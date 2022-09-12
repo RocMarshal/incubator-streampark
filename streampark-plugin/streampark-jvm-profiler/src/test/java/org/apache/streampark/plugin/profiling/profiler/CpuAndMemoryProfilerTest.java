@@ -33,18 +33,17 @@ public class CpuAndMemoryProfilerTest {
         final List<Map<String, Object>> metricList = new ArrayList<>();
 
         CpuAndMemoryProfiler profiler =
-            new CpuAndMemoryProfiler(
-                new Reporter() {
-                    @Override
-                    public void report(String profilerName, Map<String, Object> metrics) {
-                        nameList.add(profilerName);
-                        metricList.add(metrics);
-                    }
+                new CpuAndMemoryProfiler(
+                        new Reporter() {
+                            @Override
+                            public void report(String profilerName, Map<String, Object> metrics) {
+                                nameList.add(profilerName);
+                                metricList.add(metrics);
+                            }
 
-                    @Override
-                    public void close() {
-                    }
-                });
+                            @Override
+                            public void close() {}
+                        });
 
         profiler.setInterval(123);
         Assert.assertEquals(123L, profiler.getInterval());

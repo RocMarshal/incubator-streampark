@@ -17,8 +17,6 @@
 
 package org.apache.streampark.console.core.runner;
 
-import static org.apache.streampark.common.enums.StorageType.LFS;
-
 import org.apache.streampark.common.conf.CommonConfig;
 import org.apache.streampark.common.conf.ConfigConst;
 import org.apache.streampark.common.conf.InternalConfigHolder;
@@ -51,38 +49,42 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.apache.streampark.common.enums.StorageType.LFS;
+
 @Order
 @Slf4j
 @Component
 public class EnvInitializer implements ApplicationRunner {
 
-    @Autowired
-    private ApplicationContext context;
+    @Autowired private ApplicationContext context;
 
-    @Autowired
-    private SettingService settingService;
+    @Autowired private SettingService settingService;
 
     private final Map<StorageType, Boolean> initialized = new ConcurrentHashMap<>(2);
 
     private final FileFilter fileFilter = p -> !".gitkeep".equals(p.getName());
 
-    private static final Pattern PATTERN_FLINK_SHIMS_JAR = Pattern.compile(
-        "^streampark-flink-shims_flink-(1.12|1.13|1.14|1.15)_(2.11|2.12)-(.*).jar$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    private static final Pattern PATTERN_FLINK_SHIMS_JAR =
+            Pattern.compile(
+                    "^streampark-flink-shims_flink-(1.12|1.13|1.14|1.15)_(2.11|2.12)-(.*).jar$",
+                    Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         String appHome = WebUtils.getAppHome();
         if (appHome == null) {
-            throw new ExceptionInInitializerError("[StreamPark] System initialization check failed," +
-                " The system initialization check failed. If started local for development and debugging," +
-                " please ensure the -Dapp.home parameter is clearly specified," +
-                " more detail: http://streampark.apache.org/docs/user-guide/development");
+            throw new ExceptionInInitializerError(
+                    "[StreamPark] System initialization check failed,"
+                            + " The system initialization check failed. If started local for development and debugging,"
+                            + " please ensure the -Dapp.home parameter is clearly specified,"
+                            + " more detail: http://streampark.apache.org/docs/user-guide/development");
         }
 
         // init InternalConfig
         initInternalConfig(context.getEnvironment());
         // overwrite system variable HADOOP_USER_NAME
-        String hadoopUserName = InternalConfigHolder.get(CommonConfig.STREAMPARK_HADOOP_USER_NAME());
+        String hadoopUserName =
+                InternalConfigHolder.get(CommonConfig.STREAMPARK_HADOOP_USER_NAME());
         overrideSystemProp(ConfigConst.KEY_HADOOP_USER_NAME(), hadoopUserName);
         // initialize local file system resources
         storageInitialize(LFS);
@@ -90,15 +92,15 @@ public class EnvInitializer implements ApplicationRunner {
 
     private void initInternalConfig(Environment springEnv) {
         // override config from spring application.yaml
-        InternalConfigHolder
-            .keys()
-            .stream()
-            .filter(springEnv::containsProperty)
-            .forEach(key -> {
-                InternalOption config = InternalConfigHolder.getConfig(key);
-                assert config != null;
-                InternalConfigHolder.set(config, springEnv.getProperty(key, config.classType()));
-            });
+        InternalConfigHolder.keys().stream()
+                .filter(springEnv::containsProperty)
+                .forEach(
+                        key -> {
+                            InternalOption config = InternalConfigHolder.getConfig(key);
+                            assert config != null;
+                            InternalConfigHolder.set(
+                                    config, springEnv.getProperty(key, config.classType()));
+                        });
 
         String mvnRepository = settingService.getMavenRepository();
         if (StringUtils.isNotEmpty(mvnRepository)) {
@@ -124,9 +126,7 @@ public class EnvInitializer implements ApplicationRunner {
         SystemPropertyUtils.set(key, value);
     }
 
-    /**
-     * @param storageType
-     */
+    /** @param storageType */
     public synchronized void storageInitialize(StorageType storageType) {
 
         final String mkdirLog = "storage initialize, now mkdir [{}] starting ...";
@@ -178,9 +178,8 @@ public class EnvInitializer implements ApplicationRunner {
             // 2.1) upload client jar
             File client = WebUtils.getAppClientDir();
             AssertUtils.checkArgument(
-                client.exists() && client.listFiles().length > 0,
-                client.getAbsolutePath().concat(" is not exists or empty directory ")
-            );
+                    client.exists() && client.listFiles().length > 0,
+                    client.getAbsolutePath().concat(" is not exists or empty directory "));
 
             String appClient = workspace.APP_CLIENT();
             fsOperator.mkCleanDirs(appClient);
@@ -201,13 +200,15 @@ public class EnvInitializer implements ApplicationRunner {
             }
 
             // 2.3) upload shims jar
-            File[] shims = WebUtils.getAppLibDir()
-                .listFiles(pathname -> pathname.getName().matches(PATTERN_FLINK_SHIMS_JAR.pattern()));
+            File[] shims =
+                    WebUtils.getAppLibDir()
+                            .listFiles(
+                                    pathname ->
+                                            pathname.getName()
+                                                    .matches(PATTERN_FLINK_SHIMS_JAR.pattern()));
 
             AssertUtils.checkArgument(
-                shims != null && shims.length > 0,
-                "streampark-flink-shims jar not exist"
-            );
+                    shims != null && shims.length > 0, "streampark-flink-shims jar not exist");
 
             String appShims = workspace.APP_SHIMS();
             fsOperator.delete(appShims);
@@ -237,7 +238,8 @@ public class EnvInitializer implements ApplicationRunner {
     public void checkFlinkEnv(StorageType storageType, FlinkEnv flinkEnv) throws IOException {
         String flinkLocalHome = flinkEnv.getFlinkHome();
         if (flinkLocalHome == null) {
-            throw new ExceptionInInitializerError("[StreamPark] FLINK_HOME is undefined,Make sure that Flink is installed.");
+            throw new ExceptionInInitializerError(
+                    "[StreamPark] FLINK_HOME is undefined,Make sure that Flink is installed.");
         }
         Workspace workspace = Workspace.of(storageType);
         String appFlink = workspace.APP_FLINK();
@@ -257,5 +259,4 @@ public class EnvInitializer implements ApplicationRunner {
             fsOperator.upload(flinkLocalHome, flinkHome, false, true);
         }
     }
-
 }

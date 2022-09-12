@@ -41,49 +41,31 @@ public class AlertConfig implements Serializable {
 
     private Long userId;
 
-    /**
-     * alert name
-     */
+    /** alert name */
     private String alertName;
 
-    /**
-     * alert type
-     */
+    /** alert type */
     private Integer alertType;
 
-    /**
-     * email alert parameters
-     */
+    /** email alert parameters */
     private String emailParams;
 
-    /**
-     * ding alert parameters
-     */
+    /** ding alert parameters */
     private String dingTalkParams;
 
-    /**
-     * wecom alert parameters
-     */
+    /** wecom alert parameters */
     private String weComParams;
 
-    /**
-     * alert http callback parameters
-     */
+    /** alert http callback parameters */
     private String httpCallbackParams;
 
-    /**
-     * lark alert parameters
-     */
+    /** lark alert parameters */
     private String larkParams;
 
-    /**
-     * create time
-     */
+    /** create time */
     private Date createTime;
 
-    /**
-     * modify time
-     */
+    /** modify time */
     private Date modifyTime;
 
     public static AlertConfig of(AlertConfigWithParams params) {
@@ -91,7 +73,14 @@ public class AlertConfig implements Serializable {
             return null;
         }
         AlertConfig alertConfig = new AlertConfig();
-        BeanUtils.copyProperties(params, alertConfig, "emailParams", "dingTalkParams", "weComParams", "httpCallbackParams", "larkParams");
+        BeanUtils.copyProperties(
+                params,
+                alertConfig,
+                "emailParams",
+                "dingTalkParams",
+                "weComParams",
+                "httpCallbackParams",
+                "larkParams");
         try {
             if (params.getEmailParams() != null) {
                 alertConfig.setEmailParams(JacksonUtils.write(params.getEmailParams()));
@@ -103,7 +92,8 @@ public class AlertConfig implements Serializable {
                 alertConfig.setWeComParams(JacksonUtils.write(params.getWeComParams()));
             }
             if (params.getHttpCallbackParams() != null) {
-                alertConfig.setHttpCallbackParams(JacksonUtils.write(params.getHttpCallbackParams()));
+                alertConfig.setHttpCallbackParams(
+                        JacksonUtils.write(params.getHttpCallbackParams()));
             }
             if (params.getLarkParams() != null) {
                 alertConfig.setLarkParams(JacksonUtils.write(params.getLarkParams()));
@@ -113,5 +103,4 @@ public class AlertConfig implements Serializable {
         }
         return alertConfig;
     }
-
 }

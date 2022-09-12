@@ -25,20 +25,23 @@ import java.util.Date;
 import java.util.List;
 
 public class ShutdownHookRunner implements Runnable {
-    private static final AgentLogger LOGGER = AgentLogger.getLogger(ShutdownHookRunner.class.getName());
+    private static final AgentLogger LOGGER =
+            AgentLogger.getLogger(ShutdownHookRunner.class.getName());
 
     private List<Profiler> profilers;
     private List<Reporter> reporters;
     private List<AutoCloseable> closeables;
 
     public ShutdownHookRunner(
-        Collection<Profiler> profilers,
-        Collection<Reporter> reporters,
-        Collection<AutoCloseable> objectsToCloseOnShutdown) {
+            Collection<Profiler> profilers,
+            Collection<Reporter> reporters,
+            Collection<AutoCloseable> objectsToCloseOnShutdown) {
         this.profilers = profilers == null ? new ArrayList<>() : new ArrayList<>(profilers);
         this.reporters = reporters == null ? new ArrayList<>() : new ArrayList<>(reporters);
         this.closeables =
-            objectsToCloseOnShutdown == null ? new ArrayList<>() : new ArrayList<>(objectsToCloseOnShutdown);
+                objectsToCloseOnShutdown == null
+                        ? new ArrayList<>()
+                        : new ArrayList<>(objectsToCloseOnShutdown);
     }
 
     @Override
@@ -62,13 +65,19 @@ public class ShutdownHookRunner implements Runnable {
                 logShutdownMessage("Closed reporter " + r);
             } catch (Throwable ex) {
                 LOGGER.warn(
-                    "Failed to close reporter " + r + ", " + new Date() + ", " + System.currentTimeMillis(),
-                    ex);
+                        "Failed to close reporter "
+                                + r
+                                + ", "
+                                + new Date()
+                                + ", "
+                                + System.currentTimeMillis(),
+                        ex);
             }
         }
 
         for (AutoCloseable closeable : closeables) {
-            // Do not use logger.warn here because the logger may depend on error log reporter which will
+            // Do not use logger.warn here because the logger may depend on error log reporter which
+            // will
             // be already closed here.
             // So we use logShutdownMessage (System.out.println) to print out logs.
             try {
@@ -83,9 +92,11 @@ public class ShutdownHookRunner implements Runnable {
     }
 
     private void logShutdownMessage(String msg) {
-        // Sometime spark log in console output seems not fully collected, thus log to error output as
+        // Sometime spark log in console output seems not fully collected, thus log to error output
+        // as
         // well to make sure
-        // we capture this shutdown hook execution. This is to help debug some issue when shutdown hook
+        // we capture this shutdown hook execution. This is to help debug some issue when shutdown
+        // hook
         // seems not executed.
         String log = System.currentTimeMillis() + " " + msg;
         System.out.println(log);

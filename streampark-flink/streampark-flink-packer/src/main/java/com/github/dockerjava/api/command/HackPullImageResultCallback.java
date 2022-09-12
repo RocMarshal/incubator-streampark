@@ -35,5 +35,4 @@ public class HackPullImageResultCallback extends PullImageResultCallback {
             listener.watchPullProcess(item);
         }
     }
-
 }

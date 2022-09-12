@@ -23,15 +23,14 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * ClassAndMethodLongMetricBuffer is a buffer to store metrics. It is thread safe for appendValue.
  * The reset method will create a new empty internal buffer and return the old one.
- *
  */
 public class ClassAndMethodLongMetricBuffer {
     private volatile ConcurrentHashMap<ClassAndMethodMetricKey, Histogram> metrics =
-        new ConcurrentHashMap<>();
+            new ConcurrentHashMap<>();
 
     public void appendValue(String className, String methodName, String metricName, long value) {
         ClassAndMethodMetricKey methodMetricKey =
-            new ClassAndMethodMetricKey(className, methodName, metricName);
+                new ClassAndMethodMetricKey(className, methodName, metricName);
         Histogram histogram = metrics.computeIfAbsent(methodMetricKey, key -> new Histogram());
         histogram.appendValue(value);
     }

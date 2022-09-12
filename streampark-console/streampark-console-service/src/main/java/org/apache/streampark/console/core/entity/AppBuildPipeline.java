@@ -53,9 +53,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Building pipeline state for Application.
- * Each Application instance will have only one corresponding ApplicationBuildPipeline record.
- *
+ * Building pipeline state for Application. Each Application instance will have only one
+ * corresponding ApplicationBuildPipeline record.
  */
 @TableName("t_app_build_pipe")
 @Data
@@ -125,10 +124,13 @@ public class AppBuildPipeline {
             return Maps.newHashMap();
         }
         try {
-            return JacksonUtils.read(stepStatusJson, new TypeReference<HashMap<Integer, PipelineStepStatus>>() {
-            });
+            return JacksonUtils.read(
+                    stepStatusJson, new TypeReference<HashMap<Integer, PipelineStepStatus>>() {});
         } catch (JsonProcessingException e) {
-            log.error("json parse error on ApplicationBuildPipeline, stepStatusJson={}", stepStatusJson, e);
+            log.error(
+                    "json parse error on ApplicationBuildPipeline, stepStatusJson={}",
+                    stepStatusJson,
+                    e);
             return Maps.newHashMap();
         }
     }
@@ -138,8 +140,12 @@ public class AppBuildPipeline {
         try {
             this.stepStatusJson = JacksonUtils.write(stepStatus);
         } catch (JsonProcessingException e) {
-            log.error("json parse error on ApplicationBuildPipeline, stepStatusMap=({})",
-                    stepStatus.entrySet().stream().map(et -> et.getKey() + "->" + et.getValue()).collect(Collectors.joining(",")), e);
+            log.error(
+                    "json parse error on ApplicationBuildPipeline, stepStatusMap=({})",
+                    stepStatus.entrySet().stream()
+                            .map(et -> et.getKey() + "->" + et.getValue())
+                            .collect(Collectors.joining(",")),
+                    e);
         }
         return this;
     }
@@ -151,10 +157,13 @@ public class AppBuildPipeline {
             return Maps.newHashMap();
         }
         try {
-            return JacksonUtils.read(stepStatusTimestampJson, new TypeReference<HashMap<Integer, Long>>() {
-            });
+            return JacksonUtils.read(
+                    stepStatusTimestampJson, new TypeReference<HashMap<Integer, Long>>() {});
         } catch (JsonProcessingException e) {
-            log.error("json parse error on ApplicationBuildPipeline, stepStatusJson={}", stepStatusTimestampJson, e);
+            log.error(
+                    "json parse error on ApplicationBuildPipeline, stepStatusJson={}",
+                    stepStatusTimestampJson,
+                    e);
             return Maps.newHashMap();
         }
     }
@@ -164,8 +173,12 @@ public class AppBuildPipeline {
         try {
             this.stepStatusTimestampJson = JacksonUtils.write(stepStatusSt);
         } catch (JsonProcessingException e) {
-            log.error("json parse error on ApplicationBuildPipeline, stepStatusSt=({})",
-                    stepStatusSt.entrySet().stream().map(et -> et.getKey() + "->" + et.getValue()).collect(Collectors.joining(",")), e);
+            log.error(
+                    "json parse error on ApplicationBuildPipeline, stepStatusSt=({})",
+                    stepStatusSt.entrySet().stream()
+                            .map(et -> et.getKey() + "->" + et.getValue())
+                            .collect(Collectors.joining(",")),
+                    e);
         }
         return this;
     }
@@ -216,8 +229,8 @@ public class AppBuildPipeline {
     }
 
     /**
-     * Only return null when getPipeType() = UNKNOWN or json covert error,
-     * The return class type depend on PipeType.ResultType.
+     * Only return null when getPipeType() = UNKNOWN or json covert error, The return class type
+     * depend on PipeType.ResultType.
      */
     @SuppressWarnings("unchecked")
     @Nullable
@@ -230,21 +243,20 @@ public class AppBuildPipeline {
         try {
             return (R) JacksonUtils.read(buildResultJson, pipeType.getResultType());
         } catch (JsonProcessingException e) {
-            log.error("json parse error on ApplicationBuildPipeline, buildResultJson={}", buildResultJson, e);
+            log.error(
+                    "json parse error on ApplicationBuildPipeline, buildResultJson={}",
+                    buildResultJson,
+                    e);
             return null;
         }
     }
 
-    /**
-     * Initialize from BuildPipeline
-     */
+    /** Initialize from BuildPipeline */
     public static AppBuildPipeline initFromPipeline(@Nonnull BuildPipeline pipeline) {
         return fromPipeSnapshot(pipeline.snapshot());
     }
 
-    /**
-     * Create object from PipeSnapshot
-     */
+    /** Create object from PipeSnapshot */
     public static AppBuildPipeline fromPipeSnapshot(@Nonnull PipeSnapshot snapshot) {
         return new AppBuildPipeline()
                 .setPipeType(snapshot.pipeType())
@@ -257,17 +269,12 @@ public class AppBuildPipeline {
                 .setModifyTime(new Date(snapshot.emitTime()));
     }
 
-    /**
-     * Covert to view object
-     */
+    /** Covert to view object */
     public View toView() {
         return View.of(this);
     }
 
-
-    /**
-     * View object of AppBuildPipeline
-     */
+    /** View object of AppBuildPipeline */
     @Data
     @Accessors(chain = true)
     @NoArgsConstructor
@@ -292,10 +299,14 @@ public class AppBuildPipeline {
             Map<Integer, Long> stepTs = pipe.getStepStatusTimestamp();
             List<Step> steps = new ArrayList<>(stepDesc.size());
             for (int i = 1; i <= pipe.getPipeType().getSteps().size(); i++) {
-                Step step = new Step()
-                        .setSeq(i)
-                        .setDesc(stepDesc.getOrDefault(i, "unknown step"))
-                        .setStatus(stepStatus.getOrDefault(i, PipelineStepStatus.unknown).getCode());
+                Step step =
+                        new Step()
+                                .setSeq(i)
+                                .setDesc(stepDesc.getOrDefault(i, "unknown step"))
+                                .setStatus(
+                                        stepStatus
+                                                .getOrDefault(i, PipelineStepStatus.unknown)
+                                                .getCode());
                 Long st = stepTs.get(i);
                 if (st != null) {
                     step.setTs(new Date(st));
@@ -309,10 +320,12 @@ public class AppBuildPipeline {
                     .setPipeStatus(pipe.getPipeStatusCode())
                     .setCurStep(pipe.getCurStep())
                     .setTotalStep(pipe.getTotalStep())
-                    .setPercent(Utils.calPercent(
-                            pipe.getBuildResult() == null ? pipe.getCurStep() - 1 : pipe.getCurStep(),
-                            pipe.getTotalStep())
-                    )
+                    .setPercent(
+                            Utils.calPercent(
+                                    pipe.getBuildResult() == null
+                                            ? pipe.getCurStep() - 1
+                                            : pipe.getCurStep(),
+                                    pipe.getTotalStep()))
                     .setCostSec(pipe.calCostSecond())
                     .setSteps(steps)
                     .setHasError(pipe.getError().nonEmpty())

@@ -21,19 +21,13 @@ import java.io.Serializable;
 
 public enum AccessTokenState implements Serializable {
 
-    /**
-     * not added token
-     */
+    /** not added token */
     NULL(0),
 
-    /**
-     * invalid token
-     */
+    /** invalid token */
     INVALID(1),
 
-    /**
-     * effect token
-     */
+    /** effect token */
     OK(2);
 
     private final int value;
@@ -45,5 +39,4 @@ public enum AccessTokenState implements Serializable {
     public int get() {
         return this.value;
     }
-
 }

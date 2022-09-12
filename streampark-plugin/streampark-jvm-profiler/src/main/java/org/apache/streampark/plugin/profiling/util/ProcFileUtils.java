@@ -149,7 +149,6 @@ public class ProcFileUtils {
         // See http://man7.org/linux/man-pages/man5/proc.5.html for details about proc status
         Map<String, String> procStatus = getProcFileAsMap(filePath);
         return procStatus.get("Pid");
-
     }
 
     public static String getCmdline() {

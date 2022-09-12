@@ -23,20 +23,13 @@ import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
 
-/**
- * Building pipeline type.
- *
- */
+/** Building pipeline type. */
 public enum PipelineType {
 
-    /**
-     * unknown type
-     */
+    /** unknown type */
     UNKNOWN(0, "", ImmutableMap.of(), null),
 
-    /**
-     * flink native kubernetes session mode
-     */
+    /** flink native kubernetes session mode */
     FLINK_NATIVE_K8S_SESSION(
             1,
             "flink native kubernetes session mode task building pipeline",
@@ -44,12 +37,9 @@ public enum PipelineType {
                     .put(1, "Create building workspace")
                     .put(2, "Build shaded flink app jar")
                     .build(),
-            ShadedBuildResponse.class
-    ),
+            ShadedBuildResponse.class),
 
-    /**
-     * flink native kubernetes application mode
-     */
+    /** flink native kubernetes application mode */
     FLINK_NATIVE_K8S_APPLICATION(
             2,
             "flink native kubernetes session mode task building pipeline",
@@ -62,8 +52,7 @@ public enum PipelineType {
                     .put(6, "Build flink app docker image")
                     .put(7, "Push flink app docker image")
                     .build(),
-            DockerImageBuildResponse.class
-    ),
+            DockerImageBuildResponse.class),
     FLINK_STANDALONE(
             3,
             "flink standalone session mode task building pipeline",
@@ -71,8 +60,7 @@ public enum PipelineType {
                     .put(1, "Create building workspace")
                     .put(2, "Build shaded flink app jar")
                     .build(),
-            ShadedBuildResponse.class
-    ),
+            ShadedBuildResponse.class),
 
     FLINK_YARN_APPLICATION(
             4,
@@ -82,25 +70,21 @@ public enum PipelineType {
                     .put(2, "Resolve maven dependencies")
                     .put(3, "upload jar to yarn.provided.lib.dirs")
                     .build(),
-            SimpleBuildResponse.class
-    );
-
+            SimpleBuildResponse.class);
 
     private final Integer code;
-    /**
-     * short description of pipeline type.
-     */
+    /** short description of pipeline type. */
     private final String desc;
-    /**
-     * building steps of pipeline, element => [sorted seq -> step desc].
-     */
+    /** building steps of pipeline, element => [sorted seq -> step desc]. */
     private final Map<Integer, String> steps;
-    /**
-     * type of result
-     */
+    /** type of result */
     private final Class<? extends BuildResult> resultType;
 
-    PipelineType(Integer code, String desc, Map<Integer, String> steps, Class<? extends BuildResult> resultType) {
+    PipelineType(
+            Integer code,
+            String desc,
+            Map<Integer, String> steps,
+            Class<? extends BuildResult> resultType) {
         this.code = code;
         this.desc = desc;
         this.steps = steps;
@@ -141,6 +125,4 @@ public enum PipelineType {
     public boolean isUnknown() {
         return this == UNKNOWN;
     }
-
 }
-

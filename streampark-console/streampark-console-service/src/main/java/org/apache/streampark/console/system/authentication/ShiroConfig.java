@@ -28,9 +28,7 @@ import javax.servlet.Filter;
 
 import java.util.LinkedHashMap;
 
-/**
- * Shiro Config
- */
+/** Shiro Config */
 @Configuration
 public class ShiroConfig {
 
@@ -73,9 +71,9 @@ public class ShiroConfig {
 
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(
-        SecurityManager securityManager) {
+            SecurityManager securityManager) {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor =
-            new AuthorizationAttributeSourceAdvisor();
+                new AuthorizationAttributeSourceAdvisor();
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
         return authorizationAttributeSourceAdvisor;
     }

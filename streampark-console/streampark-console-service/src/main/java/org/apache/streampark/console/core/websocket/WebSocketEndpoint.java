@@ -41,11 +41,9 @@ public class WebSocketEndpoint {
 
     private static final Map<String, Session> SOCKET_SESSIONS = new CopyOnWriteMap<>();
 
-    @Getter
-    private String id;
+    @Getter private String id;
 
-    @Getter
-    private Session session;
+    @Getter private Session session;
 
     @OnOpen
     public void onOpen(Session session, @PathParam("id") String id) {
@@ -88,6 +86,4 @@ public class WebSocketEndpoint {
             log.error(e.getMessage(), e);
         }
     }
-
 }
-

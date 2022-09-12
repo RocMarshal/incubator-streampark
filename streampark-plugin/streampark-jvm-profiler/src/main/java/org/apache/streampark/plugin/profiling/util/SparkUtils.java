@@ -49,10 +49,12 @@ public class SparkUtils {
 
     // Get application ID by invoking SparkEnv
     public static String getSparkEnvAppId() {
-        // Do not use "org.apache.spark.SparkEnv" directly because the maven shade plugin will convert
+        // Do not use "org.apache.spark.SparkEnv" directly because the maven shade plugin will
+        // convert
         // the class name to ja_shaded.org.apache.spark.SparkEnv due to relocation.
         String className =
-            org.apache.commons.lang3.StringUtils.joinWith(".", "org", "apache", "spark", "SparkEnv");
+                org.apache.commons.lang3.StringUtils.joinWith(
+                        ".", "org", "apache", "spark", "SparkEnv");
         try {
             Object result = ReflectionUtils.executeStaticMethods(className, "get.conf.getAppId");
             if (result == null) {

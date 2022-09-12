@@ -35,9 +35,10 @@ public class RefreshCacheTest {
     @Test
     public void cache() throws Exception {
         if (caffeine == null) {
-            caffeine = Caffeine.newBuilder()
-                .refreshAfterWrite(10, TimeUnit.SECONDS)
-                .build(this::refresh);
+            caffeine =
+                    Caffeine.newBuilder()
+                            .refreshAfterWrite(10, TimeUnit.SECONDS)
+                            .build(this::refresh);
         }
         caffeine.put("config", "hadoop");
         while (true) {
@@ -52,16 +53,21 @@ public class RefreshCacheTest {
 
     @Test
     public void task() throws InterruptedException {
-        System.out.println(DateUtils.format(new Date(), DateUtils.fullFormat(), TimeZone.getDefault()));
+        System.out.println(
+                DateUtils.format(new Date(), DateUtils.fullFormat(), TimeZone.getDefault()));
         Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                System.out.println(DateUtils.format(new Date(), DateUtils.fullFormat(), TimeZone.getDefault()));
-            }
-        }, 1000 * 10, 1000 * 10);
+        timer.schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        System.out.println(
+                                DateUtils.format(
+                                        new Date(), DateUtils.fullFormat(), TimeZone.getDefault()));
+                    }
+                },
+                1000 * 10,
+                1000 * 10);
 
         Thread.sleep(Long.MAX_VALUE);
-
     }
 }

@@ -22,8 +22,6 @@ import org.apache.streampark.plugin.profiling.util.ExponentialBackoffRetryPolicy
 import org.apache.streampark.plugin.profiling.util.Utils;
 
 import org.yaml.snakeyaml.Yaml;
-import scalaj.http.Http;
-import scalaj.http.HttpResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -34,16 +32,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import scalaj.http.Http;
+import scalaj.http.HttpResponse;
+
 public class YamlConfigProvider implements ConfigProvider {
     private static final AgentLogger LOGGER =
-        AgentLogger.getLogger(YamlConfigProvider.class.getName());
+            AgentLogger.getLogger(YamlConfigProvider.class.getName());
 
     private static final String OVERRIDE_KEY = "override";
 
     private String filePath;
 
-    public YamlConfigProvider() {
-    }
+    public YamlConfigProvider() {}
 
     public YamlConfigProvider(String filePath) {
         setFilePath(filePath);
@@ -72,17 +72,19 @@ public class YamlConfigProvider implements ConfigProvider {
 
         try {
             bytes =
-                new ExponentialBackoffRetryPolicy<byte[]>(3, 100)
-                    .attempt(
-                        () -> {
-                            String filePathLowerCase = configFilePathOrUrl.toLowerCase();
-                            if (filePathLowerCase.startsWith("http://")
-                                || filePathLowerCase.startsWith("https://")) {
-                                return getHttp(configFilePathOrUrl);
-                            } else {
-                                return Files.readAllBytes(Paths.get(configFilePathOrUrl));
-                            }
-                        });
+                    new ExponentialBackoffRetryPolicy<byte[]>(3, 100)
+                            .attempt(
+                                    () -> {
+                                        String filePathLowerCase =
+                                                configFilePathOrUrl.toLowerCase();
+                                        if (filePathLowerCase.startsWith("http://")
+                                                || filePathLowerCase.startsWith("https://")) {
+                                            return getHttp(configFilePathOrUrl);
+                                        } else {
+                                            return Files.readAllBytes(
+                                                    Paths.get(configFilePathOrUrl));
+                                        }
+                                    });
 
             LOGGER.info("Read YAML config from: " + configFilePathOrUrl);
         } catch (Throwable e) {
@@ -161,8 +163,12 @@ public class YamlConfigProvider implements ConfigProvider {
     }
 
     private static void addConfig(
-        Map<String, Map<String, List<String>>> config, String override, String key, Object value) {
-        Map<String, List<String>> configMap = config.computeIfAbsent(override, k -> new HashMap<>());
+            Map<String, Map<String, List<String>>> config,
+            String override,
+            String key,
+            Object value) {
+        Map<String, List<String>> configMap =
+                config.computeIfAbsent(override, k -> new HashMap<>());
 
         if (value instanceof List) {
             List<String> configValueList = configMap.computeIfAbsent(key, k -> new ArrayList<>());
@@ -194,7 +200,7 @@ public class YamlConfigProvider implements ConfigProvider {
             HttpResponse response = Http.apply(url).timeout(1000, 5000).asString();
             if (response.isError()) {
                 throw new RuntimeException(
-                    "Failed response from url: " + url + ", response code: " + response.code());
+                        "Failed response from url: " + url + ", response code: " + response.code());
             }
             return Utils.toByteArray((InputStream) response.body());
         } catch (Throwable ex) {

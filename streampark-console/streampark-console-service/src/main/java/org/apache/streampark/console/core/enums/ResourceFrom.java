@@ -22,14 +22,10 @@ import java.util.Arrays;
 
 public enum ResourceFrom implements Serializable {
 
-    /**
-     * cicd(build from cvs)
-     */
+    /** cicd(build from cvs) */
     CICD(1),
 
-    /**
-     * upload local jar
-     */
+    /** upload local jar */
     UPLOAD(2);
 
     private final Integer value;

@@ -39,10 +39,7 @@ public class Message {
 
     private String title;
 
-    /**
-     * 1) build failure report
-     * 2) task monitoring exception
-     */
+    /** 1) build failure report 2) task monitoring exception */
     private Integer type;
 
     private String context;
@@ -51,8 +48,7 @@ public class Message {
 
     private Date createTime;
 
-    public Message() {
-    }
+    public Message() {}
 
     public Message(Long userId, Long appId, String title, String context, NoticeType noticeType) {
         this.userId = userId;
@@ -63,5 +59,4 @@ public class Message {
         this.createTime = new Date();
         this.isRead = false;
     }
-
 }

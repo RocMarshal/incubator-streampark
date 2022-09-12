@@ -41,8 +41,7 @@ import java.util.Map;
 @RequestMapping("flink/project")
 public class ProjectController {
 
-    @Autowired
-    private ProjectService projectService;
+    @Autowired private ProjectService projectService;
 
     @PostMapping("create")
     @RequiresPermissions("project:create")

@@ -32,23 +32,21 @@ import java.util.zip.GZIPInputStream;
 @Slf4j
 public final class GZipUtils {
 
-    private GZipUtils() {
-
-    }
+    private GZipUtils() {}
 
     /**
      * @param tarZipSource source dir
-     * @param targetDir    target dir
+     * @param targetDir target dir
      */
     public static File decompress(String tarZipSource, String targetDir) {
         File unFile = null;
         // tar compress format
         ArchiveStreamFactory archiveStreamFactory = new ArchiveStreamFactory();
-        try (
-            FileInputStream inputStream = new FileInputStream(tarZipSource);
-            BufferedInputStream bufInput = new BufferedInputStream(inputStream);
-            GZIPInputStream gzipInput = new GZIPInputStream(bufInput);
-            ArchiveInputStream archiveInput = archiveStreamFactory.createArchiveInputStream("tar", gzipInput);) {
+        try (FileInputStream inputStream = new FileInputStream(tarZipSource);
+                BufferedInputStream bufInput = new BufferedInputStream(inputStream);
+                GZIPInputStream gzipInput = new GZIPInputStream(bufInput);
+                ArchiveInputStream archiveInput =
+                        archiveStreamFactory.createArchiveInputStream("tar", gzipInput); ) {
 
             TarArchiveEntry entry = (TarArchiveEntry) archiveInput.getNextEntry();
 
@@ -63,7 +61,8 @@ public final class GZipUtils {
                 } else if (entry.isFile()) {
                     String fullFileName = createDir(targetDir, entryName, 2);
                     try (FileOutputStream outputStream = new FileOutputStream(fullFileName);
-                        BufferedOutputStream bufOutput = new BufferedOutputStream(outputStream);) {
+                            BufferedOutputStream bufOutput =
+                                    new BufferedOutputStream(outputStream); ) {
                         int b = -1;
                         while ((b = archiveInput.read()) != -1) {
                             bufOutput.write(b);
@@ -81,8 +80,8 @@ public final class GZipUtils {
 
     /**
      * @param baseDir baseDir
-     * @param entry   archive entry
-     * @param type    type: 1, dir; 2, file
+     * @param entry archive entry
+     * @param type type: 1, dir; 2, file
      * @return
      */
     private static String createDir(String baseDir, String entry, int type) {

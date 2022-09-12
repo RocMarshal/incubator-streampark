@@ -28,7 +28,7 @@ public class ArgumentUtils {
     }
 
     public static String getArgumentSingleValue(
-        Map<String, List<String>> parsedArgs, String argName) {
+            Map<String, List<String>> parsedArgs, String argName) {
         List<String> list = parsedArgs.get(argName);
         if (list == null) {
             return null;
@@ -42,7 +42,7 @@ public class ArgumentUtils {
     }
 
     public static List<String> getArgumentMultiValues(
-        Map<String, List<String>> parsedArgs, String argName) {
+            Map<String, List<String>> parsedArgs, String argName) {
         List<String> list = parsedArgs.get(argName);
         if (list == null) {
             return new ArrayList<>();

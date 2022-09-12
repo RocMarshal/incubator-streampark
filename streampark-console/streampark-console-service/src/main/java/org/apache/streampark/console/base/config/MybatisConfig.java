@@ -27,9 +27,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * for MyBatis Configure management.
- */
+/** for MyBatis Configure management. */
 @Configuration
 @MapperScan(value = {"org.apache.streampark.console.*.mapper"})
 public class MybatisConfig {
@@ -62,5 +60,4 @@ public class MybatisConfig {
     public PostgreSQLPrepareInterceptor postgreSQLPrepareInterceptor() {
         return new PostgreSQLPrepareInterceptor();
     }
-
 }

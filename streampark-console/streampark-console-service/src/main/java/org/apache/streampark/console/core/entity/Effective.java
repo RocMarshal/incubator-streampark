@@ -34,20 +34,20 @@ public class Effective {
 
     @TableId(type = IdType.AUTO)
     private Long id;
+
     private Long appId;
     /**
      * 1) config <br>
      * 2) flink Sql<br>
      */
     private Integer targetType;
+
     private Long targetId;
     private Date createTime;
 
     private transient EffectiveType effectiveType;
 
-    public Effective() {
-
-    }
+    public Effective() {}
 
     public Effective(Long appId, EffectiveType type, Long targetId) {
         this.appId = appId;
@@ -55,5 +55,4 @@ public class Effective {
         this.targetId = targetId;
         this.createTime = new Date();
     }
-
 }

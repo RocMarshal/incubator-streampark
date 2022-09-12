@@ -69,20 +69,15 @@ import java.util.stream.Collectors;
 @RequestMapping("flink/app")
 public class ApplicationController {
 
-    @Autowired
-    private ApplicationService applicationService;
+    @Autowired private ApplicationService applicationService;
 
-    @Autowired
-    private ApplicationBackUpService backUpService;
+    @Autowired private ApplicationBackUpService backUpService;
 
-    @Autowired
-    private ApplicationLogService applicationLogService;
+    @Autowired private ApplicationLogService applicationLogService;
 
-    @Autowired
-    private AppBuildPipeService appBuildPipeService;
+    @Autowired private AppBuildPipeService appBuildPipeService;
 
-    @Autowired
-    private LoggerService logService;
+    @Autowired private LoggerService logService;
 
     @ApiAccess
     @PostMapping("get")
@@ -101,18 +96,42 @@ public class ApplicationController {
     }
 
     @ApiAccess
-    @ApiOperation(value = "App Copy", notes = "App Copy", tags = ApiDocConstant.FLINK_APP_OP_TAG, consumes = "application/x-www-form-urlencoded")
+    @ApiOperation(
+            value = "App Copy",
+            notes = "App Copy",
+            tags = ApiDocConstant.FLINK_APP_OP_TAG,
+            consumes = "application/x-www-form-urlencoded")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "id", value = "copy target app id", required = true, paramType = "form", dataType = "Long"),
-        @ApiImplicitParam(name = "jobName", value = "name of the copied application", required = true, paramType = "form", dataType = "String", defaultValue = ""),
-        @ApiImplicitParam(name = "args", value = "commit parameters after copying", required = false, paramType = "form", dataType = "String", defaultValue = "")})
+        @ApiImplicitParam(
+                name = "id",
+                value = "copy target app id",
+                required = true,
+                paramType = "form",
+                dataType = "Long"),
+        @ApiImplicitParam(
+                name = "jobName",
+                value = "name of the copied application",
+                required = true,
+                paramType = "form",
+                dataType = "String",
+                defaultValue = ""),
+        @ApiImplicitParam(
+                name = "args",
+                value = "commit parameters after copying",
+                required = false,
+                paramType = "form",
+                dataType = "String",
+                defaultValue = "")
+    })
     @PostMapping(value = "copy", consumes = "application/x-www-form-urlencoded")
     @RequiresPermissions("app:copy")
     public RestResponse copy(@ApiIgnore Application app) throws IOException {
         Long id = applicationService.copy(app);
         Map<String, String> data = new HashMap<>();
         data.put("id", Long.toString(id));
-        return id.equals(0) ? RestResponse.success(false).data(data) : RestResponse.success(true).data(data);
+        return id.equals(0)
+                ? RestResponse.success(false).data(data)
+                : RestResponse.success(true).data(data);
     }
 
     @PostMapping("update")
@@ -135,15 +154,39 @@ public class ApplicationController {
         IPage<Application> applicationList = applicationService.page(app, request);
 
         List<Application> appRecords = applicationList.getRecords();
-        List<Long> appIds = appRecords.stream().map(Application::getId).collect(Collectors.toList());
+        List<Long> appIds =
+                appRecords.stream().map(Application::getId).collect(Collectors.toList());
         Map<Long, PipelineStatus> pipeStates = appBuildPipeService.listPipelineStatus(appIds);
 
         // add building pipeline status info and app control info
-        appRecords = appRecords.stream().peek(e -> {
-            if (pipeStates.containsKey(e.getId())) {
-                e.setBuildStatus(pipeStates.get(e.getId()).getCode());
-            }
-        }).peek(e -> e.setAppControl(new AppControl().setAllowBuild(e.getBuildStatus() == null || !PipelineStatus.running.getCode().equals(e.getBuildStatus())).setAllowStart(PipelineStatus.success.getCode().equals(e.getBuildStatus()) && !e.shouldBeTrack()).setAllowStop(e.isRunning()))).collect(Collectors.toList());
+        appRecords =
+                appRecords.stream()
+                        .peek(
+                                e -> {
+                                    if (pipeStates.containsKey(e.getId())) {
+                                        e.setBuildStatus(pipeStates.get(e.getId()).getCode());
+                                    }
+                                })
+                        .peek(
+                                e ->
+                                        e.setAppControl(
+                                                new AppControl()
+                                                        .setAllowBuild(
+                                                                e.getBuildStatus() == null
+                                                                        || !PipelineStatus.running
+                                                                                .getCode()
+                                                                                .equals(
+                                                                                        e
+                                                                                                .getBuildStatus()))
+                                                        .setAllowStart(
+                                                                PipelineStatus.success
+                                                                                .getCode()
+                                                                                .equals(
+                                                                                        e
+                                                                                                .getBuildStatus())
+                                                                        && !e.shouldBeTrack())
+                                                        .setAllowStop(e.isRunning())))
+                        .collect(Collectors.toList());
 
         applicationList.setRecords(appRecords);
         return RestResponse.success(applicationList);
@@ -164,13 +207,47 @@ public class ApplicationController {
     }
 
     @ApiAccess
-    @ApiOperation(value = "App Start", notes = "App Start", tags = ApiDocConstant.FLINK_APP_OP_TAG, consumes = "application/x-www-form-urlencoded")
+    @ApiOperation(
+            value = "App Start",
+            notes = "App Start",
+            tags = ApiDocConstant.FLINK_APP_OP_TAG,
+            consumes = "application/x-www-form-urlencoded")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "id", value = "app Id", required = true, paramType = "form", dataType = "Long"),
-        @ApiImplicitParam(name = "savePointed", value = "从savepoint或最新checkpoint恢复app", required = true, paramType = "form", dataType = "Boolean", defaultValue = "false"),
-        @ApiImplicitParam(name = "savePoint", value = "手动填写savepoint或最新checkpoint", required = true, paramType = "form", dataType = "String", defaultValue = ""),
-        @ApiImplicitParam(name = "flameGraph", value = "flame Graph support", required = true, paramType = "form", dataType = "Boolean", defaultValue = "false"),
-        @ApiImplicitParam(name = "allowNonRestored", value = "ignore savepoint then cannot be restored", required = true, paramType = "form", dataType = "Boolean", defaultValue = "false")})
+        @ApiImplicitParam(
+                name = "id",
+                value = "app Id",
+                required = true,
+                paramType = "form",
+                dataType = "Long"),
+        @ApiImplicitParam(
+                name = "savePointed",
+                value = "从savepoint或最新checkpoint恢复app",
+                required = true,
+                paramType = "form",
+                dataType = "Boolean",
+                defaultValue = "false"),
+        @ApiImplicitParam(
+                name = "savePoint",
+                value = "手动填写savepoint或最新checkpoint",
+                required = true,
+                paramType = "form",
+                dataType = "String",
+                defaultValue = ""),
+        @ApiImplicitParam(
+                name = "flameGraph",
+                value = "flame Graph support",
+                required = true,
+                paramType = "form",
+                dataType = "Boolean",
+                defaultValue = "false"),
+        @ApiImplicitParam(
+                name = "allowNonRestored",
+                value = "ignore savepoint then cannot be restored",
+                required = true,
+                paramType = "form",
+                dataType = "Boolean",
+                defaultValue = "false")
+    })
     @PostMapping(value = "start", consumes = "application/x-www-form-urlencoded")
     @RequiresPermissions("app:start")
     public RestResponse start(@ApiIgnore Application app) {
@@ -185,12 +262,39 @@ public class ApplicationController {
     }
 
     @ApiAccess
-    @ApiOperation(value = "App Cancel", notes = "App Cancel", tags = ApiDocConstant.FLINK_APP_OP_TAG, consumes = "application/x-www-form-urlencoded")
+    @ApiOperation(
+            value = "App Cancel",
+            notes = "App Cancel",
+            tags = ApiDocConstant.FLINK_APP_OP_TAG,
+            consumes = "application/x-www-form-urlencoded")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "id", value = "app Id", required = true, paramType = "form", dataType = "Long"),
-        @ApiImplicitParam(name = "savePointed", value = "trigger savePoint before taking stoping", required = true, paramType = "form", dataType = "Boolean", defaultValue = "false"),
-        @ApiImplicitParam(name = "savePoint", value = "savepoint path", paramType = "form", dataType = "String", defaultValue = "hdfs:///tm/xxx"),
-        @ApiImplicitParam(name = "drain", value = "send max watermark before canceling", required = true, paramType = "form", dataType = "Boolean", defaultValue = "false")})
+        @ApiImplicitParam(
+                name = "id",
+                value = "app Id",
+                required = true,
+                paramType = "form",
+                dataType = "Long"),
+        @ApiImplicitParam(
+                name = "savePointed",
+                value = "trigger savePoint before taking stoping",
+                required = true,
+                paramType = "form",
+                dataType = "Boolean",
+                defaultValue = "false"),
+        @ApiImplicitParam(
+                name = "savePoint",
+                value = "savepoint path",
+                paramType = "form",
+                dataType = "String",
+                defaultValue = "hdfs:///tm/xxx"),
+        @ApiImplicitParam(
+                name = "drain",
+                value = "send max watermark before canceling",
+                required = true,
+                paramType = "form",
+                dataType = "Boolean",
+                defaultValue = "false")
+    })
     @PostMapping(value = "cancel", consumes = "application/x-www-form-urlencoded")
     @RequiresPermissions("app:cancel")
     public RestResponse cancel(@ApiIgnore Application app) throws Exception {
@@ -206,9 +310,7 @@ public class ApplicationController {
         return RestResponse.success(true);
     }
 
-    /**
-     * force stop(stop normal start or in progress)
-     */
+    /** force stop(stop normal start or in progress) */
     @PostMapping("forcedStop")
     @RequiresPermissions("app:cancel")
     public RestResponse forcedStop(Application app) {
@@ -253,8 +355,8 @@ public class ApplicationController {
 
     @PostMapping("rollback")
     public RestResponse rollback(ApplicationBackUp backUp) {
-        //TODO: next version implementation
-        //backUpService.rollback(backUp);
+        // TODO: next version implementation
+        // backUpService.rollback(backUp);
         return RestResponse.success();
     }
 
@@ -308,11 +410,13 @@ public class ApplicationController {
         RestResponse restResponse = RestResponse.success(true);
         String error;
         if (scheme == null) {
-            error = "The scheme (hdfs://, file://, etc) is null. Please specify the file system scheme explicitly in the URI.";
+            error =
+                    "The scheme (hdfs://, file://, etc) is null. Please specify the file system scheme explicitly in the URI.";
             restResponse.data(false).message(error);
         }
         if (pathPart == null) {
-            error = "The path to store the checkpoint data in is null. Please specify a directory path for the checkpoint data.";
+            error =
+                    "The path to store the checkpoint data in is null. Please specify a directory path for the checkpoint data.";
             restResponse.data(false).message(error);
         }
         if (pathPart.length() == 0 || pathPart.equals("/")) {
@@ -334,11 +438,18 @@ public class ApplicationController {
 
     @ApiOperation(value = "APP detail")
     @PostMapping(value = "/detail")
-    public RestResponse detail(@ApiParam("K8s name spaces") @RequestParam(value = "namespace", required = false) String namespace,
-                               @ApiParam("Job name") @RequestParam(value = "jobName", required = false) String jobName,
-                               @ApiParam("Number of log lines skipped loading") @RequestParam(value = "skipLineNum", required = false) Integer skipLineNum,
-                               @ApiParam("Number of log lines loaded at once") @RequestParam(value = "limit", required = false) Integer limit) {
-        return RestResponse.success(MoreFutures.derefUsingDefaultTimeout(logService.queryLog(namespace, jobName, skipLineNum, limit)));
+    public RestResponse detail(
+            @ApiParam("K8s name spaces") @RequestParam(value = "namespace", required = false)
+                    String namespace,
+            @ApiParam("Job name") @RequestParam(value = "jobName", required = false) String jobName,
+            @ApiParam("Number of log lines skipped loading")
+                    @RequestParam(value = "skipLineNum", required = false)
+                    Integer skipLineNum,
+            @ApiParam("Number of log lines loaded at once")
+                    @RequestParam(value = "limit", required = false)
+                    Integer limit) {
+        return RestResponse.success(
+                MoreFutures.derefUsingDefaultTimeout(
+                        logService.queryLog(namespace, jobName, skipLineNum, limit)));
     }
-
 }

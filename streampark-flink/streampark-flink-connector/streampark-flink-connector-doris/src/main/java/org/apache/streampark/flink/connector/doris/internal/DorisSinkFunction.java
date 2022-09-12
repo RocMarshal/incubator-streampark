@@ -41,9 +41,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.Properties;
 
-/**
- * DorisSinkFunction
- **/
+/** DorisSinkFunction */
 public class DorisSinkFunction<T> extends RichSinkFunction<T> implements CheckpointedFunction {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DorisSinkFunction.class);
@@ -68,7 +66,8 @@ public class DorisSinkFunction<T> extends RichSinkFunction<T> implements Checkpo
         super.open(parameters);
         dorisSinkWriter.setRuntimeContext(getRuntimeContext());
         totalInvokeRows = getRuntimeContext().getMetricGroup().counter(COUNTER_INVOKE_ROWS);
-        totalInvokeRowsTime = getRuntimeContext().getMetricGroup().counter(COUNTER_INVOKE_ROWS_COST_TIME);
+        totalInvokeRowsTime =
+                getRuntimeContext().getMetricGroup().counter(COUNTER_INVOKE_ROWS_COST_TIME);
         dorisSinkWriter.startScheduler();
         dorisSinkWriter.startAsyncFlushing();
     }
@@ -78,16 +77,24 @@ public class DorisSinkFunction<T> extends RichSinkFunction<T> implements Checkpo
         long start = System.nanoTime();
         if (value instanceof DorisSinkRowDataWithMeta) {
             DorisSinkRowDataWithMeta data = (DorisSinkRowDataWithMeta) value;
-            if (Strings.isNullOrEmpty(data.getDatabase()) || Strings.isNullOrEmpty(data.getTable()) || null == data.getDataRows()) {
-                LOGGER.warn(String.format(" row data not fullfilled. {database: %s, table: %s, dataRows: %s}", data.getDatabase(), data.getTable(), data.getDataRows()));
+            if (Strings.isNullOrEmpty(data.getDatabase())
+                    || Strings.isNullOrEmpty(data.getTable())
+                    || null == data.getDataRows()) {
+                LOGGER.warn(
+                        String.format(
+                                " row data not fullfilled. {database: %s, table: %s, dataRows: %s}",
+                                data.getDatabase(), data.getTable(), data.getDataRows()));
                 return;
             }
             dorisSinkWriter.writeRecords(data.getDatabase(), data.getTable(), data.getDataRows());
         } else {
-            if (Strings.isNullOrEmpty(dorisConfig.database()) || Strings.isNullOrEmpty(dorisConfig.table())) {
-                throw new RuntimeException(" database|table  is empt ,please check your config or create DorisSinkRowDataWithMeta instance");
+            if (Strings.isNullOrEmpty(dorisConfig.database())
+                    || Strings.isNullOrEmpty(dorisConfig.table())) {
+                throw new RuntimeException(
+                        " database|table  is empt ,please check your config or create DorisSinkRowDataWithMeta instance");
             }
-            dorisSinkWriter.writeRecords(dorisConfig.database(), dorisConfig.table(), (String) value);
+            dorisSinkWriter.writeRecords(
+                    dorisConfig.database(), dorisConfig.table(), (String) value);
         }
         // raw data sink
         totalInvokeRows.inc(1);
@@ -99,7 +106,6 @@ public class DorisSinkFunction<T> extends RichSinkFunction<T> implements Checkpo
     public void close() throws Exception {
         super.close();
         dorisSinkWriter.close();
-
     }
 
     @Override
@@ -116,11 +122,10 @@ public class DorisSinkFunction<T> extends RichSinkFunction<T> implements Checkpo
     public void initializeState(FunctionInitializationContext context) throws Exception {
         if (Semantic.EXACTLY_ONCE.equals(Semantic.of(dorisConfig.semantic()))) {
             ListStateDescriptor<Map<String, DorisSinkBufferEntry>> descriptor =
-                new ListStateDescriptor<>(
-                    "buffered-rows",
-                    TypeInformation.of(new TypeHint<Map<String, DorisSinkBufferEntry>>() {
-                    })
-                );
+                    new ListStateDescriptor<>(
+                            "buffered-rows",
+                            TypeInformation.of(
+                                    new TypeHint<Map<String, DorisSinkBufferEntry>>() {}));
             checkpointedState = context.getOperatorStateStore().getListState(descriptor);
         }
     }

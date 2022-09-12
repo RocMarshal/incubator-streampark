@@ -20,10 +20,7 @@ package org.apache.streampark.console.system.authentication;
 import lombok.Data;
 import org.apache.shiro.authc.AuthenticationToken;
 
-/**
- * JSON Web Token
- *
- */
+/** JSON Web Token */
 @Data
 public class JWTToken implements AuthenticationToken {
 
@@ -51,5 +48,4 @@ public class JWTToken implements AuthenticationToken {
     public Object getCredentials() {
         return token;
     }
-
 }

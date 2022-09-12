@@ -25,14 +25,17 @@ import java.util.Map;
 
 public class ConsoleOutputReporter implements Reporter {
 
-    private static final AgentLogger LOGGER = AgentLogger.getLogger(ConsoleOutputReporter.class.getName());
+    private static final AgentLogger LOGGER =
+            AgentLogger.getLogger(ConsoleOutputReporter.class.getName());
 
     @Override
     public void report(String profilerName, Map<String, Object> metrics) {
-        LOGGER.info(String.format("ConsoleOutputReporter - %s: %s", profilerName, Utils.toJsonString(metrics)));
+        LOGGER.info(
+                String.format(
+                        "ConsoleOutputReporter - %s: %s",
+                        profilerName, Utils.toJsonString(metrics)));
     }
 
     @Override
-    public void close() {
-    }
+    public void close() {}
 }

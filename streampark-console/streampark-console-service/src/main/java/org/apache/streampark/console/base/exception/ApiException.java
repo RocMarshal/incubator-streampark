@@ -17,9 +17,7 @@
 
 package org.apache.streampark.console.base.exception;
 
-/**
- * api business exceptions, as different from internal errors, need to return a friendly message
- */
+/** api business exceptions, as different from internal errors, need to return a friendly message */
 public class ApiException extends RuntimeException {
 
     private static final long serialVersionUID = -994962710559017255L;
@@ -35,5 +33,4 @@ public class ApiException extends RuntimeException {
     public ApiException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }

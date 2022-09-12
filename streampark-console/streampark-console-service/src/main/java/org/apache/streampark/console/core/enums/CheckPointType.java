@@ -21,13 +21,9 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public enum CheckPointType implements Serializable {
-    /**
-     * CHECKPOINT
-     */
+    /** CHECKPOINT */
     CHECKPOINT(1),
-    /**
-     * SAVEPOINT
-     */
+    /** SAVEPOINT */
     SAVEPOINT(2),
 
     SYNC_SAVEPOINT(3);

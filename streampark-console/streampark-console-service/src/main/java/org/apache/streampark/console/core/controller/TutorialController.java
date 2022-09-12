@@ -36,8 +36,7 @@ import java.io.IOException;
 @RequestMapping("tutorial")
 public class TutorialController {
 
-    @Autowired
-    private TutorialService tutorialService;
+    @Autowired private TutorialService tutorialService;
 
     @PostMapping("get")
     public RestResponse get(String name) throws IOException {

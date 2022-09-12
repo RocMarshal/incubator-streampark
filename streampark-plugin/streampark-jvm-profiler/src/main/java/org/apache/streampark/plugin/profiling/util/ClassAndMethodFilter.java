@@ -50,7 +50,7 @@ public class ClassAndMethodFilter {
         for (ClassAndMethod classAndMethod : classAndMethods) {
             if (className.startsWith(classAndMethod.getClassName())) {
                 if (METHOD_NAME_WILDCARD.equals(classAndMethod.getMethodName())
-                    || methodName.equals(classAndMethod.getMethodName())) {
+                        || methodName.equals(classAndMethod.getMethodName())) {
                     return true;
                 }
             }

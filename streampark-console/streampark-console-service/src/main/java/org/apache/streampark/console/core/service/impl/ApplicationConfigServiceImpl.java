@@ -51,16 +51,14 @@ import java.util.Scanner;
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class ApplicationConfigServiceImpl
-    extends ServiceImpl<ApplicationConfigMapper, ApplicationConfig>
-    implements ApplicationConfigService {
+        extends ServiceImpl<ApplicationConfigMapper, ApplicationConfig>
+        implements ApplicationConfigService {
 
     private String flinkConfTemplate = null;
 
-    @Autowired
-    private ResourceLoader resourceLoader;
+    @Autowired private ResourceLoader resourceLoader;
 
-    @Autowired
-    private EffectiveService effectiveService;
+    @Autowired private EffectiveService effectiveService;
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
@@ -82,13 +80,15 @@ public class ApplicationConfigServiceImpl
     @Transactional(rollbackFor = {Exception.class})
     public void setLatest(Long appId, Long configId) {
         LambdaUpdateWrapper<ApplicationConfig> updateWrapper = Wrappers.lambdaUpdate();
-        updateWrapper.set(ApplicationConfig::getLatest, false)
-            .eq(ApplicationConfig::getAppId, appId);
+        updateWrapper
+                .set(ApplicationConfig::getLatest, false)
+                .eq(ApplicationConfig::getAppId, appId);
         this.update(updateWrapper);
 
         updateWrapper.clear();
-        updateWrapper.set(ApplicationConfig::getLatest, true)
-            .eq(ApplicationConfig::getId, configId);
+        updateWrapper
+                .set(ApplicationConfig::getLatest, true)
+                .eq(ApplicationConfig::getId, configId);
         this.update(updateWrapper);
     }
 
@@ -124,7 +124,8 @@ public class ApplicationConfigServiceImpl
                 }
             }
         } else {
-            // may be re-selected a config file (without config id), or may be based on an original edit (with config Id).
+            // may be re-selected a config file (without config id), or may be based on an original
+            // edit (with config Id).
             Long configId = application.getConfigId();
             // an original edit
             if (configId != null) {
@@ -156,9 +157,7 @@ public class ApplicationConfigServiceImpl
         }
     }
 
-    /**
-     * Not running tasks are set to Effective, running tasks are set to Latest
-     */
+    /** Not running tasks are set to Effective, running tasks are set to Latest */
     @Override
     public void setLatestOrEffective(Boolean latest, Long configId, Long appId) {
         if (latest) {
@@ -171,8 +170,9 @@ public class ApplicationConfigServiceImpl
     @Override
     public void toEffective(Long appId, Long configId) {
         LambdaUpdateWrapper<ApplicationConfig> updateWrapper = Wrappers.lambdaUpdate();
-        updateWrapper.eq(ApplicationConfig::getAppId, appId)
-            .set(ApplicationConfig::getLatest, false);
+        updateWrapper
+                .eq(ApplicationConfig::getAppId, appId)
+                .set(ApplicationConfig::getLatest, false);
         this.update(updateWrapper);
         effectiveService.saveOrUpdate(appId, EffectiveType.CONFIG, configId);
     }
@@ -202,16 +202,16 @@ public class ApplicationConfigServiceImpl
     @Override
     public IPage<ApplicationConfig> page(ApplicationConfig config, RestRequest request) {
         return this.baseMapper.page(
-            new MybatisPager<ApplicationConfig>().getPage(request, "version", Constant.ORDER_DESC),
-            config.getAppId()
-        );
+                new MybatisPager<ApplicationConfig>()
+                        .getPage(request, "version", Constant.ORDER_DESC),
+                config.getAppId());
     }
 
     @Override
     public List<ApplicationConfig> history(Application application) {
         LambdaQueryWrapper<ApplicationConfig> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ApplicationConfig::getAppId, application.getId())
-            .orderByDesc(ApplicationConfig::getVersion);
+                .orderByDesc(ApplicationConfig::getVersion);
 
         List<ApplicationConfig> configList = this.baseMapper.selectList(wrapper);
         ApplicationConfig effective = getEffective(application.getId());
@@ -235,8 +235,7 @@ public class ApplicationConfigServiceImpl
                 Scanner scanner = new Scanner(resource.getInputStream());
                 StringBuilder stringBuffer = new StringBuilder();
                 while (scanner.hasNextLine()) {
-                    stringBuffer.append(scanner.nextLine())
-                        .append(System.lineSeparator());
+                    stringBuffer.append(scanner.nextLine()).append(System.lineSeparator());
                 }
                 scanner.close();
                 String template = stringBuffer.toString();
@@ -252,7 +251,6 @@ public class ApplicationConfigServiceImpl
     @Override
     public void removeApp(Long appId) {
         baseMapper.delete(
-            new LambdaQueryWrapper<ApplicationConfig>().eq(ApplicationConfig::getAppId, appId)
-        );
+                new LambdaQueryWrapper<ApplicationConfig>().eq(ApplicationConfig::getAppId, appId));
     }
 }

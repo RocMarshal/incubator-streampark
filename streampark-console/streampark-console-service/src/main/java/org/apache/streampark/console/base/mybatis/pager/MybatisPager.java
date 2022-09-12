@@ -44,7 +44,7 @@ public final class MybatisPager<T> {
 
         List<OrderItem> orderItems = new ArrayList<>(0);
         if (StringUtils.isNotBlank(request.getSortField())
-            && StringUtils.isNotBlank(request.getSortOrder())) {
+                && StringUtils.isNotBlank(request.getSortOrder())) {
             if (StringUtils.equals(request.getSortOrder(), Constant.ORDER_DESC)) {
                 orderItems.add(OrderItem.desc(sortField));
             } else {
@@ -66,13 +66,10 @@ public final class MybatisPager<T> {
     }
 
     public static void handleWrapperSort(
-        RestRequest request,
-        QueryWrapper wrapper,
-        String defaultSort,
-        String defaultOrder) {
+            RestRequest request, QueryWrapper wrapper, String defaultSort, String defaultOrder) {
         String sortField = request.getSortField();
         if (StringUtils.isNotBlank(request.getSortField())
-            && StringUtils.isNotBlank(request.getSortOrder())) {
+                && StringUtils.isNotBlank(request.getSortOrder())) {
             if (StringUtils.equals(request.getSortOrder(), Constant.ORDER_DESC)) {
                 wrapper.orderByDesc(sortField);
             } else {
@@ -88,5 +85,4 @@ public final class MybatisPager<T> {
             }
         }
     }
-
 }

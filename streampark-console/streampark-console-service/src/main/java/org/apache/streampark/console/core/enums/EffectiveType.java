@@ -20,13 +20,9 @@ package org.apache.streampark.console.core.enums;
 import java.io.Serializable;
 
 public enum EffectiveType implements Serializable {
-    /**
-     * config
-     */
+    /** config */
     CONFIG(1),
-    /**
-     * FLINKSQL
-     */
+    /** FLINKSQL */
     FLINKSQL(2);
 
     private final int type;

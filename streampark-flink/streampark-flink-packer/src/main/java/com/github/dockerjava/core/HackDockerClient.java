@@ -22,10 +22,7 @@ import com.github.dockerjava.core.command.HackPullImageCmd;
 import com.github.dockerjava.core.command.HackPushImageCmd;
 import com.github.dockerjava.transport.DockerHttpClient;
 
-/**
- * Enhancement of DockerClient to provide custom api with a hacked way.
- *
- */
+/** Enhancement of DockerClient to provide custom api with a hacked way. */
 public class HackDockerClient extends DockerClientImpl {
 
     private final DockerClientConfig dockerClientConfig;
@@ -35,9 +32,12 @@ public class HackDockerClient extends DockerClientImpl {
         this.dockerClientConfig = dockerClientConfig;
     }
 
-    public static HackDockerClient getInstance(DockerClientConfig dockerClientConfig, DockerHttpClient dockerHttpClient) {
+    public static HackDockerClient getInstance(
+            DockerClientConfig dockerClientConfig, DockerHttpClient dockerHttpClient) {
         HackDockerClient client = new HackDockerClient(dockerClientConfig);
-        client.dockerCmdExecFactory = new DefaultDockerCmdExecFactory(dockerHttpClient, dockerClientConfig.getObjectMapper());
+        client.dockerCmdExecFactory =
+                new DefaultDockerCmdExecFactory(
+                        dockerHttpClient, dockerClientConfig.getObjectMapper());
         ((DockerClientConfigAware) client.dockerCmdExecFactory).init(dockerClientConfig);
         return client;
     }
@@ -50,17 +50,16 @@ public class HackDockerClient extends DockerClientImpl {
     @Override
     public HackPullImageCmd pullImageCmd(String repository) {
         return new HackPullImageCmd(
-            dockerCmdExecFactory.createPullImageCmdExec(),
-            dockerClientConfig.effectiveAuthConfig(repository),
-            repository);
+                dockerCmdExecFactory.createPullImageCmdExec(),
+                dockerClientConfig.effectiveAuthConfig(repository),
+                repository);
     }
 
     @Override
     public HackPushImageCmd pushImageCmd(String name) {
         return new HackPushImageCmd(
-            dockerCmdExecFactory.createPushImageCmdExec(),
-            dockerClientConfig.effectiveAuthConfig(name),
-            name);
+                dockerCmdExecFactory.createPushImageCmdExec(),
+                dockerClientConfig.effectiveAuthConfig(name),
+                name);
     }
-
 }

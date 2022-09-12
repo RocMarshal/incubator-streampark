@@ -66,7 +66,9 @@ public class Stacktrace {
         if (threadName != null ? !threadName.equals(that.threadName) : that.threadName != null) {
             return false;
         }
-        if (threadState != null ? !threadState.equals(that.threadState) : that.threadState != null) {
+        if (threadState != null
+                ? !threadState.equals(that.threadState)
+                : that.threadState != null) {
             return false;
         }
 

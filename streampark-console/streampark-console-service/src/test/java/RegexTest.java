@@ -65,14 +65,18 @@ public class RegexTest {
         }
 
         String version = "1.13";
-        List<URL> shimsUrls = shimsCache.stream().filter(url -> {
-            Matcher matcher = pattern.matcher(url.getFile());
-            if (matcher.matches()) {
-                System.out.println(matcher.group(2));
-                return version.equals(matcher.group(2));
-            }
-            return false;
-        }).collect(Collectors.toList());
+        List<URL> shimsUrls =
+                shimsCache.stream()
+                        .filter(
+                                url -> {
+                                    Matcher matcher = pattern.matcher(url.getFile());
+                                    if (matcher.matches()) {
+                                        System.out.println(matcher.group(2));
+                                        return version.equals(matcher.group(2));
+                                    }
+                                    return false;
+                                })
+                        .collect(Collectors.toList());
         shimsUrls.addAll(libCache);
         URLClassLoader urlClassLoader = new URLClassLoader(shimsUrls.toArray(new URL[0]));
         System.out.println(urlClassLoader);
@@ -83,27 +87,32 @@ public class RegexTest {
         final Pattern flinkVersionPattern = Pattern.compile("^Version: (.*), Commit ID: (.*)$");
         String flinkHome = System.getenv("FLINK_HOME");
         String libPath = flinkHome.concat("/lib");
-        File[] distJar = new File(libPath).listFiles(x -> x.getName().matches("flink-dist.*\\.jar"));
+        File[] distJar =
+                new File(libPath).listFiles(x -> x.getName().matches("flink-dist.*\\.jar"));
         if (distJar == null || distJar.length == 0) {
-            throw new IllegalArgumentException("[StreamPark] can no found flink-dist jar in " + libPath);
+            throw new IllegalArgumentException(
+                    "[StreamPark] can no found flink-dist jar in " + libPath);
         }
         if (distJar.length > 1) {
-            throw new IllegalArgumentException("[StreamPark] found multiple flink-dist jar in " + libPath);
+            throw new IllegalArgumentException(
+                    "[StreamPark] found multiple flink-dist jar in " + libPath);
         }
-        List<String> cmd = Collections.singletonList(
-            String.format(
-                "java -classpath %s org.apache.flink.client.cli.CliFrontend --version",
-                distJar[0].getAbsolutePath()
-            )
-        );
+        List<String> cmd =
+                Collections.singletonList(
+                        String.format(
+                                "java -classpath %s org.apache.flink.client.cli.CliFrontend --version",
+                                distJar[0].getAbsolutePath()));
 
-        CommandUtils.execute(flinkHome, cmd, versionInfo -> {
-            Matcher matcher = flinkVersionPattern.matcher(versionInfo);
-            if (matcher.find()) {
-                String flinkVersion = matcher.group(1);
-                System.out.println(flinkVersion);
-            }
-        });
+        CommandUtils.execute(
+                flinkHome,
+                cmd,
+                versionInfo -> {
+                    Matcher matcher = flinkVersionPattern.matcher(versionInfo);
+                    if (matcher.find()) {
+                        String flinkVersion = matcher.group(1);
+                        System.out.println(flinkVersion);
+                    }
+                });
     }
 
     @Test
@@ -117,5 +126,4 @@ public class RegexTest {
             }
         }
     }
-
 }

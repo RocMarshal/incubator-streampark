@@ -31,20 +31,17 @@ public class YarnTest {
 
     @Test
     public void vcore() throws IOException, YarnException {
-        int numYarnMaxVcores = HadoopUtils.yarnClient().getNodeReports(NodeState.RUNNING)
-            .stream()
-            .mapToInt(report -> report.getCapability().getVirtualCores())
-            .max()
-            .orElse(0);
+        int numYarnMaxVcores =
+                HadoopUtils.yarnClient().getNodeReports(NodeState.RUNNING).stream()
+                        .mapToInt(report -> report.getCapability().getVirtualCores())
+                        .max()
+                        .orElse(0);
         System.out.println(numYarnMaxVcores);
     }
 
     @Test
     public void getURL() {
-        /**
-         * 将hadoop的配置文件放到一个目录下,
-         * 在运行该类的时候加上jvm级别的参数(idea里的 vmOption ) -DHADOOP_CONF_DIR=${目录}
-         */
+        /** 将hadoop的配置文件放到一个目录下, 在运行该类的时候加上jvm级别的参数(idea里的 vmOption ) -DHADOOP_CONF_DIR=${目录} */
         String url = YarnUtils.getRMWebAppURL();
         System.out.println(url);
     }
@@ -56,5 +53,4 @@ public class YarnTest {
         Map<String, String> map = PropertiesUtils.loadFlinkConfYaml(yaml);
         System.out.println(map.size());
     }
-
 }

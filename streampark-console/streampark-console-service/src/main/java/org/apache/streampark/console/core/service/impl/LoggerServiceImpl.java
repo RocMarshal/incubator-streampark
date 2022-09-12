@@ -30,38 +30,38 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
-/**
- * log service
- */
+/** log service */
 @Service
 @Slf4j
 public class LoggerServiceImpl implements LoggerService {
 
-    @Autowired
-    private LogClientService logClient;
+    @Autowired private LogClientService logClient;
 
     /**
      * view log
      *
      * @param skipLineNum skip line number
-     * @param limit       limit
+     * @param limit limit
      * @return log string data
      */
-    public CompletionStage<String> queryLog(String nameSpace, String jobName, int skipLineNum, int limit) {
-        return CompletableFuture.supplyAsync(() -> jobDeploymentsWatch(nameSpace, jobName)
-        ).exceptionally(e -> {
-            try {
-                return String.format("%s/%s_%s_err.log", new File("").getCanonicalPath(), nameSpace, jobName);
-            } catch (IOException ex) {
-                log.error("Generate log path exception:{}", ex.getMessage());
-                return null;
-            }
-        }).thenApply(path -> logClient.rollViewLog(String.valueOf(path), skipLineNum, limit));
+    public CompletionStage<String> queryLog(
+            String nameSpace, String jobName, int skipLineNum, int limit) {
+        return CompletableFuture.supplyAsync(() -> jobDeploymentsWatch(nameSpace, jobName))
+                .exceptionally(
+                        e -> {
+                            try {
+                                return String.format(
+                                        "%s/%s_%s_err.log",
+                                        new File("").getCanonicalPath(), nameSpace, jobName);
+                            } catch (IOException ex) {
+                                log.error("Generate log path exception:{}", ex.getMessage());
+                                return null;
+                            }
+                        })
+                .thenApply(path -> logClient.rollViewLog(String.valueOf(path), skipLineNum, limit));
     }
 
     private String jobDeploymentsWatch(String nameSpace, String jobName) {
         return KubernetesDeploymentHelper.watchDeploymentLog(nameSpace, jobName);
     }
 }
-
-

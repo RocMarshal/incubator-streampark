@@ -46,7 +46,8 @@ public class SecurityConfig {
 
     private void setAuthenticationType(String type) {
         if (StringUtils.isBlank(type)) {
-            LOG.info("security.authentication.type configuration is empty, the default value 'PASSWORD'");
+            LOG.info(
+                    "security.authentication.type configuration is empty, the default value 'PASSWORD'");
             this.authenticationType = AuthenticationType.PASSWORD;
             return;
         }

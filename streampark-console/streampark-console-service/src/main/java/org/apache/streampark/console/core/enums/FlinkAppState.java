@@ -28,9 +28,7 @@ import scala.Enumeration;
 @Getter
 public enum FlinkAppState implements Serializable {
 
-    /**
-     * added new job to database
-     */
+    /** added new job to database */
     ADDED(0),
 
     /**
@@ -39,47 +37,29 @@ public enum FlinkAppState implements Serializable {
      */
     INITIALIZING(1),
 
-    /**
-     * Job is newly created, no task has started to run.
-     */
+    /** Job is newly created, no task has started to run. */
     CREATED(2),
-    /**
-     * Application which is currently running.
-     */
+    /** Application which is currently running. */
     STARTING(3),
 
-    /**
-     * Application which is currently running.
-     */
+    /** Application which is currently running. */
     RESTARTING(4),
-    /**
-     * Some tasks are scheduled or running, some may be pending, some may be finished.
-     */
+    /** Some tasks are scheduled or running, some may be pending, some may be finished. */
     RUNNING(5),
 
-    /**
-     * The job has failed and is currently waiting for the cleanup to complete.
-     */
+    /** The job has failed and is currently waiting for the cleanup to complete. */
     FAILING(6),
 
-    /**
-     * The job has failed with a non-recoverable task failure.
-     */
+    /** The job has failed with a non-recoverable task failure. */
     FAILED(7),
 
-    /**
-     * Job is being cancelled.
-     */
+    /** Job is being cancelled. */
     CANCELLING(8),
 
-    /**
-     * Job has been cancelled.
-     */
+    /** Job has been cancelled. */
     CANCELED(9),
 
-    /**
-     * All of the job's tasks have successfully finished.
-     */
+    /** All of the job's tasks have successfully finished. */
     FINISHED(10),
 
     /**
@@ -87,53 +67,35 @@ public enum FlinkAppState implements Serializable {
      * potential HA job store.
      */
     SUSPENDED(11),
-    /**
-     * The job is currently reconciling and waits for task execution report to recover state.
-     */
+    /** The job is currently reconciling and waits for task execution report to recover state. */
     RECONCILING(12),
-    /**
-     * 失联
-     */
+    /** 失联 */
     LOST(13),
 
-    /**
-     * 射影中...
-     */
+    /** 射影中... */
     MAPPING(14),
 
-    /**
-     * 其他不关心的状态...
-     */
+    /** 其他不关心的状态... */
     OTHER(15),
 
-    /**
-     * has rollback
-     */
+    /** has rollback */
     REVOKED(16),
 
     /**
-     * Lost track of flink job temporarily.
-     * A complete loss of flink job tracking translates into LOST state.
+     * Lost track of flink job temporarily. A complete loss of flink job tracking translates into
+     * LOST state.
      */
     SILENT(17),
 
-    /**
-     * Flink job has terminated vaguely, maybe FINISHED, CACNELED or FAILED
-     */
+    /** Flink job has terminated vaguely, maybe FINISHED, CACNELED or FAILED */
     TERMINATED(18),
 
-    /**
-     * Flink job has terminated vaguely, maybe FINISHED, CACNELED or FAILED
-     */
+    /** Flink job has terminated vaguely, maybe FINISHED, CACNELED or FAILED */
     POS_TERMINATED(19),
 
-    /**
-     * job SUCCEEDED on yarn
-     */
+    /** job SUCCEEDED on yarn */
     SUCCEEDED(20),
-    /**
-     * has killed in Yarn
-     */
+    /** has killed in Yarn */
     KILLED(-9);
 
     private final int value;
@@ -160,13 +122,9 @@ public enum FlinkAppState implements Serializable {
         return FlinkAppState.OTHER;
     }
 
-    /**
-     * type conversion bridging
-     */
+    /** type conversion bridging */
     public static class Bridge {
-        /**
-         * covert from org.apache.streampark.flink.k8s.enums.FlinkJobState
-         */
+        /** covert from org.apache.streampark.flink.k8s.enums.FlinkJobState */
         public static FlinkAppState fromK8sFlinkJobState(Enumeration.Value flinkJobState) {
             if (FlinkJobState.K8S_INITIALIZING().equals(flinkJobState)) {
                 return INITIALIZING;
@@ -175,13 +133,9 @@ public enum FlinkAppState implements Serializable {
             }
         }
 
-        /**
-         * covert to org.apache.streampark.flink.k8s.enums.FlinkJobState
-         */
+        /** covert to org.apache.streampark.flink.k8s.enums.FlinkJobState */
         public static Enumeration.Value toK8sFlinkJobState(FlinkAppState flinkAppState) {
             return FlinkJobState.of(flinkAppState.name());
         }
-
     }
-
 }

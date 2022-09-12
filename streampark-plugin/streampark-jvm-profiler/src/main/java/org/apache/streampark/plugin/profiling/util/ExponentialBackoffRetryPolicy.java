@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
 
 public class ExponentialBackoffRetryPolicy<T> {
     private static final AgentLogger LOGGER =
-        AgentLogger.getLogger(ExponentialBackoffRetryPolicy.class.getName());
+            AgentLogger.getLogger(ExponentialBackoffRetryPolicy.class.getName());
 
     private final int maxAttemptCount;
     private final long minSleepMillis;
@@ -35,7 +35,7 @@ public class ExponentialBackoffRetryPolicy<T> {
     }
 
     public ExponentialBackoffRetryPolicy(
-        int maxAttemptCount, long minSleepMillis, float scaleFactor) {
+            int maxAttemptCount, long minSleepMillis, float scaleFactor) {
         this.maxAttemptCount = maxAttemptCount;
         this.minSleepMillis = minSleepMillis;
         this.scaleFactor = scaleFactor;
@@ -60,9 +60,9 @@ public class ExponentialBackoffRetryPolicy<T> {
         while (remainingAttempts > 0) {
             long sleepTime = minSleepTime + random.nextInt((int) (maxSleepTime - minSleepTime));
             LOGGER.info(
-                String.format(
-                    "Retrying (after sleeping %s milliseconds) on exception: %s",
-                    sleepTime, previousException));
+                    String.format(
+                            "Retrying (after sleeping %s milliseconds) on exception: %s",
+                            sleepTime, previousException));
             try {
                 Thread.sleep(sleepTime);
             } catch (InterruptedException ex) {

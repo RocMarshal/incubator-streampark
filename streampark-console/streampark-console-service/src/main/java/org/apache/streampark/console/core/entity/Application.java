@@ -17,8 +17,6 @@
 
 package org.apache.streampark.console.core.entity;
 
-import static org.apache.streampark.console.core.enums.FlinkAppState.of;
-
 import org.apache.streampark.common.conf.ConfigConst;
 import org.apache.streampark.common.conf.K8sFlinkConfig;
 import org.apache.streampark.common.conf.Workspace;
@@ -68,6 +66,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.apache.streampark.console.core.enums.FlinkAppState.of;
+
 @Data
 @TableName("t_flink_app")
 @Slf4j
@@ -76,21 +76,14 @@ public class Application implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
 
-    /**
-     * 1) custom code
-     * 2) flink SQL
-     */
+    /** 1) custom code 2) flink SQL */
     private Integer jobType;
 
     private Long projectId;
-    /**
-     * creator
-     */
+    /** creator */
     private Long userId;
 
-    /**
-     * The name of the frontend and program displayed in yarn
-     */
+    /** The name of the frontend and program displayed in yarn */
     private String jobName;
 
     @TableField(updateStrategy = FieldStrategy.IGNORED)
@@ -99,59 +92,38 @@ public class Application implements Serializable {
     @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String jobId;
 
-    /**
-     * flink version
-     */
+    /** flink version */
     private Long versionId;
 
-    /**
-     * k8s cluster id
-     */
+    /** k8s cluster id */
     private String clusterId;
 
-    /**
-     * flink docker base image
-     */
+    /** flink docker base image */
     private String flinkImage;
 
-    /**
-     * k8s namespace
-     */
+    /** k8s namespace */
     private String k8sNamespace = K8sFlinkConfig.DEFAULT_KUBERNETES_NAMESPACE();
 
-
     private Integer state;
-    /**
-     * task launch status
-     */
+    /** task launch status */
     private Integer launch;
 
-    /**
-     * determine if a task needs to be built
-     */
+    /** determine if a task needs to be built */
     private Boolean build;
 
-    /**
-     * max restart retries after job failed
-     */
+    /** max restart retries after job failed */
     private Integer restartSize;
 
-    /**
-     * has restart count
-     */
+    /** has restart count */
     private Integer restartCount;
 
     private Integer optionState;
 
-    /**
-     * alert id
-     */
+    /** alert id */
     private Integer alertId;
 
     private String args;
-    /**
-     * application module
-     */
+    /** application module */
     private String module;
 
     private String options;
@@ -162,16 +134,14 @@ public class Application implements Serializable {
     private Integer appType;
     private Boolean flameGraph;
 
-    /**
-     * determine if tracking status
-     */
+    /** determine if tracking status */
     private Integer tracking;
 
     private String jar;
 
     /**
-     * for upload type tasks, checkSum needs to be recorded whether it needs to be republished
-     * after the update and modify.
+     * for upload type tasks, checkSum needs to be recorded whether it needs to be republished after
+     * the update and modify.
      */
     private Long jarCheckSum;
 
@@ -186,26 +156,16 @@ public class Application implements Serializable {
 
     private Long duration;
 
-    /**
-     * checkpoint max failure interval
-     */
+    /** checkpoint max failure interval */
     private Integer cpMaxFailureInterval;
 
-    /**
-     * checkpoint failure rate interval
-     */
+    /** checkpoint failure rate interval */
     private Integer cpFailureRateInterval;
 
-    /**
-     * Actions triggered after X minutes failed Y times:
-     * 1: send alert
-     * 2: restart
-     */
+    /** Actions triggered after X minutes failed Y times: 1: send alert 2: restart */
     private Integer cpFailureAction;
 
-    /**
-     * overview
-     */
+    /** overview */
     @TableField("TOTAL_TM")
     private Integer totalTM;
 
@@ -215,9 +175,7 @@ public class Application implements Serializable {
     private Integer tmMemory;
     private Integer totalTask;
 
-    /**
-     * the cluster id bound to the task in remote mode
-     */
+    /** the cluster id bound to the task in remote mode */
     private Long flinkClusterId;
 
     private String description;
@@ -231,36 +189,26 @@ public class Application implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date modifyTime;
 
-    /**
-     * The exposed type of the rest service of K8s(kubernetes.rest-service.exposed.type)
-     */
+    /** The exposed type of the rest service of K8s(kubernetes.rest-service.exposed.type) */
     private Integer k8sRestExposedType;
-    /**
-     * flink kubernetes pod template
-     */
+    /** flink kubernetes pod template */
     private String k8sPodTemplate;
+
     private String k8sJmPodTemplate;
     private String k8sTmPodTemplate;
 
     private String ingressTemplate;
     private String defaultModeIngress;
 
-    /**
-     * 1: cicd (build from csv)
-     * 2: upload (upload local jar job)
-     */
+    /** 1: cicd (build from csv) 2: upload (upload local jar job) */
     private Integer resourceFrom;
 
-    /**
-     * flink-hadoop integration on flink-k8s mode
-     */
+    /** flink-hadoop integration on flink-k8s mode */
     private Boolean k8sHadoopIntegration;
 
     private String tags;
 
-    /**
-     * running job
-     */
+    /** running job */
     private transient JobsOverview.Task overview;
 
     private transient String dependency;
@@ -290,14 +238,10 @@ public class Application implements Serializable {
     private transient String yarnQueue;
     private transient String yarnSessionClusterId;
 
-    /**
-     * Flink Web UI Url
-     */
+    /** Flink Web UI Url */
     private transient String flinkRestUrl;
 
-    /**
-     * refer to {@link org.apache.streampark.flink.packer.pipeline.BuildPipeline}
-     */
+    /** refer to {@link org.apache.streampark.flink.packer.pipeline.BuildPipeline} */
     private transient Integer buildStatus;
 
     private transient AppControl appControl;
@@ -319,7 +263,10 @@ public class Application implements Serializable {
     }
 
     public void setK8sNamespace(String k8sNamespace) {
-        this.k8sNamespace = StringUtils.isBlank(k8sNamespace) ? K8sFlinkConfig.DEFAULT_KUBERNETES_NAMESPACE() : k8sNamespace;
+        this.k8sNamespace =
+                StringUtils.isBlank(k8sNamespace)
+                        ? K8sFlinkConfig.DEFAULT_KUBERNETES_NAMESPACE()
+                        : k8sNamespace;
     }
 
     public K8sPodTemplates getK8sPodTemplates() {
@@ -394,7 +341,9 @@ public class Application implements Serializable {
 
     @JsonIgnore
     public boolean cpFailedTrigger() {
-        return this.cpMaxFailureInterval != null && this.cpFailureRateInterval != null && this.cpFailureAction != null;
+        return this.cpMaxFailureInterval != null
+                && this.cpFailureRateInterval != null
+                && this.cpFailureAction != null;
     }
 
     @JsonIgnore
@@ -407,44 +356,32 @@ public class Application implements Serializable {
         return false;
     }
 
-    /**
-     * Local compilation and packaging working directory
-     */
+    /** Local compilation and packaging working directory */
     @JsonIgnore
     public String getDistHome() {
-        String path = String.format("%s/%s/%s",
-            Workspace.local().APP_LOCAL_DIST(),
-            projectId.toString(),
-            getModule()
-        );
+        String path =
+                String.format(
+                        "%s/%s/%s",
+                        Workspace.local().APP_LOCAL_DIST(), projectId.toString(), getModule());
         log.info("local distHome:{}", path);
         return path;
     }
 
     @JsonIgnore
     public String getLocalAppHome() {
-        String path = String.format("%s/%s",
-            Workspace.local().APP_WORKSPACE(),
-            id.toString()
-        );
+        String path = String.format("%s/%s", Workspace.local().APP_WORKSPACE(), id.toString());
         log.info("local appHome:{}", path);
         return path;
     }
 
     @JsonIgnore
     public String getRemoteAppHome() {
-        String path = String.format(
-            "%s/%s",
-            Workspace.remote().APP_WORKSPACE(),
-            id.toString()
-        );
+        String path = String.format("%s/%s", Workspace.remote().APP_WORKSPACE(), id.toString());
         log.info("remote appHome:{}", path);
         return path;
     }
 
-    /**
-     * Automatically identify remoteAppHome or localAppHome based on app ExecutionModeEnum
-     */
+    /** Automatically identify remoteAppHome or localAppHome based on app ExecutionModeEnum */
     @JsonIgnore
     public String getAppHome() {
         switch (this.getExecutionModeEnum()) {
@@ -458,7 +395,8 @@ public class Application implements Serializable {
             case YARN_APPLICATION:
                 return getRemoteAppHome();
             default:
-                throw new UnsupportedOperationException("unsupported executionMode ".concat(getExecutionModeEnum().getName()));
+                throw new UnsupportedOperationException(
+                        "unsupported executionMode ".concat(getExecutionModeEnum().getName()));
         }
     }
 
@@ -535,7 +473,8 @@ public class Application implements Serializable {
     }
 
     /**
-     * Parameter comparison, mainly to compare whether the parameters related to Flink runtime have changed
+     * Parameter comparison, mainly to compare whether the parameters related to Flink runtime have
+     * changed
      */
     @JsonIgnore
     public boolean eqJobParam(Application other) {
@@ -553,9 +492,10 @@ public class Application implements Serializable {
             return false;
         }
 
-        if (!ObjectUtils.safeEquals(this.getResolveOrder(), other.getResolveOrder()) ||
-            !ObjectUtils.safeEquals(this.getExecutionMode(), other.getExecutionMode()) ||
-            !ObjectUtils.safeEquals(this.getK8sRestExposedType(), other.getK8sRestExposedType())) {
+        if (!ObjectUtils.safeEquals(this.getResolveOrder(), other.getResolveOrder())
+                || !ObjectUtils.safeEquals(this.getExecutionMode(), other.getExecutionMode())
+                || !ObjectUtils.safeEquals(
+                        this.getK8sRestExposedType(), other.getK8sRestExposedType())) {
             return false;
         }
 
@@ -601,7 +541,6 @@ public class Application implements Serializable {
         } else {
             return other.getArgs() == null;
         }
-
     }
 
     @JsonIgnore
@@ -621,7 +560,8 @@ public class Application implements Serializable {
             case REMOTE:
                 return StorageType.LFS;
             default:
-                throw new UnsupportedOperationException("Unsupported ".concat(executionMode.getName()));
+                throw new UnsupportedOperationException(
+                        "Unsupported ".concat(executionMode.getName()));
         }
     }
 
@@ -692,8 +632,7 @@ public class Application implements Serializable {
         @SneakyThrows
         public static Dependency toDependency(String dependency) {
             if (Utils.notEmpty(dependency)) {
-                return JacksonUtils.read(dependency, new TypeReference<Dependency>() {
-                });
+                return JacksonUtils.read(dependency, new TypeReference<Dependency>() {});
             }
             return new Dependency();
         }
@@ -717,7 +656,9 @@ public class Application implements Serializable {
             File localUploads = new File(Workspace.local().APP_UPLOADS());
             HashSet<String> otherJars = new HashSet<>(other.jar);
             for (String jarName : jar) {
-                if (!otherJars.contains(jarName) || !FileUtils.equals(new File(localJar, jarName), new File(localUploads, jarName))) {
+                if (!otherJars.contains(jarName)
+                        || !FileUtils.equals(
+                                new File(localJar, jarName), new File(localUploads, jarName))) {
                     return false;
                 }
             }
@@ -726,15 +667,21 @@ public class Application implements Serializable {
 
         @JsonIgnore
         public DependencyInfo toJarPackDeps() {
-            List<Artifact> mvnArts = this.pom.stream()
-                .map(pom -> new Artifact(pom.getGroupId(), pom.getArtifactId(), pom.getVersion()))
-                .collect(Collectors.toList());
-            List<String> extJars = this.jar.stream()
-                .map(jar -> Workspace.local().APP_UPLOADS() + "/" + jar)
-                .collect(Collectors.toList());
+            List<Artifact> mvnArts =
+                    this.pom.stream()
+                            .map(
+                                    pom ->
+                                            new Artifact(
+                                                    pom.getGroupId(),
+                                                    pom.getArtifactId(),
+                                                    pom.getVersion()))
+                            .collect(Collectors.toList());
+            List<String> extJars =
+                    this.jar.stream()
+                            .map(jar -> Workspace.local().APP_UPLOADS() + "/" + jar)
+                            .collect(Collectors.toList());
             return new DependencyInfo(mvnArts, extJars);
         }
-
     }
 
     @Data
@@ -769,5 +716,4 @@ public class Application implements Serializable {
             return getGroupId() + "_" + getArtifactId() + "-" + getVersion() + ".jar";
         }
     }
-
 }

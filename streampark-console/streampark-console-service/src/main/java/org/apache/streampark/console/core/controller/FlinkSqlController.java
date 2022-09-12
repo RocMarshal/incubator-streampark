@@ -37,36 +37,37 @@ import javax.validation.constraints.NotNull;
 
 import java.util.List;
 
-@Api(tags = "[flink sql] related operations", consumes = "Content-Type=application/x-www-form-urlencoded")
+@Api(
+        tags = "[flink sql] related operations",
+        consumes = "Content-Type=application/x-www-form-urlencoded")
 @Slf4j
 @Validated
 @RestController
 @RequestMapping("flink/sql")
 public class FlinkSqlController {
 
-    @Autowired
-    private FlinkSqlService flinkSqlService;
+    @Autowired private FlinkSqlService flinkSqlService;
 
-    @Autowired
-    private SqlCompleteService sqlComplete;
+    @Autowired private SqlCompleteService sqlComplete;
 
     @PostMapping("verify")
     public RestResponse verify(String sql, Long versionId) {
-        FlinkSqlValidationResult flinkSqlValidationResult = flinkSqlService.verifySql(sql, versionId);
+        FlinkSqlValidationResult flinkSqlValidationResult =
+                flinkSqlService.verifySql(sql, versionId);
         if (!flinkSqlValidationResult.success()) {
             // record error type, such as error sql, reason and error start/end line
             String exception = flinkSqlValidationResult.exception();
-            RestResponse response = RestResponse.success()
-                .data(false)
-                .message(exception)
-                .put("type", flinkSqlValidationResult.failedType().getValue())
-                .put("start", flinkSqlValidationResult.lineStart())
-                .put("end", flinkSqlValidationResult.lineEnd());
+            RestResponse response =
+                    RestResponse.success()
+                            .data(false)
+                            .message(exception)
+                            .put("type", flinkSqlValidationResult.failedType().getValue())
+                            .put("start", flinkSqlValidationResult.lineStart())
+                            .put("end", flinkSqlValidationResult.lineEnd());
 
             if (flinkSqlValidationResult.errorLine() > 0) {
-                response
-                    .put("start", flinkSqlValidationResult.errorLine())
-                    .put("end", flinkSqlValidationResult.errorLine() + 1);
+                response.put("start", flinkSqlValidationResult.errorLine())
+                        .put("end", flinkSqlValidationResult.errorLine() + 1);
             }
             return response;
         } else {
@@ -84,7 +85,7 @@ public class FlinkSqlController {
         }
         FlinkSql flinkSql2 = flinkSqlService.getById(array[1]);
         flinkSql2.base64Encode();
-        return RestResponse.success(new FlinkSql[]{flinkSql1, flinkSql2});
+        return RestResponse.success(new FlinkSql[] {flinkSql1, flinkSql2});
     }
 
     @PostMapping("history")
@@ -97,5 +98,4 @@ public class FlinkSqlController {
     public RestResponse getSqlComplete(@NotNull(message = "{required}") String sql) {
         return RestResponse.success().put("word", sqlComplete.getComplete(sql));
     }
-
 }

@@ -47,5 +47,4 @@ public class Setting implements Serializable {
 
     private transient String flinkHome;
     private transient String flinkConf;
-
 }

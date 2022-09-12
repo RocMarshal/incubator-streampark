@@ -36,13 +36,13 @@ public class ProcFileUtilsTest {
         file.deleteOnExit();
 
         String content =
-            "Name:\tcat\t\n"
-                + "VmSize:	     776 kB \r\n"
-                + "VmPeak:	     876 kB \r\n"
-                + "VmRSS:	     676 kB \r\n"
-                + "\t  Pid \t  : \t 66646 \t\n\r"
-                + "Threads: \t 1 \t\n"
-                + "";
+                "Name:\tcat\t\n"
+                        + "VmSize:	     776 kB \r\n"
+                        + "VmPeak:	     876 kB \r\n"
+                        + "VmRSS:	     676 kB \r\n"
+                        + "\t  Pid \t  : \t 66646 \t\n\r"
+                        + "Threads: \t 1 \t\n"
+                        + "";
         Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 
         Map<String, String> result = ProcFileUtils.getProcFileAsMap(file.getPath());
@@ -129,11 +129,11 @@ public class ProcFileUtilsTest {
             file.deleteOnExit();
 
             String content =
-                "Name:\tcat\t\n"
-                    + "VmRSS:	     xxx kB \r\n"
-                    + "Pid: \t 66646 \t\n\r"
-                    + "Threads: \t 1 \t\n"
-                    + "";
+                    "Name:\tcat\t\n"
+                            + "VmRSS:	     xxx kB \r\n"
+                            + "Pid: \t 66646 \t\n\r"
+                            + "Threads: \t 1 \t\n"
+                            + "";
             Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 
             Map<String, String> map = ProcFileUtils.getProcFileAsMap(file.getPath());
@@ -145,11 +145,11 @@ public class ProcFileUtilsTest {
             file.deleteOnExit();
 
             String content =
-                "Name:\tcat\t\n"
-                    + "VmRSS:	     676 \r\n"
-                    + "Pid: \t 66646 \t\n\r"
-                    + "Threads: \t 1 \t\n"
-                    + "";
+                    "Name:\tcat\t\n"
+                            + "VmRSS:	     676 \r\n"
+                            + "Pid: \t 66646 \t\n\r"
+                            + "Threads: \t 1 \t\n"
+                            + "";
             Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 
             Map<String, String> map = ProcFileUtils.getProcFileAsMap(file.getPath());
@@ -161,11 +161,11 @@ public class ProcFileUtilsTest {
             file.deleteOnExit();
 
             String content =
-                "Name:\tcat\t\n"
-                    + "VmRSS:	     676 kB \r\n"
-                    + "Pid: \t 66646 \t\n\r"
-                    + "Threads: \t 1 \t\n"
-                    + "";
+                    "Name:\tcat\t\n"
+                            + "VmRSS:	     676 kB \r\n"
+                            + "Pid: \t 66646 \t\n\r"
+                            + "Threads: \t 1 \t\n"
+                            + "";
             Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 
             Map<String, String> map = ProcFileUtils.getProcFileAsMap(file.getPath());
@@ -177,11 +177,11 @@ public class ProcFileUtilsTest {
             file.deleteOnExit();
 
             String content =
-                "Name:\tcat\t\n"
-                    + "VmRSS:	    \t 676 \t kB \t\r\n"
-                    + "Pid: \t 66646 \t\n\r"
-                    + "Threads: \t 1 \t\n"
-                    + "";
+                    "Name:\tcat\t\n"
+                            + "VmRSS:	    \t 676 \t kB \t\r\n"
+                            + "Pid: \t 66646 \t\n\r"
+                            + "Threads: \t 1 \t\n"
+                            + "";
             Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 
             Map<String, String> map = ProcFileUtils.getProcFileAsMap(file.getPath());
@@ -193,11 +193,11 @@ public class ProcFileUtilsTest {
             file.deleteOnExit();
 
             String content =
-                "Name:\tcat\t\n"
-                    + "VmRSS:	    \t 676 KB \t\r\n"
-                    + "Pid: \t 66646 \t\n\r"
-                    + "Threads: \t 1 \t\n"
-                    + "";
+                    "Name:\tcat\t\n"
+                            + "VmRSS:	    \t 676 KB \t\r\n"
+                            + "Pid: \t 66646 \t\n\r"
+                            + "Threads: \t 1 \t\n"
+                            + "";
             Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 
             Map<String, String> map = ProcFileUtils.getProcFileAsMap(file.getPath());
@@ -209,11 +209,11 @@ public class ProcFileUtilsTest {
             file.deleteOnExit();
 
             String content =
-                "Name:\tcat\t\n"
-                    + "VmRSS:	    \t 676KB \t\r\n"
-                    + "Pid: \t 66646 \t\n\r"
-                    + "Threads: \t 1 \t\n"
-                    + "";
+                    "Name:\tcat\t\n"
+                            + "VmRSS:	    \t 676KB \t\r\n"
+                            + "Pid: \t 66646 \t\n\r"
+                            + "Threads: \t 1 \t\n"
+                            + "";
             Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 
             Map<String, String> map = ProcFileUtils.getProcFileAsMap(file.getPath());
@@ -225,11 +225,11 @@ public class ProcFileUtilsTest {
             file.deleteOnExit();
 
             String content =
-                "Name:\tcat\t\n"
-                    + "VmRSS:676KB \t\r\n"
-                    + "Pid: \t 66646 \t\n\r"
-                    + "Threads: \t 1 \t\n"
-                    + "";
+                    "Name:\tcat\t\n"
+                            + "VmRSS:676KB \t\r\n"
+                            + "Pid: \t 66646 \t\n\r"
+                            + "Threads: \t 1 \t\n"
+                            + "";
             Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 
             Map<String, String> map = ProcFileUtils.getProcFileAsMap(file.getPath());
@@ -241,11 +241,11 @@ public class ProcFileUtilsTest {
             file.deleteOnExit();
 
             String content =
-                "Name:\tcat\t\n"
-                    + "VmRSS:	    \t 676 mB \t\r\n"
-                    + "Pid: \t 66646 \t\n\r"
-                    + "Threads: \t 1 \t\n"
-                    + "";
+                    "Name:\tcat\t\n"
+                            + "VmRSS:	    \t 676 mB \t\r\n"
+                            + "Pid: \t 66646 \t\n\r"
+                            + "Threads: \t 1 \t\n"
+                            + "";
             Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 
             Map<String, String> map = ProcFileUtils.getProcFileAsMap(file.getPath());
@@ -257,11 +257,11 @@ public class ProcFileUtilsTest {
             file.deleteOnExit();
 
             String content =
-                "Name:\tcat\t\n"
-                    + "VmRSS:	    \t 676 MB \t\r\n"
-                    + "Pid: \t 66646 \t\n\r"
-                    + "Threads: \t 1 \t\n"
-                    + "";
+                    "Name:\tcat\t\n"
+                            + "VmRSS:	    \t 676 MB \t\r\n"
+                            + "Pid: \t 66646 \t\n\r"
+                            + "Threads: \t 1 \t\n"
+                            + "";
             Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 
             Map<String, String> map = ProcFileUtils.getProcFileAsMap(file.getPath());
@@ -273,11 +273,11 @@ public class ProcFileUtilsTest {
             file.deleteOnExit();
 
             String content =
-                "Name:\tcat\t\n"
-                    + "VmRSS:	    \t 676 gB \t\r\n"
-                    + "Pid: \t 66646 \t\n\r"
-                    + "Threads: \t 1 \t\n"
-                    + "";
+                    "Name:\tcat\t\n"
+                            + "VmRSS:	    \t 676 gB \t\r\n"
+                            + "Pid: \t 66646 \t\n\r"
+                            + "Threads: \t 1 \t\n"
+                            + "";
             Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 
             Map<String, String> map = ProcFileUtils.getProcFileAsMap(file.getPath());
@@ -289,11 +289,11 @@ public class ProcFileUtilsTest {
             file.deleteOnExit();
 
             String content =
-                "Name:\tcat\t\n"
-                    + "VmRSS:	    \t 676 GB \t\r\n"
-                    + "Pid: \t 66646 \t\n\r"
-                    + "Threads: \t 1 \t\n"
-                    + "";
+                    "Name:\tcat\t\n"
+                            + "VmRSS:	    \t 676 GB \t\r\n"
+                            + "Pid: \t 66646 \t\n\r"
+                            + "Threads: \t 1 \t\n"
+                            + "";
             Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 
             Map<String, String> map = ProcFileUtils.getProcFileAsMap(file.getPath());
@@ -313,12 +313,12 @@ public class ProcFileUtilsTest {
             file.deleteOnExit();
 
             String content =
-                "cpu  1172937054 824289701 468234436 75675853861 1569550 49092 35809349 0 0 0\n"
-                    + "cpuXYZ \t  1172937055   \t\t   824289702 468234436 75675853861 1569550 49092 35809349 0 0 0\n\r"
-                    + "cpu0 62086703 131209370 38265368 3012668347 284193 6311 5544941 0 0 0\n"
-                    + "cpu1 67845808 163124717 46602120 2966238934 85123 5536 4311624 0 0 0\n"
-                    + "xyz 67845808 163124717 46602120 2966238934 85123 5536 4311624 0 0 0\n"
-                    + "foo\n";
+                    "cpu  1172937054 824289701 468234436 75675853861 1569550 49092 35809349 0 0 0\n"
+                            + "cpuXYZ \t  1172937055   \t\t   824289702 468234436 75675853861 1569550 49092 35809349 0 0 0\n\r"
+                            + "cpu0 62086703 131209370 38265368 3012668347 284193 6311 5544941 0 0 0\n"
+                            + "cpu1 67845808 163124717 46602120 2966238934 85123 5536 4311624 0 0 0\n"
+                            + "xyz 67845808 163124717 46602120 2966238934 85123 5536 4311624 0 0 0\n"
+                            + "foo\n";
             Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 
             List<String[]> rows = ProcFileUtils.getProcFileAsRowColumn(file.getPath());
@@ -375,7 +375,7 @@ public class ProcFileUtilsTest {
         file.deleteOnExit();
 
         String content =
-            "Name:\tcat\t\n" + "VmRSS:	     676 kB \r\n" + "\t  Pid \t  : \t 66646 \t\n\r" + "";
+                "Name:\tcat\t\n" + "VmRSS:	     676 kB \r\n" + "\t  Pid \t  : \t 66646 \t\n\r" + "";
         Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 
         String result = ProcFileUtils.getPid(file.getPath());

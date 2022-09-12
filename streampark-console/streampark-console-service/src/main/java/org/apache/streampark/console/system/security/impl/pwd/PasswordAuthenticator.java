@@ -27,8 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class PasswordAuthenticator extends AbstractAuthenticator implements Authenticator {
-    @Autowired
-    private UserService usersService;
+    @Autowired private UserService usersService;
 
     @Override
     public User login(String userId, String password) {

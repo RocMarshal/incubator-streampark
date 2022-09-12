@@ -22,13 +22,13 @@ import org.apache.streampark.plugin.profiling.Reporter;
 import org.apache.streampark.plugin.profiling.util.AgentLogger;
 import org.apache.streampark.plugin.profiling.util.Utils;
 
-import scalaj.http.Http;
-import scalaj.http.HttpResponse;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import scalaj.http.Http;
+import scalaj.http.HttpResponse;
 
 public class HttpReporter implements Reporter {
 
@@ -43,12 +43,15 @@ public class HttpReporter implements Reporter {
     private String url;
     private String type;
 
-    public HttpReporter() {
-    }
+    public HttpReporter() {}
 
     @Override
     public void doArguments(Map<String, List<String>> parsedArgs) {
-        id = Long.parseLong(Objects.requireNonNull(ArgumentUtils.getArgumentSingleValue(parsedArgs, ARG_ID)).trim());
+        id =
+                Long.parseLong(
+                        Objects.requireNonNull(
+                                        ArgumentUtils.getArgumentSingleValue(parsedArgs, ARG_ID))
+                                .trim());
         token = ArgumentUtils.getArgumentSingleValue(parsedArgs, ARG_TOKEN);
         url = ArgumentUtils.getArgumentSingleValue(parsedArgs, ARG_URL);
         type = ArgumentUtils.getArgumentSingleValue(parsedArgs, ARG_TYPE);
@@ -64,15 +67,14 @@ public class HttpReporter implements Reporter {
         param.put("profiler", profilerName);
         param.put("metric", Utils.zipString(json));
         HttpResponse<String> response =
-            Http.apply(url)
-                .timeout(1000, 5000)
-                .header("content-type", "application/json;charset=UTF-8")
-                .postData(Utils.toJsonString(param))
-                .asString();
+                Http.apply(url)
+                        .timeout(1000, 5000)
+                        .header("content-type", "application/json;charset=UTF-8")
+                        .postData(Utils.toJsonString(param))
+                        .asString();
         LOGGER.log("jvm-profiler profiler:" + profilerName + ",report result:" + response.body());
     }
 
     @Override
-    public void close() {
-    }
+    public void close() {}
 }

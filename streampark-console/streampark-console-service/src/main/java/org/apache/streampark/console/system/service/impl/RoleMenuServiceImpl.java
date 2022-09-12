@@ -33,7 +33,7 @@ import java.util.List;
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu>
-    implements RoleMenuServie {
+        implements RoleMenuServie {
 
     @Override
     @Transactional
@@ -51,6 +51,7 @@ public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu>
 
     @Override
     public List<RoleMenu> getRoleMenusByRoleId(String roleId) {
-        return baseMapper.selectList(new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getRoleId, roleId));
+        return baseMapper.selectList(
+                new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getRoleId, roleId));
     }
 }

@@ -23,10 +23,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-/**
- * Vue Router Meta
- *
- */
+/** Vue Router Meta */
 @Data
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)

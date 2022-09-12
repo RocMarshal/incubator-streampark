@@ -30,28 +30,18 @@ public class AlertDingTalkParams implements Serializable {
     @NotBlank(message = "The access token of DingTalk must not be empty")
     private String token;
 
-    /**
-     * alert phone, separated by ','
-     */
+    /** alert phone, separated by ',' */
     private String contacts;
 
-    /**
-     * ding alert url
-     */
+    /** ding alert url */
     private String alertDingURL;
 
-    /**
-     * at all
-     */
+    /** at all */
     private Boolean isAtAll = false;
 
-    /**
-     * ding robot secret enabled, default false, if enable, need set secret token
-     */
+    /** ding robot secret enabled, default false, if enable, need set secret token */
     private Boolean secretEnable = false;
 
-    /**
-     * ding robot webhook secret_token
-     */
+    /** ding robot webhook secret_token */
     private String secretToken;
 }

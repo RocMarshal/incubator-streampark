@@ -68,10 +68,17 @@ public class AlertTemplate implements Serializable {
             template.setLink(null);
         }
 
-        template.setStartTime(DateUtils.format(application.getStartTime(), DateUtils.fullFormat(), TimeZone.getDefault()));
-        template.setEndTime(DateUtils.format(application.getEndTime() == null ? new Date() : application.getEndTime(), DateUtils.fullFormat(), TimeZone.getDefault()));
+        template.setStartTime(
+                DateUtils.format(
+                        application.getStartTime(), DateUtils.fullFormat(), TimeZone.getDefault()));
+        template.setEndTime(
+                DateUtils.format(
+                        application.getEndTime() == null ? new Date() : application.getEndTime(),
+                        DateUtils.fullFormat(),
+                        TimeZone.getDefault()));
         template.setDuration(DateUtils.toRichTimeDuration(duration));
-        boolean needRestart = application.isNeedRestartOnFailed() && application.getRestartCount() > 0;
+        boolean needRestart =
+                application.isNeedRestartOnFailed() && application.getRestartCount() > 0;
         template.setRestart(needRestart);
         if (needRestart) {
             template.setRestartIndex(application.getRestartCount());
@@ -83,8 +90,10 @@ public class AlertTemplate implements Serializable {
     public static AlertTemplate of(Application application, FlinkAppState appState) {
         AlertTemplate template = of(application);
         template.setType(1);
-        template.setTitle(String.format("Notify: %s %s", application.getJobName(), appState.name()));
-        template.setSubject(String.format("StreamPark Alert: %s %s", template.getJobName(), appState));
+        template.setTitle(
+                String.format("Notify: %s %s", application.getJobName(), appState.name()));
+        template.setSubject(
+                String.format("StreamPark Alert: %s %s", template.getJobName(), appState));
         template.setStatus(appState.name());
         return template;
     }
@@ -92,10 +101,12 @@ public class AlertTemplate implements Serializable {
     public static AlertTemplate of(Application application, CheckPointStatus checkPointStatus) {
         AlertTemplate template = of(application);
         template.setType(2);
-        template.setCpFailureRateInterval(DateUtils.toRichTimeDuration(application.getCpFailureRateInterval()));
+        template.setCpFailureRateInterval(
+                DateUtils.toRichTimeDuration(application.getCpFailureRateInterval()));
         template.setCpMaxFailureInterval(application.getCpMaxFailureInterval());
         template.setTitle(String.format("Notify: %s checkpoint FAILED", application.getJobName()));
-        template.setSubject(String.format("StreamPark Alert: %s, checkPoint is Failed", template.getJobName()));
+        template.setSubject(
+                String.format("StreamPark Alert: %s, checkPoint is Failed", template.getJobName()));
         return template;
     }
 }

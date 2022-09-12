@@ -53,7 +53,7 @@ public class ClassMethodArgumentFilter {
         for (ClassMethodArgument classMethodArgument : classMethodArguments) {
             if (className.startsWith(classMethodArgument.getClassName())) {
                 if (METHOD_NAME_WILDCARD.equals(classMethodArgument.getMethodName())
-                    || methodName.equals(classMethodArgument.getMethodName())) {
+                        || methodName.equals(classMethodArgument.getMethodName())) {
                     result.add(classMethodArgument.getArgumentIndex());
                 }
             }

@@ -49,16 +49,14 @@ import java.util.function.Function;
 @Slf4j
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class FlinkSqlServiceImpl extends ServiceImpl<FlinkSqlMapper, FlinkSql> implements FlinkSqlService {
+public class FlinkSqlServiceImpl extends ServiceImpl<FlinkSqlMapper, FlinkSql>
+        implements FlinkSqlService {
 
-    @Autowired
-    private EffectiveService effectiveService;
+    @Autowired private EffectiveService effectiveService;
 
-    @Autowired
-    private ApplicationBackUpService backUpService;
+    @Autowired private ApplicationBackUpService backUpService;
 
-    @Autowired
-    private FlinkEnvService flinkEnvService;
+    @Autowired private FlinkEnvService flinkEnvService;
 
     @Override
     public FlinkSql getEffective(Long appId, boolean decode) {
@@ -74,8 +72,9 @@ public class FlinkSqlServiceImpl extends ServiceImpl<FlinkSqlMapper, FlinkSql> i
         Page<FlinkSql> page = new Page<>();
         page.setCurrent(0).setSize(1).setSearchCount(false);
         LambdaQueryWrapper<FlinkSql> queryWrapper =
-            new LambdaQueryWrapper<FlinkSql>().eq(FlinkSql::getAppId, appId)
-                .orderByDesc(FlinkSql::getVersion);
+                new LambdaQueryWrapper<FlinkSql>()
+                        .eq(FlinkSql::getAppId, appId)
+                        .orderByDesc(FlinkSql::getVersion);
 
         Page<FlinkSql> flinkSqlPage = baseMapper.selectPage(page, queryWrapper);
         if (!flinkSqlPage.getRecords().isEmpty()) {
@@ -102,23 +101,20 @@ public class FlinkSqlServiceImpl extends ServiceImpl<FlinkSqlMapper, FlinkSql> i
     @Override
     public void setCandidate(CandidateType candidateType, Long appId, Long sqlId) {
         this.update(
-            new LambdaUpdateWrapper<FlinkSql>()
-                .eq(FlinkSql::getAppId, appId)
-                .set(FlinkSql::getCandidate, 0)
-        );
+                new LambdaUpdateWrapper<FlinkSql>()
+                        .eq(FlinkSql::getAppId, appId)
+                        .set(FlinkSql::getCandidate, 0));
 
         this.update(
-            new LambdaUpdateWrapper<FlinkSql>()
-                .eq(FlinkSql::getId, sqlId)
-                .set(FlinkSql::getCandidate, candidateType.get())
-        );
+                new LambdaUpdateWrapper<FlinkSql>()
+                        .eq(FlinkSql::getId, sqlId)
+                        .set(FlinkSql::getCandidate, candidateType.get()));
     }
 
     @Override
     public List<FlinkSql> history(Application application) {
         LambdaQueryWrapper<FlinkSql> wrapper = new LambdaQueryWrapper();
-        wrapper.eq(FlinkSql::getAppId, application.getId())
-            .orderByDesc(FlinkSql::getVersion);
+        wrapper.eq(FlinkSql::getAppId, application.getId()).orderByDesc(FlinkSql::getVersion);
 
         List<FlinkSql> sqlList = this.baseMapper.selectList(wrapper);
         FlinkSql effective = getEffective(application.getId(), false);
@@ -135,8 +131,8 @@ public class FlinkSqlServiceImpl extends ServiceImpl<FlinkSqlMapper, FlinkSql> i
 
     @Override
     public FlinkSql getCandidate(Long appId, CandidateType candidateType) {
-        LambdaQueryWrapper<FlinkSql> queryWrapper = new LambdaQueryWrapper<FlinkSql>()
-            .eq(FlinkSql::getAppId, appId);
+        LambdaQueryWrapper<FlinkSql> queryWrapper =
+                new LambdaQueryWrapper<FlinkSql>().eq(FlinkSql::getAppId, appId);
         if (candidateType == null) {
             queryWrapper.gt(FlinkSql::getCandidate, CandidateType.NONE.get());
         } else {
@@ -153,10 +149,9 @@ public class FlinkSqlServiceImpl extends ServiceImpl<FlinkSqlMapper, FlinkSql> i
     @Override
     public void cleanCandidate(Long id) {
         this.update(
-            new LambdaUpdateWrapper<FlinkSql>()
-                .eq(FlinkSql::getId, id)
-                .set(FlinkSql::getCandidate, CandidateType.NONE.get())
-        );
+                new LambdaUpdateWrapper<FlinkSql>()
+                        .eq(FlinkSql::getId, id)
+                        .set(FlinkSql::getCandidate, CandidateType.NONE.get()));
     }
 
     @Override
@@ -184,21 +179,29 @@ public class FlinkSqlServiceImpl extends ServiceImpl<FlinkSqlMapper, FlinkSql> i
     @Override
     public FlinkSqlValidationResult verifySql(String sql, Long versionId) {
         FlinkEnv flinkEnv = flinkEnvService.getById(versionId);
-        return FlinkShimsProxy.proxy(flinkEnv.getFlinkVersion(), (Function<ClassLoader, FlinkSqlValidationResult>) classLoader -> {
-            try {
-                Class<?> clazz = classLoader.loadClass("org.apache.streampark.flink.core.FlinkSqlValidator");
-                Method method = clazz.getDeclaredMethod("verifySql", String.class);
-                method.setAccessible(true);
-                Object result = method.invoke(null, sql);
-                if (result == null) {
-                    return null;
-                }
-                return FlinkShimsProxy.getObject(this.getClass().getClassLoader(), result);
-            } catch (Throwable e) {
-                log.error("verifySql invocationTargetException: {}", ExceptionUtils.stringifyException(e));
-            }
-            return null;
-        });
+        return FlinkShimsProxy.proxy(
+                flinkEnv.getFlinkVersion(),
+                (Function<ClassLoader, FlinkSqlValidationResult>)
+                        classLoader -> {
+                            try {
+                                Class<?> clazz =
+                                        classLoader.loadClass(
+                                                "org.apache.streampark.flink.core.FlinkSqlValidator");
+                                Method method = clazz.getDeclaredMethod("verifySql", String.class);
+                                method.setAccessible(true);
+                                Object result = method.invoke(null, sql);
+                                if (result == null) {
+                                    return null;
+                                }
+                                return FlinkShimsProxy.getObject(
+                                        this.getClass().getClassLoader(), result);
+                            } catch (Throwable e) {
+                                log.error(
+                                        "verifySql invocationTargetException: {}",
+                                        ExceptionUtils.stringifyException(e));
+                            }
+                            return null;
+                        });
     }
 
     private boolean isFlinkSqlBacked(FlinkSql sql) {

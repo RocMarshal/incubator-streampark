@@ -138,7 +138,8 @@ public class StringUtils {
         }
 
         if (maxCount > ARGUMENT_VALUE_COUNT_LIMIT) {
-            throw new RuntimeException("Does not support values more than " + ARGUMENT_VALUE_COUNT_LIMIT);
+            throw new RuntimeException(
+                    "Does not support values more than " + ARGUMENT_VALUE_COUNT_LIMIT);
         }
 
         List<String> list = new ArrayList<>();
@@ -146,14 +147,15 @@ public class StringUtils {
         int startIndex = 0;
 
         for (int index = str.indexOf(argument, startIndex);
-             index >= 0;
-             index = str.indexOf(argument, startIndex)) {
+                index >= 0;
+                index = str.indexOf(argument, startIndex)) {
             int argumentValueStartIndex = index + argument.length();
             StringValueAndIndex stringValueAndIndex =
-                getArgumentValueString(str, argumentValueStartIndex);
+                    getArgumentValueString(str, argumentValueStartIndex);
             list.add(stringValueAndIndex.str);
 
-            if (stringValueAndIndex.endIndex < 0 || stringValueAndIndex.endIndex >= str.length() - 1) {
+            if (stringValueAndIndex.endIndex < 0
+                    || stringValueAndIndex.endIndex >= str.length() - 1) {
                 break;
             }
 

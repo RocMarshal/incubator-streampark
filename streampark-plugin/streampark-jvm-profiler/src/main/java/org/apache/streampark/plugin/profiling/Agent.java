@@ -27,8 +27,7 @@ public final class Agent {
 
     private static AgentImpl agentImpl = new AgentImpl();
 
-    private Agent() {
-    }
+    private Agent() {}
 
     public static void agentmain(final String args, final Instrumentation instrumentation) {
         premain(args, instrumentation);

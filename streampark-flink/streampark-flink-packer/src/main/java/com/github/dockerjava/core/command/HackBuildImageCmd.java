@@ -23,10 +23,7 @@ import com.github.dockerjava.api.listener.BuildImageCallbackListener;
 import java.io.File;
 import java.io.InputStream;
 
-/**
- * Listenable BuildImageCmdImpl
- *
- */
+/** Listenable BuildImageCmdImpl */
 public class HackBuildImageCmd extends BuildImageCmdImpl {
 
     public HackBuildImageCmd(Exec exec) {
@@ -44,5 +41,4 @@ public class HackBuildImageCmd extends BuildImageCmdImpl {
     public HackBuildImageResultCallback start(BuildImageCallbackListener listener) {
         return exec(new HackBuildImageResultCallback(listener));
     }
-
 }

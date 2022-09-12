@@ -47,10 +47,8 @@ import java.util.stream.Collectors;
 @RequestMapping("role")
 public class RoleController {
 
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private RoleMenuServie roleMenuServie;
+    @Autowired private RoleService roleService;
+    @Autowired private RoleMenuServie roleMenuServie;
 
     @PostMapping("list")
     @RequiresPermissions("role:view")
@@ -68,9 +66,10 @@ public class RoleController {
     @PostMapping("menu")
     public RestResponse getRoleMenus(@NotBlank(message = "{required}") String roleId) {
         List<RoleMenu> list = this.roleMenuServie.getRoleMenusByRoleId(roleId);
-        List<String> roleMenus = list.stream()
-            .map(roleMenu -> String.valueOf(roleMenu.getMenuId()))
-            .collect(Collectors.toList());
+        List<String> roleMenus =
+                list.stream()
+                        .map(roleMenu -> String.valueOf(roleMenu.getMenuId()))
+                        .collect(Collectors.toList());
         return RestResponse.success(roleMenus);
     }
 
@@ -94,5 +93,4 @@ public class RoleController {
         this.roleService.updateRole(role);
         return RestResponse.success();
     }
-
 }

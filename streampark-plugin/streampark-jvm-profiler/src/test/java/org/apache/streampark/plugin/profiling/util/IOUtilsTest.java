@@ -25,7 +25,7 @@ import java.io.ByteArrayInputStream;
 public class IOUtilsTest {
     @Test
     public void toByteArray() {
-        byte[] bytes = new byte[]{1, 2, 3};
+        byte[] bytes = new byte[] {1, 2, 3};
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         byte[] result = Utils.toByteArray(byteArrayInputStream);
         Assert.assertEquals(3, result.length);

@@ -35,15 +35,17 @@ public class FlinkSql {
 
     @TableId(type = IdType.AUTO)
     private Long id;
+
     private Long appId;
+
     @TableField("`sql`")
     private String sql;
+
     private String dependency;
     private Integer version = 1;
 
     /**
-     * candidate number:
-     * 0: none candidate <br>
+     * candidate number: 0: none candidate <br>
      * 1: newly added record becomes a candidate <br>
      * 2: specific history becomes a candidate <br>
      */
@@ -51,17 +53,12 @@ public class FlinkSql {
 
     private Date createTime;
     private transient boolean effective = false;
-    /**
-     * sql diff
-     */
+    /** sql diff */
     private transient boolean sqlDifference = false;
-    /**
-     * dependency diff
-     */
+    /** dependency diff */
     private transient boolean dependencyDifference = false;
 
-    public FlinkSql() {
-    }
+    public FlinkSql() {}
 
     public FlinkSql(Application application) {
         this.appId = application.getId();
@@ -85,8 +82,10 @@ public class FlinkSql {
         // 1) determine if sql statement has changed
         boolean sqlDifference = !this.getSql().trim().equals(target.getSql().trim());
         // 2) determine if dependency has changed
-        Application.Dependency thisDependency = Application.Dependency.toDependency(this.getDependency());
-        Application.Dependency targetDependency = Application.Dependency.toDependency(target.getDependency());
+        Application.Dependency thisDependency =
+                Application.Dependency.toDependency(this.getDependency());
+        Application.Dependency targetDependency =
+                Application.Dependency.toDependency(target.getDependency());
 
         boolean depDifference = !thisDependency.eq(targetDependency);
         if (sqlDifference && depDifference) {
@@ -102,6 +101,7 @@ public class FlinkSql {
     }
 
     public void base64Encode() {
-        this.sql = Base64.getEncoder().encodeToString(DeflaterUtils.unzipString(this.sql).getBytes());
+        this.sql =
+                Base64.getEncoder().encodeToString(DeflaterUtils.unzipString(this.sql).getBytes());
     }
 }

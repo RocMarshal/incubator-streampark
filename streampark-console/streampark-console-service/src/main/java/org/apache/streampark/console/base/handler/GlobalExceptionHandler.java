@@ -52,33 +52,36 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public RestResponse handleException(Exception e) {
         log.info("Internal server error：", e);
-        return RestResponse.fail("internal server error: " + e.getMessage(), ResponseCode.CODE_FAIL);
+        return RestResponse.fail(
+                "internal server error: " + e.getMessage(), ResponseCode.CODE_FAIL);
     }
 
     @ExceptionHandler(value = InternalException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public RestResponse handleParamsInvalidException(InternalException e) {
         log.info("Internal server error：{}", e.getMessage());
-        return RestResponse.fail("internal server error: " + e.getMessage(), ResponseCode.CODE_FAIL);
+        return RestResponse.fail(
+                "internal server error: " + e.getMessage(), ResponseCode.CODE_FAIL);
     }
 
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public RestResponse handleException(HttpRequestMethodNotSupportedException e) {
         log.info("not supported request method，exception：{}", e.getMessage());
-        return RestResponse.fail("not supported request method，exception：" + e.getMessage(), ResponseCode.CODE_FAIL);
+        return RestResponse.fail(
+                "not supported request method，exception：" + e.getMessage(), ResponseCode.CODE_FAIL);
     }
 
     @ExceptionHandler(value = ApiException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public RestResponse handleException(ApiException e) {
         log.info("api exception：{}", e.getMessage());
-        return RestResponse.fail("api fail, exception:\n" + e.getMessage(), ResponseCode.CODE_API_FAIL);
+        return RestResponse.fail(
+                "api fail, exception:\n" + e.getMessage(), ResponseCode.CODE_API_FAIL);
     }
 
     /**
-     * 统一处理请求参数校验(实体对象传参)
-     * Unified processing of request parameter verification
+     * 统一处理请求参数校验(实体对象传参) Unified processing of request parameter verification
      *
      * @param e BindException
      * @return RestResponse
@@ -89,7 +92,9 @@ public class GlobalExceptionHandler {
         StringBuilder message = new StringBuilder();
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
         for (FieldError error : fieldErrors) {
-            message.append(error.getField()).append(error.getDefaultMessage()).append(StringPool.COMMA);
+            message.append(error.getField())
+                    .append(error.getDefaultMessage())
+                    .append(StringPool.COMMA);
         }
         message = new StringBuilder(message.substring(0, message.length() - 1));
         return RestResponse.fail(message.toString(), ResponseCode.CODE_FAIL);
@@ -108,7 +113,9 @@ public class GlobalExceptionHandler {
         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
         for (ConstraintViolation<?> violation : violations) {
             Path path = violation.getPropertyPath();
-            String[] pathArr = StringUtils.splitByWholeSeparatorPreserveAllTokens(path.toString(), StringPool.DOT);
+            String[] pathArr =
+                    StringUtils.splitByWholeSeparatorPreserveAllTokens(
+                            path.toString(), StringPool.DOT);
             message.append(pathArr[1]).append(violation.getMessage()).append(StringPool.COMMA);
         }
         message = new StringBuilder(message.substring(0, message.length() - 1));

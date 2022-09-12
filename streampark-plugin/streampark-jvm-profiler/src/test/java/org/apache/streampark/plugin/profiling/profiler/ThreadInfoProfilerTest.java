@@ -34,18 +34,17 @@ public class ThreadInfoProfilerTest {
 
         // create a Profile Instance.
         ThreadInfoProfiler profiler =
-            new ThreadInfoProfiler(
-                new Reporter() {
-                    @Override
-                    public void report(String profilerName, Map<String, Object> metrics) {
-                        nameList.add(profilerName);
-                        metricList.add(metrics);
-                    }
+                new ThreadInfoProfiler(
+                        new Reporter() {
+                            @Override
+                            public void report(String profilerName, Map<String, Object> metrics) {
+                                nameList.add(profilerName);
+                                metricList.add(metrics);
+                            }
 
-                    @Override
-                    public void close() {
-                    }
-                });
+                            @Override
+                            public void close() {}
+                        });
         // Set interval
         profiler.setInterval(150);
         Assert.assertEquals(150L, profiler.getInterval());

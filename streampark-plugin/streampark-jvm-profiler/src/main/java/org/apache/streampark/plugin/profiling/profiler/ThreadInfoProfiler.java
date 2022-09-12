@@ -26,20 +26,15 @@ import java.lang.management.ThreadMXBean;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * ThreadInfoProfiler is used to Collects the Thread Related Metrics.
- *
- */
+/** ThreadInfoProfiler is used to Collects the Thread Related Metrics. */
 public class ThreadInfoProfiler extends ProfilerBase implements Profiler {
     public static final String PROFILER_NAME = "ThreadInfo";
     public static final AgentLogger LOGGER =
-        AgentLogger.getLogger(ThreadInfoProfiler.class.getName());
+            AgentLogger.getLogger(ThreadInfoProfiler.class.getName());
     private long interval = Constants.DEFAULT_METRIC_INTERVAL;
 
     private ThreadMXBean threadMXBean;
-    /**
-     * to keep track of Total Thread.
-     */
+    /** to keep track of Total Thread. */
     private long previousTotalStartedThreadCount = 0L;
 
     private Reporter reporter;

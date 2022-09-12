@@ -44,22 +44,23 @@ public class StacktraceCollectorProfilerTest {
         semaphore.acquire();
 
         Thread thread =
-            new Thread(
-                () -> {
-                    semaphore.release();
-                    try {
-                        Thread.sleep(1000 * 60);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                });
+                new Thread(
+                        () -> {
+                            semaphore.release();
+                            try {
+                                Thread.sleep(1000 * 60);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        });
 
         thread.setName("testDummySleepThread");
         thread.start();
 
         // Wait until the test thread is running
         semaphore.acquire();
-        // Sleep to make sure the test thread runs into Thread.sleep method, so we could test its top
+        // Sleep to make sure the test thread runs into Thread.sleep method, so we could test its
+        // top
         // method in the stack
         Thread.sleep(100);
 
@@ -135,22 +136,23 @@ public class StacktraceCollectorProfilerTest {
         semaphore.acquire();
 
         Thread thread =
-            new Thread(
-                () -> {
-                    semaphore.release();
-                    try {
-                        Thread.sleep(1000 * 60);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                });
+                new Thread(
+                        () -> {
+                            semaphore.release();
+                            try {
+                                Thread.sleep(1000 * 60);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        });
 
         thread.setName("testDummySleepThread");
         thread.start();
 
         // Wait until the test thread is running
         semaphore.acquire();
-        // Sleep to make sure the test thread runs into Thread.sleep method, so we could test its top
+        // Sleep to make sure the test thread runs into Thread.sleep method, so we could test its
+        // top
         // method in the stack
         Thread.sleep(100);
 
@@ -216,17 +218,18 @@ public class StacktraceCollectorProfilerTest {
         semaphore.acquire();
 
         Thread thread =
-            new Thread(
-                () -> {
-                    simulateLargeStack(0, 1000, semaphore);
-                });
+                new Thread(
+                        () -> {
+                            simulateLargeStack(0, 1000, semaphore);
+                        });
 
         thread.setName("testDummySleepThread");
         thread.start();
 
         // Wait until the test thread is running
         semaphore.acquire();
-        // Sleep to make sure the test thread runs into Thread.sleep method, so we could test its top
+        // Sleep to make sure the test thread runs into Thread.sleep method, so we could test its
+        // top
         // method in the stack
         Thread.sleep(100);
 

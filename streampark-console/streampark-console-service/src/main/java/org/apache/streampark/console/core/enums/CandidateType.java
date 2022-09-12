@@ -22,19 +22,13 @@ import java.util.Arrays;
 
 public enum CandidateType implements Serializable {
 
-    /**
-     * non candidate
-     */
+    /** non candidate */
     NONE(0),
 
-    /**
-     * newly added record becomes a candidate
-     */
+    /** newly added record becomes a candidate */
     NEW(1),
 
-    /**
-     * specific history becomes a candidate
-     */
+    /** specific history becomes a candidate */
     HISTORY(2);
 
     private final int value;

@@ -58,7 +58,7 @@ public class FlameGraph {
     public Date getStart() {
         if (this.duration > QUERY_DURATION) {
             throw new IllegalArgumentException(
-                "[StreamPark] flameGraph query duration cannot be greater than 4 hours");
+                    "[StreamPark] flameGraph query duration cannot be greater than 4 hours");
         }
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getDefault());

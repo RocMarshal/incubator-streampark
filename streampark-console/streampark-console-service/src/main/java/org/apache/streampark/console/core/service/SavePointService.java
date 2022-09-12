@@ -36,5 +36,4 @@ public interface SavePointService extends IService<SavePoint> {
     IPage<SavePoint> page(SavePoint savePoint, RestRequest request);
 
     void removeApp(Application application);
-
 }

@@ -35,13 +35,13 @@ import java.util.Date;
 @Slf4j
 public class JWTUtil {
 
-
-    private static final long JWT_TIME_OUT = SpringContextUtils.getBean(ShiroProperties.class).getJwtTimeOut() * 1000;
+    private static final long JWT_TIME_OUT =
+            SpringContextUtils.getBean(ShiroProperties.class).getJwtTimeOut() * 1000;
 
     /**
      * verify token
      *
-     * @param token  token
+     * @param token token
      * @param secret secret
      * @return is valid token
      */
@@ -59,9 +59,7 @@ public class JWTUtil {
         }
     }
 
-    /**
-     * get username from token
-     */
+    /** get username from token */
     public static String getUsername(String token) {
         try {
             DecodedJWT jwt = JWT.decode(token);
@@ -76,7 +74,7 @@ public class JWTUtil {
      * generate token
      *
      * @param username username
-     * @param secret   secret
+     * @param secret secret
      * @return token
      */
     public static String sign(String username, String secret) {
@@ -86,9 +84,9 @@ public class JWTUtil {
     /**
      * generate token
      *
-     * @param username     username
-     * @param secret       secret
-     * @param expireTime   token expire time
+     * @param username username
+     * @param secret secret
+     * @param expireTime token expire time
      * @return token
      */
     public static String sign(String username, String secret, Long expireTime) {
@@ -103,11 +101,8 @@ public class JWTUtil {
         }
     }
 
-    /**
-     * get token expire timestamp
-     */
+    /** get token expire timestamp */
     private static Long getExpireTime() {
         return System.currentTimeMillis() + JWT_TIME_OUT;
     }
-
 }

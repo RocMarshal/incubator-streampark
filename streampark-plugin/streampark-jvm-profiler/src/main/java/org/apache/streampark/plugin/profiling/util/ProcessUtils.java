@@ -28,7 +28,7 @@ public class ProcessUtils {
     private static final String SPARK_PROCESS_KEYWORD = "spark.yarn.app.container.log.dir";
     private static final String SPARK_CMDLINE_KEYWORD = "spark.";
     private static final String SPARK_EXECUTOR_CLASS_NAME =
-        "spark.executor.CoarseGrainedExecutorBackend";
+            "spark.executor.CoarseGrainedExecutorBackend";
     private static final String SPARK_EXECUTOR_KEYWORD = "spark.driver.port";
 
     private static final Pattern XMX_REGEX = Pattern.compile("-[xX][mM][xX]([a-zA-Z0-9]+)");
@@ -107,5 +107,4 @@ public class ProcessUtils {
     public static boolean isSparkDriver(String cmdline) {
         return isSparkProcess(cmdline) && !isSparkExecutor(cmdline);
     }
-
 }

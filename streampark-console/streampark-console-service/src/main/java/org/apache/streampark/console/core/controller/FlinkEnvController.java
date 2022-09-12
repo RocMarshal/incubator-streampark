@@ -36,8 +36,7 @@ import java.util.List;
 @RequestMapping("flink/env")
 public class FlinkEnvController {
 
-    @Autowired
-    private FlinkEnvService flinkEnvService;
+    @Autowired private FlinkEnvService flinkEnvService;
 
     @PostMapping("list")
     public RestResponse list() {
@@ -89,5 +88,4 @@ public class FlinkEnvController {
         flinkEnvService.setDefault(id);
         return RestResponse.success();
     }
-
 }

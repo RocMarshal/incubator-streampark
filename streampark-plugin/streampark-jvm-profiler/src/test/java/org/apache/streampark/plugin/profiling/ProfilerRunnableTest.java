@@ -28,22 +28,21 @@ public class ProfilerRunnableTest {
         final AtomicInteger i = new AtomicInteger(10);
 
         ProfilerRunner profilerRunnable =
-            new ProfilerRunner(
-                new Profiler() {
-                    @Override
-                    public long getInterval() {
-                        return 0;
-                    }
+                new ProfilerRunner(
+                        new Profiler() {
+                            @Override
+                            public long getInterval() {
+                                return 0;
+                            }
 
-                    @Override
-                    public void setReporter(Reporter reporter) {
-                    }
+                            @Override
+                            public void setReporter(Reporter reporter) {}
 
-                    @Override
-                    public void profile() {
-                        i.incrementAndGet();
-                    }
-                });
+                            @Override
+                            public void profile() {
+                                i.incrementAndGet();
+                            }
+                        });
 
         profilerRunnable.run();
 

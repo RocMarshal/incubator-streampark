@@ -26,15 +26,11 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.util.stream.IntStream;
 
-/**
- * Web Utils
- */
+/** Web Utils */
 @Slf4j
 public final class WebUtils {
 
-    private WebUtils() {
-
-    }
+    private WebUtils() {}
 
     /**
      * token encrypt
@@ -83,13 +79,15 @@ public final class WebUtils {
             return value;
         }
         StringBuilder result = new StringBuilder();
-        IntStream.range(0, arr.length).forEach(i -> {
-            if (i != arr.length - 1) {
-                result.append(arr[i]).append(StringPool.UNDERSCORE);
-            } else {
-                result.append(arr[i]);
-            }
-        });
+        IntStream.range(0, arr.length)
+                .forEach(
+                        i -> {
+                            if (i != arr.length - 1) {
+                                result.append(arr[i]).append(StringPool.UNDERSCORE);
+                            } else {
+                                result.append(arr[i]);
+                            }
+                        });
         return StringUtils.lowerCase(result.toString());
     }
 
@@ -121,4 +119,3 @@ public final class WebUtils {
         return getAppDir("conf");
     }
 }
-

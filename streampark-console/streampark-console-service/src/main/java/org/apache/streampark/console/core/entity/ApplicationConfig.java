@@ -49,9 +49,7 @@ public class ApplicationConfig {
      */
     private Integer format;
 
-    /**
-     * default version: 1
-     */
+    /** default version: 1 */
     private Integer version = 1;
 
     @TableField(updateStrategy = FieldStrategy.IGNORED)
@@ -59,9 +57,7 @@ public class ApplicationConfig {
 
     private Date createTime;
 
-    /**
-     * record the configuration to take effect for the target
-     */
+    /** record the configuration to take effect for the target */
     private Boolean latest;
 
     private transient boolean effective = false;
@@ -80,7 +76,8 @@ public class ApplicationConfig {
             case 1:
                 return PropertiesUtils.fromYamlTextAsJava(DeflaterUtils.unzipString(this.content));
             case 2:
-                return PropertiesUtils.fromPropertiesTextAsJava(DeflaterUtils.unzipString(this.content));
+                return PropertiesUtils.fromPropertiesTextAsJava(
+                        DeflaterUtils.unzipString(this.content));
             default:
                 break;
         }

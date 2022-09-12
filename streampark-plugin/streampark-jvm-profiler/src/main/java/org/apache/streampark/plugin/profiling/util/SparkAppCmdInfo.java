@@ -55,14 +55,14 @@ public class SparkAppCmdInfo {
     @Override
     public String toString() {
         return "SparkAppCmdInfo{"
-            + "appClass='"
-            + appClass
-            + '\''
-            + ", appJar='"
-            + appJar
-            + '\''
-            + ", args="
-            + Arrays.toString(args)
-            + '}';
+                + "appClass='"
+                + appClass
+                + '\''
+                + ", appJar='"
+                + appJar
+                + '\''
+                + ", args="
+                + Arrays.toString(args)
+                + '}';
     }
 }

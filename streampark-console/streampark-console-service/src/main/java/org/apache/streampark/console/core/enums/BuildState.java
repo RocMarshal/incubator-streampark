@@ -22,28 +22,18 @@ import java.util.Arrays;
 
 public enum BuildState implements Serializable {
 
-    /**
-     * has changed, need rebuild
-     */
+    /** has changed, need rebuild */
     NEED_REBUILD(-2),
-    /**
-     * has cancelled, not build
-     */
+    /** has cancelled, not build */
     NOT_BUILD(-1),
 
-    /**
-     * building
-     */
+    /** building */
     BUILDING(0),
 
-    /**
-     * build successful
-     */
+    /** build successful */
     SUCCESSFUL(1),
 
-    /**
-     * build failed
-     */
+    /** build failed */
     FAILED(2);
 
     private final int value;

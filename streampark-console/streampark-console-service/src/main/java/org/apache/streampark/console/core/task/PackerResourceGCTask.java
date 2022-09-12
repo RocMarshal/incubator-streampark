@@ -36,5 +36,4 @@ public class PackerResourceGCTask {
         log.info("[streampark-packer] Starting Packer Resource GC Task.");
         PackerResourceGC.startGc(maxResourceIntervalHours);
     }
-
 }

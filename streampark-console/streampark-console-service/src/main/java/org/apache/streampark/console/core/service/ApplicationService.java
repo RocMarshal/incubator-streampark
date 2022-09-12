@@ -73,9 +73,7 @@ public interface ApplicationService extends IService<Application> {
 
     String upload(MultipartFile file) throws ApplicationException;
 
-    /**
-     * set the latest to Effective, it will really become the current effective
-     */
+    /** set the latest to Effective, it will really become the current effective */
     void toEffective(Application application);
 
     void revoke(Application app) throws ApplicationException;
@@ -93,5 +91,4 @@ public interface ApplicationService extends IService<Application> {
     boolean checkBuildAndUpdate(Application app);
 
     void forcedStop(Application app);
-
 }

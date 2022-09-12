@@ -39,13 +39,13 @@ import java.util.List;
 @RequestMapping("flink/setting")
 public class SettingController {
 
-    @Autowired
-    private SettingService settingService;
+    @Autowired private SettingService settingService;
 
     @PostMapping("all")
     @RequiresPermissions("setting:view")
     public RestResponse all() {
-        LambdaQueryWrapper<Setting> query = new LambdaQueryWrapper<Setting>().orderByAsc(Setting::getOrderNum);
+        LambdaQueryWrapper<Setting> query =
+                new LambdaQueryWrapper<Setting>().orderByAsc(Setting::getOrderNum);
         List<Setting> setting = settingService.list(query);
         return RestResponse.success(setting);
     }
@@ -78,5 +78,4 @@ public class SettingController {
             return RestResponse.success(false).message(e.getMessage());
         }
     }
-
 }

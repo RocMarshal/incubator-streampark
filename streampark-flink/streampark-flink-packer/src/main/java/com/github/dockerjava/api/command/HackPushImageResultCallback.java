@@ -36,5 +36,4 @@ public class HackPushImageResultCallback extends PushImageResultCallback {
             listener.watchPushProcess(item);
         }
     }
-
 }

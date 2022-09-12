@@ -44,14 +44,13 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
 
     @Override
     protected boolean isAccessAllowed(
-        ServletRequest request, ServletResponse response, Object mappedValue)
-        throws UnauthorizedException {
+            ServletRequest request, ServletResponse response, Object mappedValue)
+            throws UnauthorizedException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         ShiroProperties properties = SpringContextUtils.getBean(ShiroProperties.class);
-        String[] anonUrl = StringUtils.splitByWholeSeparatorPreserveAllTokens(
-            properties.getAnonUrl(),
-            StringPool.COMMA
-        );
+        String[] anonUrl =
+                StringUtils.splitByWholeSeparatorPreserveAllTokens(
+                        properties.getAnonUrl(), StringPool.COMMA);
 
         for (String u : anonUrl) {
             if (pathMatcher.match(u.trim(), httpServletRequest.getRequestURI())) {
@@ -86,19 +85,18 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         }
     }
 
-    /**
-     * cross-domain support
-     */
+    /** cross-domain support */
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         httpServletResponse.setHeader(
-            "Access-control-Allow-Origin", httpServletRequest.getHeader("Origin"));
-        httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
+                "Access-control-Allow-Origin", httpServletRequest.getHeader("Origin"));
         httpServletResponse.setHeader(
-            "Access-Control-Allow-Headers",
-            httpServletRequest.getHeader("Access-Control-Request-Headers"));
+                "Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
+        httpServletResponse.setHeader(
+                "Access-Control-Allow-Headers",
+                httpServletRequest.getHeader("Access-Control-Request-Headers"));
         if (httpServletRequest.getMethod().equals(RequestMethod.OPTIONS.name())) {
             httpServletResponse.setStatus(HttpStatus.OK.value());
             return false;

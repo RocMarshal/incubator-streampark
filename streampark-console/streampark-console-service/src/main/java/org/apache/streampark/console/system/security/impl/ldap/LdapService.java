@@ -59,29 +59,31 @@ public class LdapService {
     /**
      * login by userId and return user email
      *
-     * @param userId  user identity id
+     * @param userId user identity id
      * @param userPwd user login password
      * @return user email
      */
     public String ldapLogin(String userId, String userPwd) {
         Properties searchEnv = getManagerLdapEnv();
         try {
-            //Connect to the LDAP server and Authenticate with a service user of whom we know the DN and credentials
+            // Connect to the LDAP server and Authenticate with a service user of whom we know the
+            // DN and credentials
             LdapContext ctx = new InitialLdapContext(searchEnv, null);
             SearchControls sc = new SearchControls();
-            sc.setReturningAttributes(new String[]{ldapEmailAttribute});
+            sc.setReturningAttributes(new String[] {ldapEmailAttribute});
             sc.setSearchScope(SearchControls.SUBTREE_SCOPE);
             String searchFilter = String.format("(%s=%s)", ldapUserIdentifyingAttribute, userId);
 
-            //Search for the user you want to authenticate, search him with some attribute
+            // Search for the user you want to authenticate, search him with some attribute
             NamingEnumeration<SearchResult> results = ctx.search(ldapBaseDn, searchFilter, sc);
-            // NamingEnumeration answer = ctx.search(usersContainer, "     (objectclass=group)", ctls);
+            // NamingEnumeration answer = ctx.search(usersContainer, "     (objectclass=group)",
+            // ctls);
             if (results.hasMore()) {
                 // get the users DN (distinguishedName) from the result
                 SearchResult result = results.next();
                 NamingEnumeration attrs = result.getAttributes().getAll();
                 while (attrs.hasMore()) {
-                    //Open another connection to the LDAP server with the found DN and the password
+                    // Open another connection to the LDAP server with the found DN and the password
                     searchEnv.put(Context.SECURITY_PRINCIPAL, result.getNameInNamespace());
                     searchEnv.put(Context.SECURITY_CREDENTIALS, userPwd);
                     try {
@@ -103,8 +105,9 @@ public class LdapService {
         return null;
     }
 
-    /***
-     * get ldap env fot ldap server search
+    /**
+     * * get ldap env fot ldap server search
+     *
      * @return Properties
      */
     Properties getManagerLdapEnv() {

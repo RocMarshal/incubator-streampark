@@ -43,10 +43,10 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class AlertConfigServiceImpl extends ServiceImpl<AlertConfigMapper, AlertConfig> implements AlertConfigService {
+public class AlertConfigServiceImpl extends ServiceImpl<AlertConfigMapper, AlertConfig>
+        implements AlertConfigService {
 
-    @Autowired
-    private ApplicationService applicationService;
+    @Autowired private ApplicationService applicationService;
 
     @Override
     public IPage<AlertConfigWithParams> page(AlertConfigWithParams params, RestRequest request) {
@@ -59,7 +59,10 @@ public class AlertConfigServiceImpl extends ServiceImpl<AlertConfigMapper, Alert
 
         Page<AlertConfigWithParams> result = new Page<>();
         if (CollectionUtils.isNotEmpty(resultPage.getRecords())) {
-            result.setRecords(resultPage.getRecords().stream().map(AlertConfigWithParams::of).collect(Collectors.toList()));
+            result.setRecords(
+                    resultPage.getRecords().stream()
+                            .map(AlertConfigWithParams::of)
+                            .collect(Collectors.toList()));
         }
 
         return result;
@@ -73,9 +76,15 @@ public class AlertConfigServiceImpl extends ServiceImpl<AlertConfigMapper, Alert
 
     @Override
     public boolean deleteById(Long id) throws AlertException {
-        long count = applicationService.count(new LambdaQueryWrapper<Application>().eq(id != null, Application::getAlertId, id));
+        long count =
+                applicationService.count(
+                        new LambdaQueryWrapper<Application>()
+                                .eq(id != null, Application::getAlertId, id));
         if (count > 0) {
-            throw new AlertException(String.format("AlertId:%d, this is bound by application. Please clear the configuration first", id));
+            throw new AlertException(
+                    String.format(
+                            "AlertId:%d, this is bound by application. Please clear the configuration first",
+                            id));
         }
         return removeById(id);
     }

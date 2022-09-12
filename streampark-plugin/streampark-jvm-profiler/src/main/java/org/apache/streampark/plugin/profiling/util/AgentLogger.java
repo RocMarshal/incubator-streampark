@@ -26,8 +26,7 @@ public class AgentLogger {
 
     private String prefix;
 
-    public AgentLogger() {
-    }
+    public AgentLogger() {}
 
     public static AgentLogger getLogger(String name) {
         return new AgentLogger(name);
@@ -78,13 +77,13 @@ public class AgentLogger {
     public void warn(String msg, Throwable ex) {
         try {
             System.out.println(
-                "[WARNING] "
-                    + System.currentTimeMillis()
-                    + " "
-                    + prefix
-                    + msg
-                    + " "
-                    + ExceptionUtils.getStackTrace(ex));
+                    "[WARNING] "
+                            + System.currentTimeMillis()
+                            + " "
+                            + prefix
+                            + msg
+                            + " "
+                            + ExceptionUtils.getStackTrace(ex));
 
             if (AgentLogger.errorLogReporter != null) {
                 AgentLogger.errorLogReporter.report(msg, ex);
@@ -97,9 +96,11 @@ public class AgentLogger {
     // Handle log specially when shutdown, since we should not depend on other kafka to log these
     // messages
     public void logShutdownMessage(String msg) {
-        // Sometime spark log in console output seems not fully collected, thus log to error output as
+        // Sometime spark log in console output seems not fully collected, thus log to error output
+        // as
         // well to make sure
-        // we capture this shutdown hook execution. This is to help debug some issue when shutdown hook
+        // we capture this shutdown hook execution. This is to help debug some issue when shutdown
+        // hook
         // seems not executed.
         String log = System.currentTimeMillis() + " " + prefix + msg;
         System.out.println(log);

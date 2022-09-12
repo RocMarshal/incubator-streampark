@@ -53,24 +53,24 @@ public class YamlConfigProviderTest {
             file.deleteOnExit();
 
             String content =
-                "key1: value1\n"
-                    + "key2:\n"
-                    + "- value2a\n"
-                    + "- value2b\n"
-                    + "key3:\n"
-                    + "    key3a: value3a\n"
-                    + "    key3b:\n"
-                    + "    - value3b\n"
-                    + "    - value3c\n"
-                    + "override:\n"
-                    + "  override1: \n"
-                    + "    key1: value11\n"
-                    + "    key2:\n"
-                    + "    - value22a\n"
-                    + "    - value22b\n"
-                    + "    key3:\n"
-                    + "      key3a: value33a\n"
-                    + "";
+                    "key1: value1\n"
+                            + "key2:\n"
+                            + "- value2a\n"
+                            + "- value2b\n"
+                            + "key3:\n"
+                            + "    key3a: value3a\n"
+                            + "    key3b:\n"
+                            + "    - value3b\n"
+                            + "    - value3c\n"
+                            + "override:\n"
+                            + "  override1: \n"
+                            + "    key1: value11\n"
+                            + "    key2:\n"
+                            + "    - value22a\n"
+                            + "    - value22b\n"
+                            + "    key3:\n"
+                            + "      key3a: value33a\n"
+                            + "";
             Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 
             YamlConfigProvider provider = new YamlConfigProvider(file.getAbsolutePath());
@@ -102,24 +102,24 @@ public class YamlConfigProviderTest {
     @Test
     public void getConfigFromFile() throws IOException {
         String content =
-            "key1: value1\n"
-                + "key2:\n"
-                + "- value2a\n"
-                + "- value2b\n"
-                + "key3:\n"
-                + "    key3a: value3a\n"
-                + "    key3b:\n"
-                + "    - value3b\n"
-                + "    - value3c\n"
-                + "override:\n"
-                + "  override1: \n"
-                + "    key1: value11\n"
-                + "    key2:\n"
-                + "    - value22a\n"
-                + "    - value22b\n"
-                + "    key3:\n"
-                + "      key3a: value33a\n"
-                + "";
+                "key1: value1\n"
+                        + "key2:\n"
+                        + "- value2a\n"
+                        + "- value2b\n"
+                        + "key3:\n"
+                        + "    key3a: value3a\n"
+                        + "    key3b:\n"
+                        + "    - value3b\n"
+                        + "    - value3c\n"
+                        + "override:\n"
+                        + "  override1: \n"
+                        + "    key1: value11\n"
+                        + "    key2:\n"
+                        + "    - value22a\n"
+                        + "    - value22b\n"
+                        + "    key3:\n"
+                        + "      key3a: value33a\n"
+                        + "";
 
         Path path = Files.createTempFile("jvm-profiler_", ".yaml");
         Files.write(path, content.getBytes());

@@ -93,7 +93,7 @@ public class Arguments {
             String[] strs = argPair.split("=");
             if (strs.length != 2) {
                 throw new IllegalArgumentException(
-                    "Arguments for the agent should be like: key1=value1,key2=value2");
+                        "Arguments for the agent should be like: key1=value1,key2=value2");
             }
 
             String key = strs[0].trim();
@@ -125,7 +125,8 @@ public class Arguments {
 
         argValue = ArgumentUtils.getArgumentSingleValue(parsedArgs, ARG_CONFIG_PROVIDER);
         if (ArgumentUtils.needToUpdateArg(argValue)) {
-            configProviderConstructor = ReflectionUtils.getConstructor(argValue, ConfigProvider.class);
+            configProviderConstructor =
+                    ReflectionUtils.getConstructor(argValue, ConfigProvider.class);
             LOGGER.info("Got argument value for configProvider: " + argValue);
         }
 
@@ -143,7 +144,7 @@ public class Arguments {
 
         if (metricInterval < MIN_INTERVAL_MILLIS) {
             throw new RuntimeException(
-                "Metric interval too short, must be at least " + Arguments.MIN_INTERVAL_MILLIS);
+                    "Metric interval too short, must be at least " + Arguments.MIN_INTERVAL_MILLIS);
         }
 
         argValue = ArgumentUtils.getArgumentSingleValue(parsedArgs, ARG_SAMPLE_INTERVAL);
@@ -154,8 +155,8 @@ public class Arguments {
 
         if (sampleInterval != 0 && sampleInterval < MIN_INTERVAL_MILLIS) {
             throw new RuntimeException(
-                "Sample interval too short, must be 0 (disable sampling) or at least "
-                    + Arguments.MIN_INTERVAL_MILLIS);
+                    "Sample interval too short, must be 0 (disable sampling) or at least "
+                            + Arguments.MIN_INTERVAL_MILLIS);
         }
 
         argValue = ArgumentUtils.getArgumentSingleValue(parsedArgs, ARG_TAG);
@@ -183,7 +184,7 @@ public class Arguments {
         }
 
         List<String> argValues =
-            ArgumentUtils.getArgumentMultiValues(parsedArgs, ARG_DURATION_PROFILING);
+                ArgumentUtils.getArgumentMultiValues(parsedArgs, ARG_DURATION_PROFILING);
         if (!argValues.isEmpty()) {
             durationProfiling.clear();
             for (String str : argValues) {
@@ -218,7 +219,7 @@ public class Arguments {
                 String methodName = str.substring(index + 1, classMethodName.length());
 
                 ClassMethodArgument classMethodArgument =
-                    new ClassMethodArgument(className, methodName, argumentIndex);
+                        new ClassMethodArgument(className, methodName, argumentIndex);
                 argumentProfiling.add(classMethodArgument);
                 LOGGER.info("Got argument value for argumentProfiling: " + classMethodArgument);
             }
@@ -241,7 +242,8 @@ public class Arguments {
                 Map<String, List<String>> rootConfig = extraConfig.get("");
                 if (rootConfig != null) {
                     doArguments(rootConfig);
-                    LOGGER.info("Updated arguments based on config: " + Utils.toJsonString(rootConfig));
+                    LOGGER.info(
+                            "Updated arguments based on config: " + Utils.toJsonString(rootConfig));
                 }
 
                 // Get tag level config (use tag value to find config values in the config map)
@@ -250,8 +252,8 @@ public class Arguments {
                     if (overrideConfig != null) {
                         doArguments(overrideConfig);
                         LOGGER.info(
-                            "Updated arguments based on config override: "
-                                + Utils.toJsonString(overrideConfig));
+                                "Updated arguments based on config override: "
+                                        + Utils.toJsonString(overrideConfig));
                     }
                 }
             }
@@ -274,9 +276,10 @@ public class Arguments {
                 return reporter;
             } catch (Throwable e) {
                 throw new RuntimeException(
-                    String.format(
-                        "Failed to create reporter instance %s", reporterConstructor.getDeclaringClass()),
-                    e);
+                        String.format(
+                                "Failed to create reporter instance %s",
+                                reporterConstructor.getDeclaringClass()),
+                        e);
             }
         }
     }
@@ -290,7 +293,8 @@ public class Arguments {
                 if (configProvider instanceof YamlConfigProvider) {
                     if (configFile == null || configFile.isEmpty()) {
                         throw new RuntimeException(
-                            "Argument configFile is empty, cannot use " + configProvider.getClass());
+                                "Argument configFile is empty, cannot use "
+                                        + configProvider.getClass());
                     }
                     ((YamlConfigProvider) configProvider).setFilePath(configFile);
                     return configProvider;
@@ -298,10 +302,10 @@ public class Arguments {
                 return configProvider;
             } catch (Throwable e) {
                 throw new RuntimeException(
-                    String.format(
-                        "Failed to create config provider instance %s",
-                        configProviderConstructor.getDeclaringClass()),
-                    e);
+                        String.format(
+                                "Failed to create config provider instance %s",
+                                configProviderConstructor.getDeclaringClass()),
+                        e);
             }
         }
     }

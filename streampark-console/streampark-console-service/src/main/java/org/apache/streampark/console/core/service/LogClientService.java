@@ -29,9 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * log client
- */
+/** log client */
 @Slf4j
 @Component
 public class LogClientService {
@@ -53,12 +51,10 @@ public class LogClientService {
      *
      * @param filePath file path
      * @param skipLine skip line
-     * @param limit    read lines limit
+     * @param limit read lines limit
      * @return part file content
      */
-    private List<String> readPartFileContent(String filePath,
-                                             int skipLine,
-                                             int limit) {
+    private List<String> readPartFileContent(String filePath, int skipLine, int limit) {
         File file = new File(filePath);
         if (file.exists() && file.isFile()) {
             try (Stream<String> stream = Files.lines(Paths.get(filePath))) {

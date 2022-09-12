@@ -62,41 +62,40 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class FlinkClusterServiceImpl extends ServiceImpl<FlinkClusterMapper, FlinkCluster> implements FlinkClusterService {
+public class FlinkClusterServiceImpl extends ServiceImpl<FlinkClusterMapper, FlinkCluster>
+        implements FlinkClusterService {
 
-    private final ExecutorService executorService = new ThreadPoolExecutor(
-        Runtime.getRuntime().availableProcessors() * 5,
-        Runtime.getRuntime().availableProcessors() * 10,
-        60L,
-        TimeUnit.SECONDS,
-        new LinkedBlockingQueue<>(1024),
-        ThreadUtils.threadFactory("streampark-cluster-executor"),
-        new ThreadPoolExecutor.AbortPolicy()
-    );
+    private final ExecutorService executorService =
+            new ThreadPoolExecutor(
+                    Runtime.getRuntime().availableProcessors() * 5,
+                    Runtime.getRuntime().availableProcessors() * 10,
+                    60L,
+                    TimeUnit.SECONDS,
+                    new LinkedBlockingQueue<>(1024),
+                    ThreadUtils.threadFactory("streampark-cluster-executor"),
+                    new ThreadPoolExecutor.AbortPolicy());
 
-    @Autowired
-    private FlinkEnvService flinkEnvService;
+    @Autowired private FlinkEnvService flinkEnvService;
 
-    @Autowired
-    private CommonService commonService;
+    @Autowired private CommonService commonService;
 
-    @Autowired
-    private SettingService settingService;
+    @Autowired private SettingService settingService;
 
     @Override
     public String check(FlinkCluster cluster) {
         if (null == cluster.getClusterName() || null == cluster.getExecutionMode()) {
             return "error";
         }
-        //1) 检查名称是否重复,是否已经存在
+        // 1) 检查名称是否重复,是否已经存在
         FlinkCluster flinkCluster = this.baseMapper.getByName(cluster.getClusterName());
         if (flinkCluster != null) {
-            if (cluster.getId() == null || (cluster.getId() != null && !flinkCluster.getId().equals(cluster.getId()))) {
+            if (cluster.getId() == null
+                    || (cluster.getId() != null && !flinkCluster.getId().equals(cluster.getId()))) {
                 return "exists";
             }
         }
         if (ExecutionMode.REMOTE.equals(cluster.getExecutionModeEnum())) {
-            //2) 检查连接是否能连接到
+            // 2) 检查连接是否能连接到
             return cluster.verifyConnection() ? "success" : "fail";
         }
         return "success";
@@ -150,41 +149,48 @@ public class FlinkClusterServiceImpl extends ServiceImpl<FlinkClusterMapper, Fli
                 case YARN_SESSION:
                     break;
                 case KUBERNETES_NATIVE_SESSION:
-                    kubernetesDeployParam = new KubernetesDeployParam(
-                        flinkCluster.getClusterId(),
-                        flinkCluster.getK8sNamespace(),
-                        flinkCluster.getK8sConf(),
-                        flinkCluster.getServiceAccount(),
-                        flinkCluster.getFlinkImage(),
-                        flinkCluster.getK8sRestExposedTypeEnum());
+                    kubernetesDeployParam =
+                            new KubernetesDeployParam(
+                                    flinkCluster.getClusterId(),
+                                    flinkCluster.getK8sNamespace(),
+                                    flinkCluster.getK8sConf(),
+                                    flinkCluster.getServiceAccount(),
+                                    flinkCluster.getFlinkImage(),
+                                    flinkCluster.getK8sRestExposedTypeEnum());
                     break;
                 default:
-                    result.setMsg("the ExecutionModeEnum " + executionModeEnum.getName() + "can't start!");
+                    result.setMsg(
+                            "the ExecutionModeEnum "
+                                    + executionModeEnum.getName()
+                                    + "can't start!");
                     result.setStatus(0);
                     return result;
             }
             FlinkEnv flinkEnv = flinkEnvService.getById(flinkCluster.getVersionId());
             Map<String, Object> extraParameter = flinkCluster.getOptionMap();
             ResolveOrder resolveOrder = ResolveOrder.of(flinkCluster.getResolveOrder());
-            Map<String, String> dynamicOption = FlinkSubmitter.extractDynamicOptionAsJava(flinkCluster.getDynamicOptions());
-            DeployRequest deployRequest = new DeployRequest(
-                flinkEnv.getFlinkVersion(),
-                flinkCluster.getClusterId(),
-                executionModeEnum,
-                resolveOrder,
-                flinkCluster.getFlameGraph() ? getFlameGraph(flinkCluster) : null,
-                dynamicOption,
-                kubernetesDeployParam,
-                extraParameter
-            );
+            Map<String, String> dynamicOption =
+                    FlinkSubmitter.extractDynamicOptionAsJava(flinkCluster.getDynamicOptions());
+            DeployRequest deployRequest =
+                    new DeployRequest(
+                            flinkEnv.getFlinkVersion(),
+                            flinkCluster.getClusterId(),
+                            executionModeEnum,
+                            resolveOrder,
+                            flinkCluster.getFlameGraph() ? getFlameGraph(flinkCluster) : null,
+                            dynamicOption,
+                            kubernetesDeployParam,
+                            extraParameter);
             log.info("deploy cluster request " + deployRequest);
-            Future<DeployResponse> future = executorService.submit(() -> FlinkSubmitter.deploy(deployRequest));
+            Future<DeployResponse> future =
+                    executorService.submit(() -> FlinkSubmitter.deploy(deployRequest));
             DeployResponse deployResponse = future.get(60, TimeUnit.SECONDS);
             if (null != deployResponse) {
                 if (deployResponse.message() == null) {
                     updateWrapper.set(FlinkCluster::getClusterId, deployResponse.clusterId());
                     updateWrapper.set(FlinkCluster::getAddress, deployResponse.address());
-                    updateWrapper.set(FlinkCluster::getClusterState, ClusterState.STARTED.getValue());
+                    updateWrapper.set(
+                            FlinkCluster::getClusterState, ClusterState.STARTED.getValue());
                     updateWrapper.set(FlinkCluster::getException, null);
                     update(updateWrapper);
                     result.setStatus(1);
@@ -194,7 +200,8 @@ public class FlinkClusterServiceImpl extends ServiceImpl<FlinkClusterMapper, Fli
                 }
             } else {
                 result.setStatus(0);
-                result.setMsg("deploy cluster failed, unknown reason，please check you params or StreamPark error log");
+                result.setMsg(
+                        "deploy cluster failed, unknown reason，please check you params or StreamPark error log");
             }
             return result;
         } catch (Exception e) {
@@ -231,16 +238,18 @@ public class FlinkClusterServiceImpl extends ServiceImpl<FlinkClusterMapper, Fli
             case YARN_SESSION:
                 break;
             case KUBERNETES_NATIVE_SESSION:
-                kubernetesDeployParam = new KubernetesDeployParam(
-                    flinkCluster.getClusterId(),
-                    flinkCluster.getK8sNamespace(),
-                    flinkCluster.getK8sConf(),
-                    flinkCluster.getServiceAccount(),
-                    flinkCluster.getFlinkImage(),
-                    flinkCluster.getK8sRestExposedTypeEnum());
+                kubernetesDeployParam =
+                        new KubernetesDeployParam(
+                                flinkCluster.getClusterId(),
+                                flinkCluster.getK8sNamespace(),
+                                flinkCluster.getK8sConf(),
+                                flinkCluster.getServiceAccount(),
+                                flinkCluster.getFlinkImage(),
+                                flinkCluster.getK8sRestExposedTypeEnum());
                 break;
             default:
-                result.setMsg("the ExecutionModeEnum " + executionModeEnum.getName() + "can't shutdown!");
+                result.setMsg(
+                        "the ExecutionModeEnum " + executionModeEnum.getName() + "can't shutdown!");
                 result.setStatus(0);
                 return result;
         }
@@ -251,17 +260,18 @@ public class FlinkClusterServiceImpl extends ServiceImpl<FlinkClusterMapper, Fli
         }
         FlinkEnv flinkEnv = flinkEnvService.getById(flinkCluster.getVersionId());
         Map<String, Object> extraParameter = flinkCluster.getOptionMap();
-        ShutDownRequest stopRequest = new ShutDownRequest(
-            flinkEnv.getFlinkVersion(),
-            executionModeEnum,
-            clusterId,
-            kubernetesDeployParam,
-            extraParameter
-        );
+        ShutDownRequest stopRequest =
+                new ShutDownRequest(
+                        flinkEnv.getFlinkVersion(),
+                        executionModeEnum,
+                        clusterId,
+                        kubernetesDeployParam,
+                        extraParameter);
         LambdaUpdateWrapper<FlinkCluster> updateWrapper = Wrappers.lambdaUpdate();
         updateWrapper.eq(FlinkCluster::getId, flinkCluster.getId());
         try {
-            Future<ShutDownResponse> future = executorService.submit(() -> FlinkSubmitter.shutdown(stopRequest));
+            Future<ShutDownResponse> future =
+                    executorService.submit(() -> FlinkSubmitter.shutdown(stopRequest));
             ShutDownResponse shutDownResponse = future.get(60, TimeUnit.SECONDS);
             if (null != shutDownResponse) {
                 updateWrapper.set(FlinkCluster::getClusterState, ClusterState.STOPED.getValue());
@@ -286,8 +296,8 @@ public class FlinkClusterServiceImpl extends ServiceImpl<FlinkClusterMapper, Fli
     public ResponseResult delete(FlinkCluster flinkCluster) {
         ResponseResult result = new ResponseResult();
         if (StringUtils.isNoneBlank(flinkCluster.getClusterId())
-            && ClusterState.STARTED.equals(flinkCluster.getClusterStateEnum())
-            && !ExecutionMode.REMOTE.equals(flinkCluster.getExecutionModeEnum())) {
+                && ClusterState.STARTED.equals(flinkCluster.getClusterStateEnum())
+                && !ExecutionMode.REMOTE.equals(flinkCluster.getExecutionModeEnum())) {
             result = shutdown(flinkCluster);
             if (0 == result.getStatus()) {
                 return result;

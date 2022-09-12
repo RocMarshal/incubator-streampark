@@ -27,7 +27,7 @@ public class MethodDurationCollector {
     }
 
     public void collectLongMetric(
-        String className, String methodName, String metricName, long metricValue) {
+            String className, String methodName, String metricName, long metricValue) {
         buffer.appendValue(className, methodName, metricName, metricValue);
     }
 }

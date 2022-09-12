@@ -52,14 +52,11 @@ import java.util.stream.Collectors;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    @Autowired
-    private UserRoleService userRoleService;
+    @Autowired private UserRoleService userRoleService;
 
-    @Autowired
-    private RoleService roleService;
+    @Autowired private RoleService roleService;
 
-    @Autowired
-    private MenuService menuService;
+    @Autowired private MenuService menuService;
 
     @Override
     public User findByName(String username) {
@@ -75,13 +72,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         if (resPage != null && !resPage.getRecords().isEmpty()) {
             List<User> users = resPage.getRecords();
-            users.forEach(u -> {
-                List<Role> roleList = roleService.findUserRole(u.getUsername());
-                String roleIds = roleList.stream().map((iter) -> iter.getRoleId().toString()).collect(Collectors.joining(","));
-                String roleNames = roleList.stream().map(Role::getRoleName).collect(Collectors.joining(","));
-                u.setRoleId(roleIds);
-                u.setRoleName(roleNames);
-            });
+            users.forEach(
+                    u -> {
+                        List<Role> roleList = roleService.findUserRole(u.getUsername());
+                        String roleIds =
+                                roleList.stream()
+                                        .map((iter) -> iter.getRoleId().toString())
+                                        .collect(Collectors.joining(","));
+                        String roleNames =
+                                roleList.stream()
+                                        .map(Role::getRoleName)
+                                        .collect(Collectors.joining(","));
+                        u.setRoleId(roleIds);
+                        u.setRoleName(roleNames);
+                    });
             resPage.setRecords(users);
         }
         assert resPage != null;
@@ -96,7 +100,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void updateLoginTime(String username) throws Exception {
         User user = new User();
         user.setLastLoginTime(new Date());
-        this.baseMapper.update(user, new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+        this.baseMapper.update(
+                user, new LambdaQueryWrapper<User>().eq(User::getUsername, username));
     }
 
     @Override
@@ -119,7 +124,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setPassword(null);
         user.setModifyTime(new Date());
         updateById(user);
-        userRoleService.deleteUserRolesByUserId(new String[]{user.getUserId().toString()});
+        userRoleService.deleteUserRolesByUserId(new String[] {user.getUserId().toString()});
         String[] roles = user.getRoleId().split(StringPool.COMMA);
         setUserRoles(user, roles);
     }
@@ -143,7 +148,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void updateAvatar(String username, String avatar) throws Exception {
         User user = new User();
         user.setAvatar(avatar);
-        this.baseMapper.update(user, new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+        this.baseMapper.update(
+                user, new LambdaQueryWrapper<User>().eq(User::getUsername, username));
     }
 
     @Override
@@ -154,7 +160,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         password = ShaHashUtils.encrypt(salt, password);
         user.setSalt(salt);
         user.setPassword(password);
-        this.baseMapper.update(user, new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+        this.baseMapper.update(
+                user, new LambdaQueryWrapper<User>().eq(User::getUsername, username));
     }
 
     @Override
@@ -166,7 +173,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             String password = ShaHashUtils.encrypt(salt, User.DEFAULT_PASSWORD);
             user.setSalt(salt);
             user.setPassword(password);
-            this.baseMapper.update(user, new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+            this.baseMapper.update(
+                    user, new LambdaQueryWrapper<User>().eq(User::getUsername, username));
         }
     }
 
@@ -186,21 +194,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public List<User> getNoTokenUser() {
         List<User> users = this.baseMapper.getNoTokenUser();
         if (!users.isEmpty()) {
-            users.forEach(u -> {
-                u.setPassword(null);
-                u.setSalt(null);
-                u.setRoleId(null);
-            });
+            users.forEach(
+                    u -> {
+                        u.setPassword(null);
+                        u.setSalt(null);
+                        u.setRoleId(null);
+                    });
         }
         return users;
     }
 
     private void setUserRoles(User user, String[] roles) {
-        Arrays.stream(roles).forEach(roleId -> {
-            UserRole ur = new UserRole();
-            ur.setUserId(user.getUserId());
-            ur.setRoleId(Long.valueOf(roleId));
-            this.userRoleService.save(ur);
-        });
+        Arrays.stream(roles)
+                .forEach(
+                        roleId -> {
+                            UserRole ur = new UserRole();
+                            ur.setUserId(user.getUserId());
+                            ur.setRoleId(Long.valueOf(roleId));
+                            this.userRoleService.save(ur);
+                        });
     }
 }

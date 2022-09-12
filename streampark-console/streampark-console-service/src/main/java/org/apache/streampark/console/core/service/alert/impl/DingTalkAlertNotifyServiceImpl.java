@@ -69,7 +69,8 @@ public class DingTalkAlertNotifyServiceImpl implements AlertNotifyService {
     }
 
     @Override
-    public boolean doAlert(AlertConfigWithParams alertConfig, AlertTemplate alertTemplate) throws AlertException {
+    public boolean doAlert(AlertConfigWithParams alertConfig, AlertTemplate alertTemplate)
+            throws AlertException {
         AlertDingTalkParams dingTalkParams = alertConfig.getDingTalkParams();
         try {
             // handling contacts
@@ -109,7 +110,8 @@ public class DingTalkAlertNotifyServiceImpl implements AlertNotifyService {
         }
     }
 
-    private void sendMessage(AlertDingTalkParams params, Map<String, Object> body) throws AlertException {
+    private void sendMessage(AlertDingTalkParams params, Map<String, Object> body)
+            throws AlertException {
         // get webhook url
         String url = getWebhook(params);
         HttpHeaders headers = new HttpHeaders();
@@ -121,21 +123,25 @@ public class DingTalkAlertNotifyServiceImpl implements AlertNotifyService {
             robotResponse = alertRestTemplate.postForObject(url, entity, RobotResponse.class);
         } catch (Exception e) {
             log.error("Failed to request DingTalk robot alarm,\nurl:{}", url, e);
-            throw new AlertException(String.format("Failed to request DingTalk robot alert,\nurl:%s", url), e);
+            throw new AlertException(
+                    String.format("Failed to request DingTalk robot alert,\nurl:%s", url), e);
         }
         if (robotResponse == null) {
-            throw new AlertException(String.format("Failed to request DingTalk robot alert,\nurl:%s", url));
+            throw new AlertException(
+                    String.format("Failed to request DingTalk robot alert,\nurl:%s", url));
         }
         if (robotResponse.getErrcode() != 0) {
-            throw new AlertException(String.format("Failed to request DingTalk robot alert,\nurl:%s,\nerrorCode:%d,\nerrorMsg:%s",
-                    url, robotResponse.getErrcode(), robotResponse.getErrmsg()));
+            throw new AlertException(
+                    String.format(
+                            "Failed to request DingTalk robot alert,\nurl:%s,\nerrorCode:%d,\nerrorMsg:%s",
+                            url, robotResponse.getErrcode(), robotResponse.getErrmsg()));
         }
     }
 
     /**
      * Gets webhook.
      *
-     * @param params {@link  AlertDingTalkParams}
+     * @param params {@link AlertDingTalkParams}
      * @return the webhook
      */
     private String getWebhook(AlertDingTalkParams params) {
@@ -150,8 +156,13 @@ public class DingTalkAlertNotifyServiceImpl implements AlertNotifyService {
         String url;
         if (params.getSecretEnable()) {
             Long timestamp = System.currentTimeMillis();
-            url = String.format("%s%s&timestamp=%d&sign=%s",
-                    urlPef, params.getToken(), timestamp, getSign(params.getSecretToken(), timestamp));
+            url =
+                    String.format(
+                            "%s%s&timestamp=%d&sign=%s",
+                            urlPef,
+                            params.getToken(),
+                            timestamp,
+                            getSign(params.getSecretToken(), timestamp));
         } else {
             url = String.format("%s%s", urlPef, params.getToken());
         }
@@ -163,10 +174,12 @@ public class DingTalkAlertNotifyServiceImpl implements AlertNotifyService {
 
     /**
      * Calculate the signature
-     * <p>Reference documentation</p>
-     * <a href="https://open.dingtalk.com/document/group/customize-robot-security-settings">Customize Robot Security Settings</a>
      *
-     * @param secret    secret
+     * <p>Reference documentation <a
+     * href="https://open.dingtalk.com/document/group/customize-robot-security-settings">Customize
+     * Robot Security Settings</a>
+     *
+     * @param secret secret
      * @param timestamp current timestamp
      * @return Signature information calculated from timestamp
      */

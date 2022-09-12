@@ -17,8 +17,6 @@
 
 package org.apache.streampark.console.core.service.impl;
 
-import static org.apache.streampark.common.enums.StorageType.LFS;
-
 import org.apache.streampark.common.conf.Workspace;
 import org.apache.streampark.common.enums.StorageType;
 import org.apache.streampark.common.fs.LfsOperator;
@@ -34,6 +32,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.apache.streampark.common.enums.StorageType.LFS;
+
 @Slf4j
 @Service
 public class ApplicationHistoryServiceImpl implements ApplicationHistoryService {
@@ -43,17 +43,16 @@ public class ApplicationHistoryServiceImpl implements ApplicationHistoryService 
         switch (storageType) {
             case LFS:
                 return Arrays.stream(LfsOperator.listDir(Workspace.of(LFS).APP_UPLOADS()))
-                    .filter(File::isFile)
-                    .sorted(Comparator.comparingLong(File::lastModified).reversed())
-                    .map(File::getName)
-                    .filter(fn -> fn.endsWith(".jar"))
-                    .limit(limit)
-                    .collect(Collectors.toList());
+                        .filter(File::isFile)
+                        .sorted(Comparator.comparingLong(File::lastModified).reversed())
+                        .map(File::getName)
+                        .filter(fn -> fn.endsWith(".jar"))
+                        .limit(limit)
+                        .collect(Collectors.toList());
             case HDFS:
                 // temporarily does not provide support for hdfs.
             default:
                 return new ArrayList<>(0);
         }
     }
-
 }

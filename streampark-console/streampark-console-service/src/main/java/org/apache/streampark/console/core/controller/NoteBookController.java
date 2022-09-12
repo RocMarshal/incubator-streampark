@@ -32,11 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class NoteBookController {
 
     @PostMapping("submit")
-    public void submit(Note note) {
-    }
+    public void submit(Note note) {}
 
     @PostMapping("submit2")
-    public void submit2(Note note) {
-    }
-
+    public void submit2(Note note) {}
 }

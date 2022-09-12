@@ -40,11 +40,10 @@ public enum AlertType {
     }
 
     /**
-     * Alarm way, binary bits indicate
-     * Where bit 1 means: email alarm, bit 2 means: ding alarm, bit 3 means: weCom alarm, bit 4 means: http callback, and bit 5 means: lark.
-     * Example:
-     * level= 3, its binary bit is: 0000 0011, then the corresponding alarm mode bit: ding, email
-     * level= 10, its binary bit is: 0000 1010, then the corresponding alarm mode bit: ding, callback
+     * Alarm way, binary bits indicate Where bit 1 means: email alarm, bit 2 means: ding alarm, bit
+     * 3 means: weCom alarm, bit 4 means: http callback, and bit 5 means: lark. Example: level= 3,
+     * its binary bit is: 0000 0011, then the corresponding alarm mode bit: ding, email level= 10,
+     * its binary bit is: 0000 1010, then the corresponding alarm mode bit: ding, callback
      */
     public static List<AlertType> decode(Integer level) {
         if (level == null) {

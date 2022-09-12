@@ -22,43 +22,27 @@ import java.util.Arrays;
 
 public enum LaunchState implements Serializable {
 
-    /**
-     * launch failed
-     */
+    /** launch failed */
     FAILED(-1),
-    /**
-     * launch done
-     */
+    /** launch done */
     DONE(0),
 
-    /**
-     * need relaunch after modify task
-     */
+    /** need relaunch after modify task */
     NEED_LAUNCH(1),
 
-    /**
-     * launching
-     */
+    /** launching */
     LAUNCHING(2),
 
-    /**
-     * launch complete, need restart
-     */
+    /** launch complete, need restart */
     NEED_RESTART(3),
 
-    /**
-     * need rollback
-     */
+    /** need rollback */
     NEED_ROLLBACK(4),
 
-    /**
-     * project has changed, need to check the jar whether to be re-selected
-     */
+    /** project has changed, need to check the jar whether to be re-selected */
     NEED_CHECK(5),
 
-    /**
-     * revoked
-     */
+    /** revoked */
     REVOKED(10);
 
     private final int value;

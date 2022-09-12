@@ -58,9 +58,7 @@ public class Project implements Serializable {
 
     private String url;
 
-    /**
-     * git branch
-     */
+    /** git branch */
     private String branches;
 
     private Date lastBuild;
@@ -68,26 +66,21 @@ public class Project implements Serializable {
     private String userName;
 
     private String password;
-    /**
-     * 1:git 2:svn
-     */
+    /** 1:git 2:svn */
     private Integer repository;
 
     private String pom;
 
     private String buildArgs;
 
-
     private String description;
     /**
-     * Build status: -2: Changed, need to rebuild -1: Not built 0: Building 1: Build successful 2: Build failed
+     * Build status: -2: Changed, need to rebuild -1: Not built 0: Building 1: Build successful 2:
+     * Build failed
      */
     private Integer buildState;
 
-    /**
-     * 1) flink
-     * 2) spark
-     */
+    /** 1) flink 2) spark */
     private Integer type;
 
     private Date createTime;
@@ -100,17 +93,12 @@ public class Project implements Serializable {
 
     private transient String dateTo;
 
-    /**
-     * project source
-     */
+    /** project source */
     private transient String appSource;
 
-    @JsonIgnore
-    private transient SettingService settingService;
+    @JsonIgnore private transient SettingService settingService;
 
-    /**
-     * get project source
-     */
+    /** get project source */
     @JsonIgnore
     public File getAppSource() {
         if (appSource == null) {
@@ -157,8 +145,10 @@ public class Project implements Serializable {
         try {
             Collection<Ref> refList;
             if (CommonUtils.notEmpty(userName, password)) {
-                UsernamePasswordCredentialsProvider pro = new UsernamePasswordCredentialsProvider(userName, password);
-                refList = Git.lsRemoteRepository().setRemote(url).setCredentialsProvider(pro).call();
+                UsernamePasswordCredentialsProvider pro =
+                        new UsernamePasswordCredentialsProvider(userName, password);
+                refList =
+                        Git.lsRemoteRepository().setRemote(url).setCredentialsProvider(pro).call();
             } else {
                 refList = Git.lsRemoteRepository().setRemote(url).call();
             }
@@ -181,8 +171,12 @@ public class Project implements Serializable {
     public GitAuthorizedError gitCheck() {
         try {
             if (CommonUtils.notEmpty(userName, password)) {
-                UsernamePasswordCredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(userName, password);
-                Git.lsRemoteRepository().setRemote(url).setCredentialsProvider(credentialsProvider).call();
+                UsernamePasswordCredentialsProvider credentialsProvider =
+                        new UsernamePasswordCredentialsProvider(userName, password);
+                Git.lsRemoteRepository()
+                        .setRemote(url)
+                        .setCredentialsProvider(credentialsProvider)
+                        .call();
             } else {
                 Git.lsRemoteRepository().setRemote(url).call();
             }
@@ -205,9 +199,9 @@ public class Project implements Serializable {
     }
 
     /**
-     * If you check that the project already exists and has been cloned, delete it first,
-     * Mainly to solve: if the latest pulling code in the file deletion, etc., the local will not automatically delete,
-     * may cause unpredictable errors.
+     * If you check that the project already exists and has been cloned, delete it first, Mainly to
+     * solve: if the latest pulling code in the file deletion, etc., the local will not
+     * automatically delete, may cause unpredictable errors.
      */
     public void cleanCloned() throws IOException {
         if (isCloned()) {
@@ -231,17 +225,19 @@ public class Project implements Serializable {
                 mvn = WebUtils.getAppHome().concat("/bin/mvnw");
             }
         }
-        return Arrays.asList(mvn.concat(" clean package -DskipTests ").concat(StringUtils.isEmpty(this.buildArgs) ? "" : this.buildArgs.trim()));
+        return Arrays.asList(
+                mvn.concat(" clean package -DskipTests ")
+                        .concat(StringUtils.isEmpty(this.buildArgs) ? "" : this.buildArgs.trim()));
     }
 
     @JsonIgnore
     public String getMavenWorkHome() {
         String buildHome = this.getAppSource().getAbsolutePath();
         if (CommonUtils.notEmpty(this.getPom())) {
-            buildHome = new File(buildHome.concat("/")
-                .concat(this.getPom()))
-                .getParentFile()
-                .getAbsolutePath();
+            buildHome =
+                    new File(buildHome.concat("/").concat(this.getPom()))
+                            .getParentFile()
+                            .getAbsolutePath();
         }
         return buildHome;
     }
@@ -249,28 +245,21 @@ public class Project implements Serializable {
     @JsonIgnore
     public String getLog4BuildStart() {
         return String.format(
-            "%sproject : %s\nbranches: %s\ncommand : %s\n\n",
-            getLogHeader("maven install"),
-            getName(),
-            getBranches(),
-            getMavenArgs()
-        );
+                "%sproject : %s\nbranches: %s\ncommand : %s\n\n",
+                getLogHeader("maven install"), getName(), getBranches(), getMavenArgs());
     }
 
     @JsonIgnore
     public String getLog4CloneStart() {
         return String.format(
-            "%sproject  : %s\nbranches : %s\nworkspace: %s\n\n",
-            getLogHeader("git clone"),
-            getName(),
-            getBranches(),
-            getAppSource()
-        );
+                "%sproject  : %s\nbranches : %s\nworkspace: %s\n\n",
+                getLogHeader("git clone"), getName(), getBranches(), getAppSource());
     }
 
     @JsonIgnore
     private String getLogHeader(String header) {
-        return "---------------------------------[ " + header + " ]---------------------------------\n";
+        return "---------------------------------[ "
+                + header
+                + " ]---------------------------------\n";
     }
-
 }

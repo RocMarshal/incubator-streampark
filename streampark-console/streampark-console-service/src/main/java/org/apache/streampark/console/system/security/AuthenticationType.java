@@ -19,11 +19,8 @@ package org.apache.streampark.console.system.security;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
-/**
- * authentication type
- */
+/** authentication type */
 public enum AuthenticationType {
-
     PASSWORD(0, "verify via user name and password"),
     LDAP(1, "verify via LDAP server"),
     ;
@@ -33,7 +30,6 @@ public enum AuthenticationType {
         this.desc = desc;
     }
 
-    @EnumValue
-    private final int code;
+    @EnumValue private final int code;
     private final String desc;
 }

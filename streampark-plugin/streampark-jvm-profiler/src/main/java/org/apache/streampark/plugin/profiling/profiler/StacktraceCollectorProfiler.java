@@ -32,7 +32,6 @@ import java.util.List;
 /**
  * This class collects stacktraces by getting thread dump via JMX, and stores the stacktraces into
  * the given buffer.
- *
  */
 public class StacktraceCollectorProfiler implements Profiler {
     private long interval;
@@ -41,12 +40,13 @@ public class StacktraceCollectorProfiler implements Profiler {
     private int maxStringLength = Constants.MAX_STRING_LENGTH;
     private ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
 
-    public StacktraceCollectorProfiler(StacktraceMetricBuffer buffer, String ignoreThreadNamePrefix) {
+    public StacktraceCollectorProfiler(
+            StacktraceMetricBuffer buffer, String ignoreThreadNamePrefix) {
         this(buffer, ignoreThreadNamePrefix, Constants.MAX_STRING_LENGTH);
     }
 
     public StacktraceCollectorProfiler(
-        StacktraceMetricBuffer buffer, String ignoreThreadNamePrefix, int maxStringLength) {
+            StacktraceMetricBuffer buffer, String ignoreThreadNamePrefix, int maxStringLength) {
         this.buffer = buffer;
         this.ignoreThreadNamePrefix = ignoreThreadNamePrefix == null ? "" : ignoreThreadNamePrefix;
         this.maxStringLength = maxStringLength;
@@ -62,8 +62,7 @@ public class StacktraceCollectorProfiler implements Profiler {
     }
 
     @Override
-    public void setReporter(Reporter reporter) {
-    }
+    public void setReporter(Reporter reporter) {}
 
     @Override
     public void profile() {
@@ -78,7 +77,8 @@ public class StacktraceCollectorProfiler implements Profiler {
                 threadName = "";
             }
 
-            if (!ignoreThreadNamePrefix.isEmpty() && threadName.startsWith(ignoreThreadNamePrefix)) {
+            if (!ignoreThreadNamePrefix.isEmpty()
+                    && threadName.startsWith(ignoreThreadNamePrefix)) {
                 continue;
             }
 
@@ -88,7 +88,8 @@ public class StacktraceCollectorProfiler implements Profiler {
             stacktrace.setThreadName(threadName);
             stacktrace.setThreadState(String.valueOf(threadInfo.getThreadState()));
 
-            // Start from bottom of the stacktrace so we could trim top method (most nested method) if the
+            // Start from bottom of the stacktrace so we could trim top method (most nested method)
+            // if the
             // size is too large
             int totalLength = 0;
             List<ClassAndMethod> stack = new ArrayList<>(stackTraceElements.length);
@@ -106,7 +107,8 @@ public class StacktraceCollectorProfiler implements Profiler {
                 }
             }
 
-            // Reverse the stack so the top method (most nested method) is the first element of the array
+            // Reverse the stack so the top method (most nested method) is the first element of the
+            // array
             ClassAndMethod[] classAndMethodArray = new ClassAndMethod[stack.size()];
             for (int i = 0; i < stack.size(); i++) {
                 classAndMethodArray[classAndMethodArray.length - 1 - i] = stack.get(i);

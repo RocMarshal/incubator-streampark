@@ -36,22 +36,20 @@ import java.util.TimeZone;
 @Component
 public class MetricsTask {
 
-    @Autowired
-    private FlameGraphService flameGraphService;
+    @Autowired private FlameGraphService flameGraphService;
 
-    private static final String FLAME_GRAPH_FILE_REGEXP = "\\d+_\\d+\\.json|\\d+_\\d+\\.folded|\\d+_\\d+\\.svg";
+    private static final String FLAME_GRAPH_FILE_REGEXP =
+            "\\d+_\\d+\\.json|\\d+_\\d+\\.folded|\\d+_\\d+\\.svg";
 
-    /**
-     * hour.
-     */
+    /** hour. */
     @Scheduled(cron = "0 0 * * * ?")
     public void cleanFlameGraph() {
         // 1) clean file
         String tempPath = WebUtils.getAppTempDir().getAbsolutePath();
         File temp = new File(tempPath);
         Arrays.stream(Objects.requireNonNull(temp.listFiles()))
-            .filter(x -> x.getName().matches(FLAME_GRAPH_FILE_REGEXP))
-            .forEach(File::delete);
+                .filter(x -> x.getName().matches(FLAME_GRAPH_FILE_REGEXP))
+                .forEach(File::delete);
 
         // 2 clean date
         Date start = new Date();

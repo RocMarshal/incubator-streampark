@@ -58,9 +58,7 @@ public class FlinkCluster implements Serializable {
 
     private Integer executionMode;
 
-    /**
-     * flink version
-     */
+    /** flink version */
     private Long versionId;
 
     private String k8sNamespace;
@@ -126,7 +124,8 @@ public class FlinkCluster implements Serializable {
         String[] array = address.split(",");
         for (String url : array) {
             try {
-                HttpClientUtils.httpGetRequest(url, RequestConfig.custom().setSocketTimeout(2000).build());
+                HttpClientUtils.httpGetRequest(
+                        url, RequestConfig.custom().setSocketTimeout(2000).build());
                 return new URI(url);
             } catch (Exception ignored) {
                 //
@@ -148,7 +147,8 @@ public class FlinkCluster implements Serializable {
                 return false;
             }
             try {
-                HttpClientUtils.httpGetRequest(url, RequestConfig.custom().setConnectTimeout(2000).build());
+                HttpClientUtils.httpGetRequest(
+                        url, RequestConfig.custom().setConnectTimeout(2000).build());
                 return true;
             } catch (Exception ignored) {
                 //
@@ -158,15 +158,17 @@ public class FlinkCluster implements Serializable {
     }
 
     @JsonIgnore
-    public Map<String, String> getFlinkConfig() throws MalformedURLException, JsonProcessingException {
+    public Map<String, String> getFlinkConfig()
+            throws MalformedURLException, JsonProcessingException {
         URI activeAddress = this.getActiveAddress();
         String restUrl = activeAddress.toURL() + "/jobmanager/config";
-        String json = HttpClientUtils.httpGetRequest(restUrl, RequestConfig.custom().setConnectTimeout(2000).build());
-        List<Map<String, String>> confList = JacksonUtils.read(json, new TypeReference<List<Map<String, String>>>() {
-        });
+        String json =
+                HttpClientUtils.httpGetRequest(
+                        restUrl, RequestConfig.custom().setConnectTimeout(2000).build());
+        List<Map<String, String>> confList =
+                JacksonUtils.read(json, new TypeReference<List<Map<String, String>>>() {});
         Map<String, String> config = new HashMap<>(0);
         confList.forEach(k -> config.put(k.get("key"), k.get("value")));
         return config;
     }
-
 }

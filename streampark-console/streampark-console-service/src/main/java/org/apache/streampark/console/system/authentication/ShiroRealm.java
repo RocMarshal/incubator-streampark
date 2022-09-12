@@ -38,19 +38,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Set;
 
-/**
- * Implementation of ShiroRealm, including two modules: authentication and authorization
- */
+/** Implementation of ShiroRealm, including two modules: authentication and authorization */
 public class ShiroRealm extends AuthorizingRealm {
 
-    @Autowired
-    private UserService userService;
+    @Autowired private UserService userService;
 
-    @Autowired
-    private RoleService roleService;
+    @Autowired private RoleService roleService;
 
-    @Autowired
-    private AccessTokenService accessTokenService;
+    @Autowired private AccessTokenService accessTokenService;
 
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -87,7 +82,8 @@ public class ShiroRealm extends AuthorizingRealm {
      * @throws AuthenticationException 认证相关异常
      */
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
+            throws AuthenticationException {
         // 这里的 token是从 JWTFilter 的 executeLogin 方法传递过来的，已经经过了解密
         String token = (String) authenticationToken.getCredentials();
         String username = JWTUtil.getUsername(token);
@@ -102,11 +98,12 @@ public class ShiroRealm extends AuthorizingRealm {
         }
 
         if (!JWTUtil.verify(token, username, user.getPassword())) {
-            //校验是否属于api的token，权限是否有效
+            // 校验是否属于api的token，权限是否有效
             String tokenDb = WebUtils.encryptToken(token);
             boolean effective = accessTokenService.checkTokenEffective(user.getUserId(), tokenDb);
             if (!effective) {
-                throw new AuthenticationException("Token checked failed: 1-[Browser Request] please check the username or password; 2-[Api Request] please check the user status or accessToken status");
+                throw new AuthenticationException(
+                        "Token checked failed: 1-[Browser Request] please check the username or password; 2-[Api Request] please check the user status or accessToken status");
             }
             SecurityUtils.getSubject().getSession().setAttribute(AccessToken.IS_API_TOKEN, true);
         }

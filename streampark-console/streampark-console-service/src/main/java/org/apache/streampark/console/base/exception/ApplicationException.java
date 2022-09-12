@@ -30,4 +30,3 @@ public class ApplicationException extends ApiException {
         super(message, cause);
     }
 }
-

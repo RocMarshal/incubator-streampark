@@ -39,7 +39,7 @@ public interface UserService extends IService<User> {
     /**
      * find uer detail, contains basic info, role, department
      *
-     * @param user        user
+     * @param user user
      * @param restRequest queryRequest
      * @return IPage
      */
@@ -84,7 +84,7 @@ public interface UserService extends IService<User> {
      * update user avatar
      *
      * @param username name
-     * @param avatar   avatar
+     * @param avatar avatar
      */
     void updateAvatar(String username, String avatar) throws Exception;
 

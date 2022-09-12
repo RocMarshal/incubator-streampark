@@ -40,5 +40,4 @@ public class HackBuildImageResultCallback extends BuildImageResultCallback {
             listener.watchBuildStep(stream);
         }
     }
-
 }

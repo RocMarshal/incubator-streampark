@@ -43,10 +43,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class SavePointServiceImpl extends ServiceImpl<SavePointMapper, SavePoint> implements SavePointService {
+public class SavePointServiceImpl extends ServiceImpl<SavePointMapper, SavePoint>
+        implements SavePointService {
 
-    @Autowired
-    private FlinkEnvService flinkEnvService;
+    @Autowired private FlinkEnvService flinkEnvService;
 
     @Override
     public void obsolete(Long appId) {
@@ -63,10 +63,10 @@ public class SavePointServiceImpl extends ServiceImpl<SavePointMapper, SavePoint
     private void expire(SavePoint entity) {
         FlinkEnv flinkEnv = flinkEnvService.getByAppId(entity.getAppId());
         assert flinkEnv != null;
-        int cpThreshold = Integer.parseInt(
-            flinkEnv.convertFlinkYamlAsMap()
-                .getOrDefault("state.checkpoints.num-retained", "5")
-        );
+        int cpThreshold =
+                Integer.parseInt(
+                        flinkEnv.convertFlinkYamlAsMap()
+                                .getOrDefault("state.checkpoints.num-retained", "5"));
 
         if (CheckPointType.CHECKPOINT.equals(CheckPointType.of(entity.getType()))) {
             cpThreshold = cpThreshold - 1;
@@ -76,13 +76,16 @@ public class SavePointServiceImpl extends ServiceImpl<SavePointMapper, SavePoint
             this.baseMapper.expireAll(entity.getAppId());
         } else {
             LambdaQueryWrapper<SavePoint> queryWrapper = new LambdaQueryWrapper<SavePoint>();
-            queryWrapper.select(SavePoint::getTriggerTime)
-                .eq(SavePoint::getAppId, entity.getAppId())
-                .eq(SavePoint::getType, CheckPointType.CHECKPOINT.get())
-                .orderByDesc(SavePoint::getTriggerTime);
+            queryWrapper
+                    .select(SavePoint::getTriggerTime)
+                    .eq(SavePoint::getAppId, entity.getAppId())
+                    .eq(SavePoint::getType, CheckPointType.CHECKPOINT.get())
+                    .orderByDesc(SavePoint::getTriggerTime);
 
-            Page<SavePoint> savePointPage = this.baseMapper.selectPage(new Page<>(1, cpThreshold + 1), queryWrapper);
-            if (!savePointPage.getRecords().isEmpty() && savePointPage.getRecords().size() > cpThreshold) {
+            Page<SavePoint> savePointPage =
+                    this.baseMapper.selectPage(new Page<>(1, cpThreshold + 1), queryWrapper);
+            if (!savePointPage.getRecords().isEmpty()
+                    && savePointPage.getRecords().size() > cpThreshold) {
                 SavePoint savePoint = savePointPage.getRecords().get(cpThreshold - 1);
                 this.baseMapper.expire(entity.getAppId(), savePoint.getTriggerTime());
             }
@@ -111,7 +114,8 @@ public class SavePointServiceImpl extends ServiceImpl<SavePointMapper, SavePoint
 
     @Override
     public IPage<SavePoint> page(SavePoint savePoint, RestRequest request) {
-        Page<SavePoint> page = new MybatisPager<SavePoint>().getPage(request, "trigger_time", Constant.ORDER_DESC);
+        Page<SavePoint> page =
+                new MybatisPager<SavePoint>().getPage(request, "trigger_time", Constant.ORDER_DESC);
         return this.baseMapper.page(page, savePoint.getAppId());
     }
 
@@ -120,7 +124,14 @@ public class SavePointServiceImpl extends ServiceImpl<SavePointMapper, SavePoint
         Long appId = application.getId();
         baseMapper.removeApp(application.getId());
         try {
-            application.getFsOperator().delete(application.getWorkspace().APP_SAVEPOINTS().concat("/").concat(appId.toString()));
+            application
+                    .getFsOperator()
+                    .delete(
+                            application
+                                    .getWorkspace()
+                                    .APP_SAVEPOINTS()
+                                    .concat("/")
+                                    .concat(appId.toString()));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

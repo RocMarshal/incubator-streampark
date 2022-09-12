@@ -33,11 +33,17 @@ public class JWTTest {
         String userName = "black";
         String secret = UUID.randomUUID().toString();
         String expireTime = AccessToken.DEFAULT_EXPIRE_TIME;
-        String token = JWTUtil.sign(userName, secret, DateUtils.getTime(expireTime, DateUtils.fullFormat(), TimeZone.getDefault()));
+        String token =
+                JWTUtil.sign(
+                        userName,
+                        secret,
+                        DateUtils.getTime(
+                                expireTime, DateUtils.fullFormat(), TimeZone.getDefault()));
 
         assert token != null;
         Date expiresAt = JWT.decode(token).getExpiresAt();
-        String decodeExpireTime = DateUtils.format(expiresAt, DateUtils.fullFormat(), TimeZone.getDefault());
+        String decodeExpireTime =
+                DateUtils.format(expiresAt, DateUtils.fullFormat(), TimeZone.getDefault());
         Assert.assertEquals(expireTime, decodeExpireTime);
     }
 }

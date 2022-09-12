@@ -25,5 +25,4 @@ public interface BuildImageCallbackListener {
      * @param buildStepMsg build step msg from docker rest api.
      */
     void watchBuildStep(String buildStepMsg);
-
 }

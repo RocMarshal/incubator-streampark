@@ -29,6 +29,7 @@ public interface SettingMapper extends BaseMapper<Setting> {
     @Select("select * from t_setting where setting_key=#{key}")
     Setting get(@Param("key") String key);
 
-    @Update("update t_setting set setting_value = #{setting.settingValue} where setting_key = #{setting.settingKey}")
+    @Update(
+            "update t_setting set setting_value = #{setting.settingValue} where setting_key = #{setting.settingKey}")
     void updateByKey(@Param("setting") Setting setting);
 }

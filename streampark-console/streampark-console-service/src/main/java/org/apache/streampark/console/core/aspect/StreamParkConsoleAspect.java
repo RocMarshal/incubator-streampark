@@ -36,8 +36,7 @@ import java.lang.reflect.Method;
 public class StreamParkConsoleAspect {
 
     @Pointcut("@annotation(org.apache.streampark.console.core.annotation.RefreshCache)")
-    public void refreshCache() {
-    }
+    public void refreshCache() {}
 
     @Around("refreshCache()")
     public Object refreshCache(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -53,14 +52,15 @@ public class StreamParkConsoleAspect {
             method.setAccessible(true);
             appId = (Long) method.invoke(param, null);
         }
-        return FlinkTrackingTask.refreshTracking(appId, () -> {
-            try {
-                return joinPoint.proceed();
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
-            }
-            return null;
-        });
+        return FlinkTrackingTask.refreshTracking(
+                appId,
+                () -> {
+                    try {
+                        return joinPoint.proceed();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                    return null;
+                });
     }
-
 }

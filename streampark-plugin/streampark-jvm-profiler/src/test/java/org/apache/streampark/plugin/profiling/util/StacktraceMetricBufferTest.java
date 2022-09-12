@@ -54,7 +54,7 @@ public class StacktraceMetricBufferTest {
             Stacktrace stacktrace = new Stacktrace();
             stacktrace.setThreadName("thread1");
             stacktrace.setThreadState("RUNNING");
-            stacktrace.setStack(new ClassAndMethod[]{new ClassAndMethod("class1", "method1")});
+            stacktrace.setStack(new ClassAndMethod[] {new ClassAndMethod("class1", "method1")});
 
             buffer.appendValue(stacktrace);
 
@@ -64,7 +64,7 @@ public class StacktraceMetricBufferTest {
             Stacktrace stacktrace = new Stacktrace();
             stacktrace.setThreadName("thread1");
             stacktrace.setThreadState("RUNNING");
-            stacktrace.setStack(new ClassAndMethod[]{new ClassAndMethod("class1", "method1")});
+            stacktrace.setStack(new ClassAndMethod[] {new ClassAndMethod("class1", "method1")});
 
             buffer.appendValue(stacktrace);
         }
@@ -72,7 +72,7 @@ public class StacktraceMetricBufferTest {
             Stacktrace stacktrace = new Stacktrace();
             stacktrace.setThreadName("thread1");
             stacktrace.setThreadState("WAITING");
-            stacktrace.setStack(new ClassAndMethod[]{new ClassAndMethod("class1", "method1")});
+            stacktrace.setStack(new ClassAndMethod[] {new ClassAndMethod("class1", "method1")});
 
             buffer.appendValue(stacktrace);
 
@@ -82,7 +82,7 @@ public class StacktraceMetricBufferTest {
             Stacktrace stacktrace = new Stacktrace();
             stacktrace.setThreadName("thread2");
             stacktrace.setThreadState("RUNNING");
-            stacktrace.setStack(new ClassAndMethod[]{new ClassAndMethod("class1", "method1")});
+            stacktrace.setStack(new ClassAndMethod[] {new ClassAndMethod("class1", "method1")});
 
             buffer.appendValue(stacktrace);
 
@@ -92,7 +92,7 @@ public class StacktraceMetricBufferTest {
             Stacktrace stacktrace = new Stacktrace();
             stacktrace.setThreadName("thread2");
             stacktrace.setThreadState("RUNNING");
-            stacktrace.setStack(new ClassAndMethod[]{new ClassAndMethod("class1", "method1")});
+            stacktrace.setStack(new ClassAndMethod[] {new ClassAndMethod("class1", "method1")});
 
             buffer.appendValue(stacktrace);
 
@@ -102,7 +102,7 @@ public class StacktraceMetricBufferTest {
             Stacktrace stacktrace = new Stacktrace();
             stacktrace.setThreadName("thread2");
             stacktrace.setThreadState("RUNNING");
-            stacktrace.setStack(new ClassAndMethod[]{new ClassAndMethod("class1", "method2")});
+            stacktrace.setStack(new ClassAndMethod[] {new ClassAndMethod("class1", "method2")});
 
             buffer.appendValue(stacktrace);
 
@@ -112,7 +112,7 @@ public class StacktraceMetricBufferTest {
             Stacktrace stacktrace = new Stacktrace();
             stacktrace.setThreadName("thread3");
             stacktrace.setThreadState("WAIRTING");
-            stacktrace.setStack(new ClassAndMethod[]{new ClassAndMethod("class2", "method2")});
+            stacktrace.setStack(new ClassAndMethod[] {new ClassAndMethod("class2", "method2")});
 
             buffer.appendValue(stacktrace);
 
@@ -123,9 +123,10 @@ public class StacktraceMetricBufferTest {
             stacktrace.setThreadName("thread3");
             stacktrace.setThreadState("RUNNING");
             stacktrace.setStack(
-                new ClassAndMethod[]{
-                    new ClassAndMethod("class11", "method11"), new ClassAndMethod("class11", "method12")
-                });
+                    new ClassAndMethod[] {
+                        new ClassAndMethod("class11", "method11"),
+                        new ClassAndMethod("class11", "method12")
+                    });
 
             buffer.appendValue(stacktrace);
 
@@ -136,9 +137,10 @@ public class StacktraceMetricBufferTest {
             stacktrace.setThreadName("thread3");
             stacktrace.setThreadState("RUNNING");
             stacktrace.setStack(
-                new ClassAndMethod[]{
-                    new ClassAndMethod("class11", "method11"), new ClassAndMethod("class11", "method12")
-                });
+                    new ClassAndMethod[] {
+                        new ClassAndMethod("class11", "method11"),
+                        new ClassAndMethod("class11", "method12")
+                    });
 
             buffer.appendValue(stacktrace);
 
@@ -183,7 +185,7 @@ public class StacktraceMetricBufferTest {
             Stacktrace stacktrace = new Stacktrace();
             stacktrace.setThreadName("thread1");
             stacktrace.setThreadState("RUNNING");
-            stacktrace.setStack(new ClassAndMethod[]{new ClassAndMethod("class1", "method1")});
+            stacktrace.setStack(new ClassAndMethod[] {new ClassAndMethod("class1", "method1")});
 
             long count = map.get(stacktrace).longValue();
             Assert.assertEquals(2, count);
@@ -192,7 +194,7 @@ public class StacktraceMetricBufferTest {
             Stacktrace stacktrace = new Stacktrace();
             stacktrace.setThreadName("thread1");
             stacktrace.setThreadState("WAITING");
-            stacktrace.setStack(new ClassAndMethod[]{new ClassAndMethod("class1", "method1")});
+            stacktrace.setStack(new ClassAndMethod[] {new ClassAndMethod("class1", "method1")});
 
             long count = map.get(stacktrace).longValue();
             Assert.assertEquals(1, count);
@@ -201,7 +203,7 @@ public class StacktraceMetricBufferTest {
             Stacktrace stacktrace = new Stacktrace();
             stacktrace.setThreadName("thread2");
             stacktrace.setThreadState("RUNNING");
-            stacktrace.setStack(new ClassAndMethod[]{new ClassAndMethod("class1", "method1")});
+            stacktrace.setStack(new ClassAndMethod[] {new ClassAndMethod("class1", "method1")});
 
             long count = map.get(stacktrace).longValue();
             Assert.assertEquals(2, count);
@@ -210,7 +212,7 @@ public class StacktraceMetricBufferTest {
             Stacktrace stacktrace = new Stacktrace();
             stacktrace.setThreadName("thread2");
             stacktrace.setThreadState("RUNNING");
-            stacktrace.setStack(new ClassAndMethod[]{new ClassAndMethod("class1", "method2")});
+            stacktrace.setStack(new ClassAndMethod[] {new ClassAndMethod("class1", "method2")});
 
             long count = map.get(stacktrace).longValue();
             Assert.assertEquals(1, count);
@@ -219,7 +221,7 @@ public class StacktraceMetricBufferTest {
             Stacktrace stacktrace = new Stacktrace();
             stacktrace.setThreadName("thread3");
             stacktrace.setThreadState("WAIRTING");
-            stacktrace.setStack(new ClassAndMethod[]{new ClassAndMethod("class2", "method2")});
+            stacktrace.setStack(new ClassAndMethod[] {new ClassAndMethod("class2", "method2")});
 
             long count = map.get(stacktrace).longValue();
             Assert.assertEquals(1, count);
@@ -229,9 +231,10 @@ public class StacktraceMetricBufferTest {
             stacktrace.setThreadName("thread3");
             stacktrace.setThreadState("RUNNING");
             stacktrace.setStack(
-                new ClassAndMethod[]{
-                    new ClassAndMethod("class11", "method11"), new ClassAndMethod("class11", "method12")
-                });
+                    new ClassAndMethod[] {
+                        new ClassAndMethod("class11", "method11"),
+                        new ClassAndMethod("class11", "method12")
+                    });
 
             long count = map.get(stacktrace).longValue();
             Assert.assertEquals(2, count);

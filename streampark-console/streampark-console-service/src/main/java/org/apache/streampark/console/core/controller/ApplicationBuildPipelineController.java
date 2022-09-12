@@ -50,27 +50,39 @@ import java.util.Optional;
 @RequestMapping("flink/pipe")
 public class ApplicationBuildPipelineController {
 
-    @Autowired
-    private AppBuildPipeService appBuildPipeService;
+    @Autowired private AppBuildPipeService appBuildPipeService;
 
-    @Autowired
-    private ApplicationService applicationService;
+    @Autowired private ApplicationService applicationService;
 
-    @Autowired
-    private FlinkSqlService flinkSqlService;
+    @Autowired private FlinkSqlService flinkSqlService;
 
     /**
      * Launch application building pipeline.
      *
-     * @param appId      application id
+     * @param appId application id
      * @param forceBuild forced start pipeline or not
      * @return Whether the pipeline was successfully started
      */
     @ApiAccess
-    @ApiOperation(value = "Launch application", notes = "Launch application", tags = ApiDocConstant.FLINK_APP_OP_TAG, consumes = "application/x-www-form-urlencoded")
+    @ApiOperation(
+            value = "Launch application",
+            notes = "Launch application",
+            tags = ApiDocConstant.FLINK_APP_OP_TAG,
+            consumes = "application/x-www-form-urlencoded")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "appId", value = "APP_ID", required = true, paramType = "form", dataType = "Long"),
-        @ApiImplicitParam(name = "forceBuild", value = "FORCE_BUILD", required = true, paramType = "form", dataType = "Boolean", defaultValue = "false"),
+        @ApiImplicitParam(
+                name = "appId",
+                value = "APP_ID",
+                required = true,
+                paramType = "form",
+                dataType = "Long"),
+        @ApiImplicitParam(
+                name = "forceBuild",
+                value = "FORCE_BUILD",
+                required = true,
+                paramType = "form",
+                dataType = "Boolean",
+                defaultValue = "false"),
     })
     @PostMapping(value = "build", consumes = "application/x-www-form-urlencoded")
     @RequiresPermissions("app:create")
@@ -114,11 +126,12 @@ public class ApplicationBuildPipelineController {
         Optional<AppBuildPipeline> pipeline = appBuildPipeService.getCurrentBuildPipeline(appId);
         details.put("pipeline", pipeline.map(AppBuildPipeline::toView).orElse(null));
 
-        if (pipeline.isPresent() && PipelineType.FLINK_NATIVE_K8S_APPLICATION == pipeline.get().getPipeType()) {
-            DockerResolvedSnapshot dockerProgress = appBuildPipeService.getDockerProgressDetailSnapshot(appId);
+        if (pipeline.isPresent()
+                && PipelineType.FLINK_NATIVE_K8S_APPLICATION == pipeline.get().getPipeType()) {
+            DockerResolvedSnapshot dockerProgress =
+                    appBuildPipeService.getDockerProgressDetailSnapshot(appId);
             details.put("docker", AppBuildDockerResolvedDetail.of(dockerProgress));
         }
         return RestResponse.success(details);
     }
-
 }

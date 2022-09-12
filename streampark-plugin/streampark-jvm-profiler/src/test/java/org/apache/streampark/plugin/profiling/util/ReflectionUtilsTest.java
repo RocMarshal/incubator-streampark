@@ -26,11 +26,12 @@ public class ReflectionUtilsTest {
 
     @Test
     public void executeStaticMethods()
-        throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
-        InvocationTargetException {
+            throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
+                    InvocationTargetException {
         Object result =
-            ReflectionUtils.executeStaticMethods(
-                "org.apache.streampark.plugin.profiling.util.ReflectionUtilsTest$ClassB", "getClassA.method1");
+                ReflectionUtils.executeStaticMethods(
+                        "org.apache.streampark.plugin.profiling.util.ReflectionUtilsTest$ClassB",
+                        "getClassA.method1");
         Assert.assertEquals("hello", result);
     }
 

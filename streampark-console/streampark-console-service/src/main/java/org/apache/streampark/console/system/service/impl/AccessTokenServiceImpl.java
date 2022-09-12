@@ -50,10 +50,10 @@ import java.util.UUID;
 @Slf4j
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class AccessTokenServiceImpl extends ServiceImpl<AccessTokenMapper, AccessToken> implements AccessTokenService {
+public class AccessTokenServiceImpl extends ServiceImpl<AccessTokenMapper, AccessToken>
+        implements AccessTokenService {
 
-    @Autowired
-    private UserService userService;
+    @Autowired private UserService userService;
 
     @Override
     public RestResponse generateToken(Long userId, String expireTime, String description) {
@@ -67,7 +67,9 @@ public class AccessTokenServiceImpl extends ServiceImpl<AccessTokenMapper, Acces
         }
 
         Long ttl = DateUtils.getTime(expireTime, DateUtils.fullFormat(), TimeZone.getDefault());
-        String token = WebUtils.encryptToken(JWTUtil.sign(user.getUsername(), UUID.randomUUID().toString(), ttl));
+        String token =
+                WebUtils.encryptToken(
+                        JWTUtil.sign(user.getUsername(), UUID.randomUUID().toString(), ttl));
         JWTToken jwtToken = new JWTToken(token, expireTime);
 
         AccessToken accessToken = new AccessToken();
@@ -113,10 +115,15 @@ public class AccessTokenServiceImpl extends ServiceImpl<AccessTokenMapper, Acces
         }
 
         if (User.STATUS_LOCK.equals(tokenInfo.getUserStatus())) {
-            return RestResponse.fail("user status is locked, could not operate this accessToken!", ResponseCode.CODE_API_FAIL);
+            return RestResponse.fail(
+                    "user status is locked, could not operate this accessToken!",
+                    ResponseCode.CODE_API_FAIL);
         }
 
-        Integer status = tokenInfo.getStatus().equals(AccessToken.STATUS_ENABLE) ? AccessToken.STATUS_DISABLE : AccessToken.STATUS_ENABLE;
+        Integer status =
+                tokenInfo.getStatus().equals(AccessToken.STATUS_ENABLE)
+                        ? AccessToken.STATUS_DISABLE
+                        : AccessToken.STATUS_ENABLE;
 
         AccessToken updateObj = new AccessToken();
         updateObj.setStatus(status);

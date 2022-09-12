@@ -26,12 +26,25 @@ public class OssStorageServiceTest {
 
     @Test
     public void testHandleException() throws Exception {
-        OSSException ossException = new OSSException("mock error", "MOCK_CODE", "requestId", "hostId", "header", "resource", "GET");
+        OSSException ossException =
+                new OSSException(
+                        "mock error",
+                        "MOCK_CODE",
+                        "requestId",
+                        "hostId",
+                        "header",
+                        "resource",
+                        "GET");
         RuntimeException exp = OssStorageService.handleOssException(ossException);
-        Assert.assertTrue(exp.getMessage().equals("Caught an OSSException. Error Message: mock error. Error Code: MOCK_CODE. Request ID: requestId"));
+        Assert.assertTrue(
+                exp.getMessage()
+                        .equals(
+                                "Caught an OSSException. Error Message: mock error. Error Code: MOCK_CODE. Request ID: requestId"));
 
         ClientException ossClientException = new ClientException("Client ERROR");
         exp = OssStorageService.handleOssException(ossClientException);
-        Assert.assertTrue(exp.getMessage().startsWith("Caught an ClientException. Error Message: Client ERROR"));
+        Assert.assertTrue(
+                exp.getMessage()
+                        .startsWith("Caught an ClientException. Error Message: Client ERROR"));
     }
 }

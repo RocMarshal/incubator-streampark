@@ -21,25 +21,16 @@ import java.io.Serializable;
 
 public enum GitAuthorizedError implements Serializable {
 
-    /**
-     * success
-     */
+    /** success */
     SUCCESS(0),
 
-    /**
-     * need required, user password is null
-     */
+    /** need required, user password is null */
     REQUIRED(1),
 
-    /**
-     * user password error
-     */
+    /** user password error */
     ERROR(2),
 
-
-    /**
-     * 其他未知错误
-     */
+    /** 其他未知错误 */
     UNKNOW(3);
 
     private final int value;
@@ -60,5 +51,4 @@ public enum GitAuthorizedError implements Serializable {
     public int getType() {
         return value;
     }
-
 }

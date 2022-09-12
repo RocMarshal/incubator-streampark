@@ -52,11 +52,9 @@ public class MetricsController {
 
     private static final String STACKTRACE_PROFILER_NAME = "Stacktrace";
 
-    @Autowired
-    private FlameGraphService flameGraphService;
+    @Autowired private FlameGraphService flameGraphService;
 
-    @Autowired
-    private MessageService messageService;
+    @Autowired private MessageService messageService;
 
     @PostMapping("notice")
     public RestResponse notice(Integer type, RestRequest request) {
@@ -74,7 +72,11 @@ public class MetricsController {
     public RestResponse report(@RequestBody JvmProfiler jvmProfiler) {
         try {
             if (jvmProfiler != null && jvmProfiler.getProfiler().equals(STACKTRACE_PROFILER_NAME)) {
-                log.info("id:{},token:{},type:{}", jvmProfiler.getId(), jvmProfiler.getToken(), jvmProfiler.getType());
+                log.info(
+                        "id:{},token:{},type:{}",
+                        jvmProfiler.getId(),
+                        jvmProfiler.getToken(),
+                        jvmProfiler.getType());
                 FlameGraph flameGraph = new FlameGraph();
                 flameGraph.setAppId(jvmProfiler.getId());
                 flameGraph.setProfiler(jvmProfiler.getProfiler());
@@ -92,16 +94,13 @@ public class MetricsController {
     public ResponseEntity<Resource> flameGraph(FlameGraph flameGraph) throws IOException {
         String file = flameGraphService.generateFlameGraph(flameGraph);
         if (file != null) {
-            String contentDisposition = ContentDisposition
-                .builder("attachment")
-                .filename(file)
-                .build()
-                .toString();
+            String contentDisposition =
+                    ContentDisposition.builder("attachment").filename(file).build().toString();
 
             return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
-                .contentType(MediaType.parseMediaType("image/svg+xml"))
-                .body(new FileSystemResource(file));
+                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                    .contentType(MediaType.parseMediaType("image/svg+xml"))
+                    .body(new FileSystemResource(file));
         } else {
             return null;
         }

@@ -40,18 +40,15 @@ import java.util.concurrent.TimeUnit;
 public class CheckpointProcessor {
 
     private final Cache<String, Long> checkPointCache =
-        Caffeine.newBuilder().expireAfterAccess(1, TimeUnit.DAYS).build();
+            Caffeine.newBuilder().expireAfterAccess(1, TimeUnit.DAYS).build();
 
     private final Map<Long, Counter> checkPointFailedCache = new ConcurrentHashMap<>(0);
 
-    @Autowired
-    private ApplicationService applicationService;
+    @Autowired private ApplicationService applicationService;
 
-    @Autowired
-    private AlertService alertService;
+    @Autowired private AlertService alertService;
 
-    @Autowired
-    private SavePointService savePointService;
+    @Autowired private SavePointService savePointService;
 
     public void process(Long appId, CheckPoints checkPoints) {
         CheckPoints.Latest latest = checkPoints.getLatest();
@@ -64,10 +61,15 @@ public class CheckpointProcessor {
 
         if (CheckPointStatus.COMPLETED.equals(status)) {
             String cacheId = appId + "_" + application.getJobId();
-            Long latestId = checkPointCache.get(cacheId, key -> {
-                SavePoint savePoint = savePointService.getLatest(appId);
-                return Optional.ofNullable(savePoint).map(SavePoint::getChkId).orElse(null);
-            });
+            Long latestId =
+                    checkPointCache.get(
+                            cacheId,
+                            key -> {
+                                SavePoint savePoint = savePointService.getLatest(appId);
+                                return Optional.ofNullable(savePoint)
+                                        .map(SavePoint::getChkId)
+                                        .orElse(null);
+                            });
 
             if (latestId == null || latestId < checkPoint.getId()) {
                 saveSavepoint(checkPoint, application);
@@ -80,7 +82,7 @@ public class CheckpointProcessor {
             } else {
                 long minute = counter.getDuration(checkPoint.getTriggerTimestamp());
                 if (minute <= application.getCpFailureRateInterval()
-                    && counter.count >= application.getCpMaxFailureInterval()) {
+                        && counter.count >= application.getCpMaxFailureInterval()) {
                     checkPointFailedCache.remove(appId);
                     if (application.getCpFailureAction() == 1) {
                         alertService.alert(application, CheckPointStatus.FAILED);
@@ -131,7 +133,4 @@ public class CheckpointProcessor {
             return (currentTimestamp - this.timestamp) / 1000 / 60;
         }
     }
-
 }
-
-

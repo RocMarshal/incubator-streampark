@@ -85,7 +85,9 @@ public class SendEmailTest {
             System.out.println(html);
             writer.close();
 
-            String subject = String.format("StreamPark Alert: %s %s", application.getJobName(), appState.name());
+            String subject =
+                    String.format(
+                            "StreamPark Alert: %s %s", application.getJobName(), appState.name());
             sendEmail(subject, html, "****@domain.com");
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,14 +107,21 @@ public class SendEmailTest {
 
         AlertTemplate template = new AlertTemplate();
         template.setJobName(application.getJobName());
-        template.setStartTime(DateUtils.format(application.getStartTime(), DateUtils.fullFormat(), TimeZone.getDefault()));
+        template.setStartTime(
+                DateUtils.format(
+                        application.getStartTime(), DateUtils.fullFormat(), TimeZone.getDefault()));
         template.setDuration(DateUtils.toRichTimeDuration(duration));
         template.setLink(url);
-        template.setEndTime(DateUtils.format(application.getEndTime() == null ? new Date() : application.getEndTime(), DateUtils.fullFormat(), TimeZone.getDefault()));
+        template.setEndTime(
+                DateUtils.format(
+                        application.getEndTime() == null ? new Date() : application.getEndTime(),
+                        DateUtils.fullFormat(),
+                        TimeZone.getDefault()));
         template.setRestart(application.isNeedRestartOnFailed());
         template.setRestartIndex(application.getRestartCount());
         template.setTotalRestart(application.getRestartSize());
-        template.setCpFailureRateInterval(DateUtils.toRichTimeDuration(application.getCpFailureRateInterval()));
+        template.setCpFailureRateInterval(
+                DateUtils.toRichTimeDuration(application.getCpFailureRateInterval()));
         template.setCpMaxFailureInterval(application.getCpMaxFailureInterval());
 
         return template;
@@ -136,5 +145,4 @@ public class SendEmailTest {
         htmlEmail.addTo(mails);
         htmlEmail.send();
     }
-
 }

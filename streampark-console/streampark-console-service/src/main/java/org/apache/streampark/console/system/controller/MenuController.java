@@ -46,15 +46,14 @@ import java.util.Map;
 @RequestMapping("/menu")
 public class MenuController {
 
-    @Autowired
-    private MenuService menuService;
+    @Autowired private MenuService menuService;
 
-    @Autowired
-    private CommonService commonService;
+    @Autowired private CommonService commonService;
 
     @PostMapping("router")
     public RestResponse getUserRouters() {
-        ArrayList<VueRouter<Menu>> routers = this.menuService.getUserRouters(commonService.getCurrentUser());
+        ArrayList<VueRouter<Menu>> routers =
+                this.menuService.getUserRouters(commonService.getCurrentUser());
         return RestResponse.success(routers);
     }
 
@@ -75,7 +74,7 @@ public class MenuController {
     @DeleteMapping("delete")
     @RequiresPermissions("menu:delete")
     public RestResponse deleteMenus(@NotBlank(message = "{required}") String menuIds)
-        throws Exception {
+            throws Exception {
         String[] ids = menuIds.split(StringPool.COMMA);
         this.menuService.deleteMenus(ids);
         return RestResponse.success();
@@ -87,5 +86,4 @@ public class MenuController {
         this.menuService.updateMenu(menu);
         return RestResponse.success();
     }
-
 }

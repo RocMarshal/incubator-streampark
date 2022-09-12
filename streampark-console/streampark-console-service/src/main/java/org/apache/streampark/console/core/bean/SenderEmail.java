@@ -28,5 +28,4 @@ public class SenderEmail {
     private String userName;
     private String password;
     private boolean ssl;
-
 }

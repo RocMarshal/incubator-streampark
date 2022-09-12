@@ -31,7 +31,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     IPage<User> findUserDetail(Page page, @Param("user") User user);
 
-    @Select("SELECT u.* FROM t_user u LEFT JOIN t_access_token t ON u.USER_ID = t.USER_ID WHERE t.USER_ID IS NULL")
+    @Select(
+            "SELECT u.* FROM t_user u LEFT JOIN t_access_token t ON u.USER_ID = t.USER_ID WHERE t.USER_ID IS NULL")
     List<User> getNoTokenUser();
-
 }

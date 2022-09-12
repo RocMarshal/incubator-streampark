@@ -50,14 +50,11 @@ import java.util.stream.Collectors;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
 
-    @Autowired
-    private RoleMenuMapper roleMenuMapper;
+    @Autowired private RoleMenuMapper roleMenuMapper;
 
-    @Autowired
-    private UserRoleService userRoleService;
+    @Autowired private UserRoleService userRoleService;
 
-    @Autowired
-    private RoleMenuServie roleMenuService;
+    @Autowired private RoleMenuServie roleMenuService;
 
     @Override
     public Set<String> getUserRoleName(String username) {
@@ -106,9 +103,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         role.setModifyTime(new Date());
         baseMapper.updateById(role);
         roleMenuMapper.delete(
-            new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getRoleId, role.getRoleId()));
+                new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getRoleId, role.getRoleId()));
         String menuId = role.getMenuId();
-        if (StringUtils.contains(menuId, Constant.APP_DETAIL_MENU_ID) && !StringUtils.contains(menuId, Constant.APP_MENU_ID)) {
+        if (StringUtils.contains(menuId, Constant.APP_DETAIL_MENU_ID)
+                && !StringUtils.contains(menuId, Constant.APP_MENU_ID)) {
             menuId = menuId + StringPool.COMMA + Constant.APP_MENU_ID;
         }
         String[] menuIds = menuId.split(StringPool.COMMA);
@@ -116,11 +114,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     private void setRoleMenus(Role role, String[] menuIds) {
-        Arrays.stream(menuIds).forEach(menuId -> {
-            RoleMenu rm = new RoleMenu();
-            rm.setMenuId(Long.valueOf(menuId));
-            rm.setRoleId(role.getRoleId());
-            this.roleMenuMapper.insert(rm);
-        });
+        Arrays.stream(menuIds)
+                .forEach(
+                        menuId -> {
+                            RoleMenu rm = new RoleMenu();
+                            rm.setMenuId(Long.valueOf(menuId));
+                            rm.setRoleId(role.getRoleId());
+                            this.roleMenuMapper.insert(rm);
+                        });
     }
 }

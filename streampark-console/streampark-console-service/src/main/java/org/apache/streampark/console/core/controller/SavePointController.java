@@ -40,11 +40,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("flink/savepoint")
 public class SavePointController {
 
-    @Autowired
-    private ApplicationService applicationService;
+    @Autowired private ApplicationService applicationService;
 
-    @Autowired
-    private SavePointService savePointService;
+    @Autowired private SavePointService savePointService;
 
     @PostMapping("latest")
     public RestResponse latest(Long appId) {

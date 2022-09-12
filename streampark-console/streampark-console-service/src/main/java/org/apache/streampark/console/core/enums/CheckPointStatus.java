@@ -21,18 +21,12 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public enum CheckPointStatus implements Serializable {
-    /**
-     * IN_PROGRESS
-     */
+    /** IN_PROGRESS */
     IN_PROGRESS(1),
-    /**
-     * COMPLETED
-     */
+    /** COMPLETED */
     COMPLETED(2),
 
-    /**
-     * FAILED
-     */
+    /** FAILED */
     FAILED(3);
 
     private final int value;

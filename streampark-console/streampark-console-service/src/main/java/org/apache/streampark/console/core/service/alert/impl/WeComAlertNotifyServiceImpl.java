@@ -58,7 +58,8 @@ public class WeComAlertNotifyServiceImpl implements AlertNotifyService {
     }
 
     @Override
-    public boolean doAlert(AlertConfigWithParams alertConfig, AlertTemplate alertTemplate) throws AlertException {
+    public boolean doAlert(AlertConfigWithParams alertConfig, AlertTemplate alertTemplate)
+            throws AlertException {
         AlertWeComParams weComParams = alertConfig.getWeComParams();
         try {
             // format markdown
@@ -80,7 +81,8 @@ public class WeComAlertNotifyServiceImpl implements AlertNotifyService {
         }
     }
 
-    private void sendMessage(AlertWeComParams params, Map<String, Object> body) throws AlertException {
+    private void sendMessage(AlertWeComParams params, Map<String, Object> body)
+            throws AlertException {
         // get webhook url
         String url = getWebhook(params);
         HttpHeaders headers = new HttpHeaders();
@@ -92,33 +94,41 @@ public class WeComAlertNotifyServiceImpl implements AlertNotifyService {
             robotResponse = alertRestTemplate.postForObject(url, entity, RobotResponse.class);
         } catch (Exception e) {
             log.error("Failed to request DingTalk robot alarm,\nurl:{}", url, e);
-            throw new AlertException(String.format("Failed to request WeCom robot alert,\nurl:%s", url), e);
+            throw new AlertException(
+                    String.format("Failed to request WeCom robot alert,\nurl:%s", url), e);
         }
 
         if (robotResponse == null) {
-            throw new AlertException(String.format("Failed to request WeCom robot alert,\nurl:%s", url));
+            throw new AlertException(
+                    String.format("Failed to request WeCom robot alert,\nurl:%s", url));
         }
         if (robotResponse.getErrcode() != 0) {
-            throw new AlertException(String.format("Failed to request DingTalk robot alert,\nurl:%s,\nerrorCode:%d,\nerrorMsg:%s",
-                    url, robotResponse.getErrcode(), robotResponse.getErrmsg()));
+            throw new AlertException(
+                    String.format(
+                            "Failed to request DingTalk robot alert,\nurl:%s,\nerrorCode:%d,\nerrorMsg:%s",
+                            url, robotResponse.getErrcode(), robotResponse.getErrmsg()));
         }
     }
 
     /**
      * Gets webhook.
-     * <p>Reference documentation</p>
-     * <a href="https://developer.work.weixin.qq.com/document/path/91770">Swarm Robot Configuration Instructions</a>
      *
-     * @param params {@link  AlertWeComParams}
+     * <p>Reference documentation <a
+     * href="https://developer.work.weixin.qq.com/document/path/91770">Swarm Robot Configuration
+     * Instructions</a>
+     *
+     * @param params {@link AlertWeComParams}
      * @return the webhook
      */
     private String getWebhook(AlertWeComParams params) {
         String url;
-        url = String.format("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=%s", params.getToken());
+        url =
+                String.format(
+                        "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=%s",
+                        params.getToken());
         if (log.isDebugEnabled()) {
             log.debug("The alert robot url of WeCom is {}", url);
         }
         return url;
     }
-
 }

@@ -32,10 +32,7 @@ import java.util.Optional;
 
 public interface AppBuildPipeService extends IService<AppBuildPipeline> {
 
-    /**
-     * Build application.
-     * This is an async call method.
-     */
+    /** Build application. This is an async call method. */
     boolean buildApplication(@Nonnull Application app) throws Exception;
 
     /**
@@ -46,23 +43,18 @@ public interface AppBuildPipeService extends IService<AppBuildPipeline> {
      */
     Optional<AppBuildPipeline> getCurrentBuildPipeline(@Nonnull Long appId);
 
-    /**
-     * Get Docker resolved snapshot of specified application.
-     */
+    /** Get Docker resolved snapshot of specified application. */
     DockerResolvedSnapshot getDockerProgressDetailSnapshot(@Nonnull Long appId);
 
-    /**
-     * Whether the application can currently start a new building progress
-     */
+    /** Whether the application can currently start a new building progress */
     boolean allowToBuildNow(@Nonnull Long appId);
 
-    /**
-     * list pipeline status on application id list
-     */
+    /** list pipeline status on application id list */
     Map<Long, PipelineStatus> listPipelineStatus(List<Long> appIds);
 
     /**
      * delete appBuildPipeline By application
+     *
      * @param appId
      */
     void removeApp(Long appId);

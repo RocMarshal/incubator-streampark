@@ -50,22 +50,19 @@ import java.util.Set;
 @RequestMapping("passport")
 public class PassportController {
 
-    @Autowired
-    private UserService userService;
+    @Autowired private UserService userService;
 
-    @Autowired
-    private RoleService roleService;
+    @Autowired private RoleService roleService;
 
-    @Autowired
-    private ShiroProperties properties;
+    @Autowired private ShiroProperties properties;
 
-    @Autowired
-    private Authenticator authenticator;
+    @Autowired private Authenticator authenticator;
 
     @PostMapping("signin")
     public RestResponse signin(
-        @NotBlank(message = "{required}") String username,
-        @NotBlank(message = "{required}") String password) throws Exception {
+            @NotBlank(message = "{required}") String username,
+            @NotBlank(message = "{required}") String password)
+            throws Exception {
 
         if (StringUtils.isEmpty(username)) {
             return RestResponse.success().put("code", 0);
@@ -101,10 +98,11 @@ public class PassportController {
     }
 
     /**
-     * generate user info, contains: 1.token, 2.vue router, 3.role, 4.permission, 5.personalized config info of frontend
+     * generate user info, contains: 1.token, 2.vue router, 3.role, 4.permission, 5.personalized
+     * config info of frontend
      *
      * @param token token
-     * @param user  user
+     * @param user user
      * @return UserInfo
      */
     private Map<String, Object> generateUserInfo(JWTToken token, User user) {
@@ -123,5 +121,4 @@ public class PassportController {
         userInfo.put("user", user);
         return userInfo;
     }
-
 }

@@ -33,7 +33,7 @@ public class ClassMethodArgument {
 
         if (argumentIndex < 0) {
             throw new IllegalArgumentException(
-                "argumentIndex (must equal or greater than 0: 0 means not collecting argument value, 1 means collecting first argument value)");
+                    "argumentIndex (must equal or greater than 0: 0 means not collecting argument value, 1 means collecting first argument value)");
         }
 
         this.className = className;
@@ -84,15 +84,15 @@ public class ClassMethodArgument {
     @Override
     public String toString() {
         return "{"
-            + "className='"
-            + className
-            + '\''
-            + ", methodName='"
-            + methodName
-            + '\''
-            + ", argumentIndex='"
-            + argumentIndex
-            + '\''
-            + '}';
+                + "className='"
+                + className
+                + '\''
+                + ", methodName='"
+                + methodName
+                + '\''
+                + ", argumentIndex='"
+                + argumentIndex
+                + '\''
+                + '}';
     }
 }

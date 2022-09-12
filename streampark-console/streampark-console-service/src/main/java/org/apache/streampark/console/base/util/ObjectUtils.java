@@ -22,9 +22,7 @@ import java.util.Arrays;
 
 public final class ObjectUtils {
 
-    private ObjectUtils() {
-
-    }
+    private ObjectUtils() {}
 
     private static final int INITIAL_HASH = 7;
     private static final int MULTIPLIER = 31;
@@ -37,8 +35,8 @@ public final class ObjectUtils {
     private static final String ARRAY_ELEMENT_SEPARATOR = ", ";
 
     /**
-     * Return whether the given throwable is a checked exception: that is, neither a RuntimeException
-     * nor an Error.
+     * Return whether the given throwable is a checked exception: that is, neither a
+     * RuntimeException nor an Error.
      *
      * @param ex the throwable to check
      * @return whether the throwable is a checked exception
@@ -54,7 +52,7 @@ public final class ObjectUtils {
      * Check whether the given exception is compatible with the exceptions declared in a throws
      * clause.
      *
-     * @param ex                 the exception to checked
+     * @param ex the exception to checked
      * @param declaredExceptions the exceptions declared in the throws clause
      * @return whether the given exception is compatible
      */
@@ -96,8 +94,8 @@ public final class ObjectUtils {
     /**
      * Check whether the given array contains the given element.
      *
-     * @param array   the array to check (may be <code>null</code>, in which case the return value will
-     *                always be <code>false</code>)
+     * @param array the array to check (may be <code>null</code>, in which case the return value
+     *     will always be <code>false</code>)
      * @param element the element to check for
      * @return whether the element has been found in the given array
      */
@@ -117,8 +115,9 @@ public final class ObjectUtils {
      * Check whether the given array of enum constants contains a constant with the given name,
      * ignoring case when determining a match.
      *
-     * @param enumValues the enum values to check, typically the product of a call to MyEnum.values()
-     * @param constant   the constant name to find (must not be null or empty string)
+     * @param enumValues the enum values to check, typically the product of a call to
+     *     MyEnum.values()
+     * @param constant the constant name to find (must not be null or empty string)
      * @return whether the constant has been found in the given array
      */
     public static boolean containsConstant(Enum<?>[] enumValues, String constant) {
@@ -128,15 +127,18 @@ public final class ObjectUtils {
     /**
      * Check whether the given array of enum constants contains a constant with the given name.
      *
-     * @param enumValues    the enum values to check, typically the product of a call to MyEnum.values()
-     * @param constant      the constant name to find (must not be null or empty string)
+     * @param enumValues the enum values to check, typically the product of a call to
+     *     MyEnum.values()
+     * @param constant the constant name to find (must not be null or empty string)
      * @param caseSensitive whether case is significant in determining a match
      * @return whether the constant has been found in the given array
      */
     public static boolean containsConstant(
-        Enum<?>[] enumValues, String constant, boolean caseSensitive) {
+            Enum<?>[] enumValues, String constant, boolean caseSensitive) {
         for (Enum<?> candidate : enumValues) {
-            if (caseSensitive ? candidate.toString().equals(constant) : candidate.toString().equalsIgnoreCase(constant)) {
+            if (caseSensitive
+                    ? candidate.toString().equals(constant)
+                    : candidate.toString().equalsIgnoreCase(constant)) {
                 return true;
             }
         }
@@ -146,11 +148,12 @@ public final class ObjectUtils {
     /**
      * Case insensitive alternative to {@link Enum#valueOf(Class, String)}.
      *
-     * @param <E>        the concrete Enum type
+     * @param <E> the concrete Enum type
      * @param enumValues the array of all Enum constants in question, usually per Enum.values()
-     * @param constant   the constant to get the enum value of
-     * @throws IllegalArgumentException if the given constant is not found in the given array of enum
-     *                                  values. Use {@link #containsConstant(Enum[], String)} as a guard to avoid this exception.
+     * @param constant the constant to get the enum value of
+     * @throws IllegalArgumentException if the given constant is not found in the given array of
+     *     enum values. Use {@link #containsConstant(Enum[], String)} as a guard to avoid this
+     *     exception.
      */
     public static <E extends Enum<?>> E caseInsensitiveValueOf(E[] enumValues, String constant) {
         for (E candidate : enumValues) {
@@ -159,17 +162,17 @@ public final class ObjectUtils {
             }
         }
         throw new IllegalArgumentException(
-            String.format(
-                "constant [%s] does not exist in enum type %s",
-                constant, enumValues.getClass().getComponentType().getName()));
+                String.format(
+                        "constant [%s] does not exist in enum type %s",
+                        constant, enumValues.getClass().getComponentType().getName()));
     }
 
     /**
-     * Append the given object to the given array, returning a new array consisting of the input array
-     * contents plus the given object.
+     * Append the given object to the given array, returning a new array consisting of the input
+     * array contents plus the given object.
      *
      * @param array the array to append to (can be <code>null</code>)
-     * @param obj   the object to append
+     * @param obj the object to append
      * @return the new array (of the same component type; never <code>null</code>)
      */
     public static <A, O extends A> A[] addObjectToArray(A[] array, O obj) {
@@ -297,7 +300,8 @@ public final class ObjectUtils {
     /**
      * Return as hash code for the given object; typically the value of <code>
      * {@link Object#hashCode()}</code>. If the object is an array, this method will delegate to any
-     * of the <code>safeHashCode</code> methods for arrays in this class. If the object is <code>null
+     * of the <code>safeHashCode</code> methods for arrays in this class. If the object is <code>
+     * null
      * </code>, this method returns 0.
      *
      * @see #safeHashCode(Object[])
@@ -527,7 +531,7 @@ public final class ObjectUtils {
      *
      * @param obj the object (may be <code>null</code>)
      * @return the object's identity as String representation, or an empty String if the object was
-     * <code>null</code>
+     *     <code>null</code>
      */
     public static String identityToString(Object obj) {
         if (obj == null) {
@@ -627,8 +631,9 @@ public final class ObjectUtils {
      * Return a String representation of the contents of the specified array.
      *
      * <p>The String representation consists of a list of the array's elements, enclosed in curly
-     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "</code>
-     * (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is <code>null
+     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "
+     * </code> (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is
+     * <code>null
      * </code>.
      *
      * @param array the array to build a String representation for
@@ -659,8 +664,9 @@ public final class ObjectUtils {
      * Return a String representation of the contents of the specified array.
      *
      * <p>The String representation consists of a list of the array's elements, enclosed in curly
-     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "</code>
-     * (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is <code>null
+     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "
+     * </code> (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is
+     * <code>null
      * </code>.
      *
      * @param array the array to build a String representation for
@@ -692,8 +698,9 @@ public final class ObjectUtils {
      * Return a String representation of the contents of the specified array.
      *
      * <p>The String representation consists of a list of the array's elements, enclosed in curly
-     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "</code>
-     * (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is <code>null
+     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "
+     * </code> (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is
+     * <code>null
      * </code>.
      *
      * @param array the array to build a String representation for
@@ -724,8 +731,9 @@ public final class ObjectUtils {
      * Return a String representation of the contents of the specified array.
      *
      * <p>The String representation consists of a list of the array's elements, enclosed in curly
-     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "</code>
-     * (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is <code>null
+     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "
+     * </code> (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is
+     * <code>null
      * </code>.
      *
      * @param array the array to build a String representation for
@@ -756,8 +764,9 @@ public final class ObjectUtils {
      * Return a String representation of the contents of the specified array.
      *
      * <p>The String representation consists of a list of the array's elements, enclosed in curly
-     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "</code>
-     * (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is <code>null
+     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "
+     * </code> (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is
+     * <code>null
      * </code>.
      *
      * @param array the array to build a String representation for
@@ -789,8 +798,9 @@ public final class ObjectUtils {
      * Return a String representation of the contents of the specified array.
      *
      * <p>The String representation consists of a list of the array's elements, enclosed in curly
-     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "</code>
-     * (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is <code>null
+     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "
+     * </code> (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is
+     * <code>null
      * </code>.
      *
      * @param array the array to build a String representation for
@@ -822,8 +832,9 @@ public final class ObjectUtils {
      * Return a String representation of the contents of the specified array.
      *
      * <p>The String representation consists of a list of the array's elements, enclosed in curly
-     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "</code>
-     * (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is <code>null
+     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "
+     * </code> (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is
+     * <code>null
      * </code>.
      *
      * @param array the array to build a String representation for
@@ -854,8 +865,9 @@ public final class ObjectUtils {
      * Return a String representation of the contents of the specified array.
      *
      * <p>The String representation consists of a list of the array's elements, enclosed in curly
-     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "</code>
-     * (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is <code>null
+     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "
+     * </code> (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is
+     * <code>null
      * </code>.
      *
      * @param array the array to build a String representation for
@@ -886,8 +898,9 @@ public final class ObjectUtils {
      * Return a String representation of the contents of the specified array.
      *
      * <p>The String representation consists of a list of the array's elements, enclosed in curly
-     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "</code>
-     * (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is <code>null
+     * braces (<code>"{}"</code>). Adjacent elements are separated by the characters <code>", "
+     * </code> (a comma followed by a space). Returns <code>"null"</code> if <code>array</code> is
+     * <code>null
      * </code>.
      *
      * @param array the array to build a String representation for

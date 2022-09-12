@@ -62,9 +62,7 @@ public class SqlCompleteServiceImpl implements SqlCompleteService {
         return completeFstTree.getComplicate(temp[temp.length - 1]);
     }
 
-    /**
-     * maintain a TreeSet sorting object in the positive order of occurrence frequency
-     */
+    /** maintain a TreeSet sorting object in the positive order of occurrence frequency */
     private static class WordWithFrequency implements Comparable<WordWithFrequency> {
         String word;
         Integer count;
@@ -80,7 +78,9 @@ public class SqlCompleteServiceImpl implements SqlCompleteService {
 
             // -1 just for ascending output
             if (num == 0) {
-                // This step is very critical. If the same name is not judged and the count is different, then the set collection will default to the same element, and it will be overwritten.
+                // This step is very critical. If the same name is not judged and the count is
+                // different, then the set collection will default to the same element, and it will
+                // be overwritten.
                 return this.word.compareTo(other.word) * -1;
             } else {
                 return num * -1;
@@ -125,12 +125,16 @@ public class SqlCompleteServiceImpl implements SqlCompleteService {
                 }
                 scanner.close();
                 String dict = stringBuffer.toString();
-                Arrays.stream(dict.split(SPLIT_CHAR)).map(e -> e.trim().toLowerCase()).forEach(e -> this.initSearchTree(e, 1));
+                Arrays.stream(dict.split(SPLIT_CHAR))
+                        .map(e -> e.trim().toLowerCase())
+                        .forEach(e -> this.initSearchTree(e, 1));
             } catch (IOException e) {
                 log.error("FstTree require reserved word init fail, {}", e.getMessage());
             }
 
-            Arrays.stream(CHARACTER_NOTICE.split(SPLIT_CHAR)).map(e -> e.trim().toLowerCase()).forEach(e -> this.initSearchTree(e, 1));
+            Arrays.stream(CHARACTER_NOTICE.split(SPLIT_CHAR))
+                    .map(e -> e.trim().toLowerCase())
+                    .forEach(e -> this.initSearchTree(e, 1));
 
             try {
                 Resource resource = new ClassPathResource("sql-statistics.dict");
@@ -146,9 +150,7 @@ public class SqlCompleteServiceImpl implements SqlCompleteService {
             }
         }
 
-        /**
-         * used to return FST depth
-         */
+        /** used to return FST depth */
         private static class Single {
             public Integer loc = 0;
         }
@@ -156,7 +158,7 @@ public class SqlCompleteServiceImpl implements SqlCompleteService {
         /**
          * Used to initialize positive and reverse dictionary trees
          *
-         * @param word  word
+         * @param word word
          * @param count frequency
          */
         public void initSearchTree(String word, int count) {
@@ -165,8 +167,8 @@ public class SqlCompleteServiceImpl implements SqlCompleteService {
         }
 
         /**
-         * @param word     single word
-         * @param count    word frequency
+         * @param word single word
+         * @param count word frequency
          * @param buildWay root node
          */
         public void buildTree(String word, int count, TreeNode buildWay) {
@@ -191,12 +193,14 @@ public class SqlCompleteServiceImpl implements SqlCompleteService {
         /**
          * Traverse the FST tree and return potential word nodes
          *
-         * @param word      associative words
+         * @param word associative words
          * @param searchWay current FST tree traversal node
-         * @param breakLoc  Incoming variables, recording the depth of recursion, used to measure the effectiveness of the association
+         * @param breakLoc Incoming variables, recording the depth of recursion, used to measure the
+         *     effectiveness of the association
          * @return return the last potential node traversed
          */
-        private List<TreeNode> getMaybeNodeList(String word, TreeNode searchWay, SqlCompleteFstTree.Single breakLoc) {
+        private List<TreeNode> getMaybeNodeList(
+                String word, TreeNode searchWay, SqlCompleteFstTree.Single breakLoc) {
             int loc = 0;
             Map<Character, TreeNode> nowStep = searchWay.getNext();
             while (loc < word.length()) {
@@ -218,43 +222,73 @@ public class SqlCompleteServiceImpl implements SqlCompleteService {
          * Fst Tree node traversal method
          *
          * @param returnSource All potential paths
-         * @param buffer       cumulative words
-         * @param now          current FST node
+         * @param buffer cumulative words
+         * @param now current FST node
          */
         private void getDFSWord(List<WordWithFrequency> returnSource, String buffer, TreeNode now) {
             if (now.getNext().size() == 0 || now.isStop()) {
                 returnSource.add(new WordWithFrequency(buffer + now.getStep(), now.getCount()));
             } else {
-                now.getNext().values().forEach(each -> this.getDFSWord(returnSource, buffer + now.getStep(), each));
+                now.getNext()
+                        .values()
+                        .forEach(
+                                each ->
+                                        this.getDFSWord(
+                                                returnSource, buffer + now.getStep(), each));
             }
         }
 
-        private SortedSet<WordWithFrequency> tryComplicate(String word, TreeNode tree, SqlCompleteFstTree.Single passLength) {
+        private SortedSet<WordWithFrequency> tryComplicate(
+                String word, TreeNode tree, SqlCompleteFstTree.Single passLength) {
             List<WordWithFrequency> temp = new ArrayList<>();
             List<WordWithFrequency> tempNPreview = new ArrayList<>();
             SortedSet<WordWithFrequency> returnSource;
             SqlCompleteFstTree.Single breLoc = new Single();
-            this.getMaybeNodeList(word, tree, breLoc).forEach(each -> this.getDFSWord(temp, "", each));
-            returnSource = temp.stream().map(e -> new WordWithFrequency(word.substring(0, breLoc.loc) + e.word, e.count)).collect(Collectors.toCollection(TreeSet::new));
+            this.getMaybeNodeList(word, tree, breLoc)
+                    .forEach(each -> this.getDFSWord(temp, "", each));
+            returnSource =
+                    temp.stream()
+                            .map(
+                                    e ->
+                                            new WordWithFrequency(
+                                                    word.substring(0, breLoc.loc) + e.word,
+                                                    e.count))
+                            .collect(Collectors.toCollection(TreeSet::new));
 
-            // When FST appears that the prefix cannot be completely matched, such as: sela users may want to enter sele, there is no sela in FstTree.
-            // Try to correct errors. The error correction logic is to search for legal prefixes, that is, search for sel.
-            // Considering that the user enters the last word, although it is matched, it may be wrong. When there is an illegal match, remove a word and try to get more recalls.
-            //e.g: from, fre are prefixes that can be matched. If the last input is wrong, you can get the correct prompt. (Similar search to increase recall and get more target values)
+            // When FST appears that the prefix cannot be completely matched, such as: sela users
+            // may want to enter sele, there is no sela in FstTree.
+            // Try to correct errors. The error correction logic is to search for legal prefixes,
+            // that is, search for sel.
+            // Considering that the user enters the last word, although it is matched, it may be
+            // wrong. When there is an illegal match, remove a word and try to get more recalls.
+            // e.g: from, fre are prefixes that can be matched. If the last input is wrong, you can
+            // get the correct prompt. (Similar search to increase recall and get more target
+            // values)
 
             if (breLoc.loc < word.length() && breLoc.loc > 1) {
-                this.getMaybeNodeList(word.substring(0, breLoc.loc - 1), tree, breLoc).forEach(each -> this.getDFSWord(tempNPreview, "", each));
+                this.getMaybeNodeList(word.substring(0, breLoc.loc - 1), tree, breLoc)
+                        .forEach(each -> this.getDFSWord(tempNPreview, "", each));
 
                 // Note: that due to the use of variable variables, here breloc has been-1
-                returnSource.addAll(tempNPreview.stream().map(e -> new WordWithFrequency(word.substring(0, breLoc.loc) + e.word, e.count)).collect(Collectors.toList()));
+                returnSource.addAll(
+                        tempNPreview.stream()
+                                .map(
+                                        e ->
+                                                new WordWithFrequency(
+                                                        word.substring(0, breLoc.loc) + e.word,
+                                                        e.count))
+                                .collect(Collectors.toList()));
             }
 
-            // returns the length of the last successful match, which is used to measure the correctness of the match last time
+            // returns the length of the last successful match, which is used to measure the
+            // correctness of the match last time
             passLength.loc = breLoc.loc;
             return returnSource;
         }
 
         /**
+         *
+         *
          * <pre>
          * Return possible words with prefix matching and simple error correction function. The returned words conform to the following rules:
          *  - Without considering error correction
@@ -279,18 +313,34 @@ public class SqlCompleteServiceImpl implements SqlCompleteService {
             SqlCompleteFstTree.Single searchFromHeadPassLength = new Single();
             SqlCompleteFstTree.Single searchFromReversePassLength = new Single();
 
-            SortedSet<WordWithFrequency> head = tryComplicate(word, READ_FROM_HEAD, searchFromHeadPassLength);
+            SortedSet<WordWithFrequency> head =
+                    tryComplicate(word, READ_FROM_HEAD, searchFromHeadPassLength);
 
-            // Reverse search is used for error correction. Normal scenes have no meaning, such as sel, the reverse order will return l data in reverse order (because there is no les character)
-            SortedSet<WordWithFrequency> tail = tryComplicate(new StringBuffer(word).reverse().toString(), READ_FROM_HEAD, searchFromReversePassLength).stream().map(e -> new WordWithFrequency(new StringBuffer(e.word).reverse().toString(), e.count)).collect(Collectors.toCollection(TreeSet::new));
+            // Reverse search is used for error correction. Normal scenes have no meaning, such as
+            // sel, the reverse order will return l data in reverse order (because there is no les
+            // character)
+            SortedSet<WordWithFrequency> tail =
+                    tryComplicate(
+                                    new StringBuffer(word).reverse().toString(),
+                                    READ_FROM_HEAD,
+                                    searchFromReversePassLength)
+                            .stream()
+                            .map(
+                                    e ->
+                                            new WordWithFrequency(
+                                                    new StringBuffer(e.word).reverse().toString(),
+                                                    e.count))
+                            .collect(Collectors.toCollection(TreeSet::new));
 
             SortedSet<WordWithFrequency> temp = new TreeSet<>(head);
             temp.retainAll(tail);
 
             SortedSet<WordWithFrequency> returnSource = new TreeSet<>(temp);
 
-            // Compare and return the matched length to prevent the previous input error and lead to error correction, such as "aelect",
-            // it should not be associated with "axxx", it should be corrected according to the subsequent "elect"
+            // Compare and return the matched length to prevent the previous input error and lead to
+            // error correction, such as "aelect",
+            // it should not be associated with "axxx", it should be corrected according to the
+            // subsequent "elect"
             if (searchFromReversePassLength.loc > searchFromHeadPassLength.loc) {
                 returnSource.addAll(tail);
             }
@@ -299,7 +349,6 @@ public class SqlCompleteServiceImpl implements SqlCompleteService {
 
             return returnSource.stream().map(e -> e.word).collect(Collectors.toList());
         }
-
     }
 
     private static class TreeNode {
@@ -310,7 +359,8 @@ public class SqlCompleteServiceImpl implements SqlCompleteService {
         private final Map<Character, TreeNode> next;
 
         /**
-         * The root node must be initialized to ' ', otherwise there can only be one character as the starting node.
+         * The root node must be initialized to ' ', otherwise there can only be one character as
+         * the starting node.
          *
          * @param step the character of the current node
          */
@@ -343,5 +393,4 @@ public class SqlCompleteServiceImpl implements SqlCompleteService {
             return next;
         }
     }
-
 }

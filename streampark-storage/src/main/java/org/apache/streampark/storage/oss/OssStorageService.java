@@ -38,8 +38,12 @@ public class OssStorageService implements StorageService {
 
     public OssStorageService(OssConfig config) {
         this.ossConfig = config;
-        this.ossClient = new OSSClientBuilder()
-            .build(ossConfig.getEndpoint(), ossConfig.getAccessKeyId(), ossConfig.getAccessKeySecret());
+        this.ossClient =
+                new OSSClientBuilder()
+                        .build(
+                                ossConfig.getEndpoint(),
+                                ossConfig.getAccessKeyId(),
+                                ossConfig.getAccessKeySecret());
     }
 
     @Override
@@ -53,7 +57,9 @@ public class OssStorageService implements StorageService {
         try {
             ossClient.getObject(new GetObjectRequest(bucket, objectPath), new File(localFilePath));
         } catch (Exception e) {
-            log.error("GetData failed. ObjectPath: %s, local path: %s.", objectPath, localFilePath, e);
+            log.error(
+                    "GetData failed. ObjectPath: %s, local path: %s.",
+                    objectPath, localFilePath, e);
             throw handleOssException(e);
         }
     }
@@ -61,10 +67,14 @@ public class OssStorageService implements StorageService {
     @Override
     public void putData(String objectPath, String localFilePath) throws Exception {
         try {
-            PutObjectRequest putObjectRequest = new PutObjectRequest(ossConfig.getBucket(), objectPath, new File(localFilePath));
+            PutObjectRequest putObjectRequest =
+                    new PutObjectRequest(
+                            ossConfig.getBucket(), objectPath, new File(localFilePath));
             ossClient.putObject(putObjectRequest);
         } catch (Exception e) {
-            log.error("PutData failed. ObjectPath: %s, local path: %s.", objectPath, localFilePath, e);
+            log.error(
+                    "PutData failed. ObjectPath: %s, local path: %s.",
+                    objectPath, localFilePath, e);
             throw handleOssException(e);
         }
     }
@@ -73,13 +83,16 @@ public class OssStorageService implements StorageService {
     static RuntimeException handleOssException(Exception e) {
         if (e instanceof OSSException) {
             OSSException oe = (OSSException) e;
-            String errMsg = String.format("Caught an OSSException. Error Message: %s." +
-                    " Error Code: %s. Request ID: %s", oe.getErrorMessage(), oe.getErrorCode(),
-                oe.getRequestId());
+            String errMsg =
+                    String.format(
+                            "Caught an OSSException. Error Message: %s."
+                                    + " Error Code: %s. Request ID: %s",
+                            oe.getErrorMessage(), oe.getErrorCode(), oe.getRequestId());
             return new RuntimeException(errMsg, oe);
         } else if (e instanceof ClientException) {
             ClientException ce = (ClientException) e;
-            String errMsg = String.format("Caught an ClientException. Error Message: %s.", ce.getMessage());
+            String errMsg =
+                    String.format("Caught an ClientException. Error Message: %s.", ce.getMessage());
             return new RuntimeException(errMsg, ce);
         } else {
             return new RuntimeException(e);

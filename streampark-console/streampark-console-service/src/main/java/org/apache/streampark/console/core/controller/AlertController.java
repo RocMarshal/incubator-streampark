@@ -49,11 +49,9 @@ import java.util.TimeZone;
 @RequestMapping("flink/alert")
 public class AlertController {
 
-    @Autowired
-    private AlertConfigService alertConfigService;
+    @Autowired private AlertConfigService alertConfigService;
 
-    @Autowired
-    private AlertService alertService;
+    @Autowired private AlertService alertService;
 
     @PostMapping(value = "add")
     public RestResponse addAlertConf(@RequestBody AlertConfigWithParams params) {
@@ -83,7 +81,8 @@ public class AlertController {
     }
 
     @PostMapping(value = "list")
-    public RestResponse list(@RequestBody AlertConfigWithParams params, RestRequest request) throws Exception {
+    public RestResponse list(@RequestBody AlertConfigWithParams params, RestRequest request)
+            throws Exception {
         IPage<AlertConfigWithParams> page = alertConfigService.page(params, request);
         return RestResponse.success(page);
     }
@@ -100,9 +99,7 @@ public class AlertController {
         return RestResponse.success(result);
     }
 
-    /**
-     * send alert message for test
-     */
+    /** send alert message for test */
     @PostMapping("send")
     public RestResponse sendAlert(Long id) throws AlertException {
         AlertTemplate alertTemplate = new AlertTemplate();
@@ -113,11 +110,14 @@ public class AlertController {
         alertTemplate.setType(1);
         alertTemplate.setRestart(false);
         Date date = new Date();
-        alertTemplate.setStartTime(DateUtils.format(date, DateUtils.fullFormat(), TimeZone.getDefault()));
-        alertTemplate.setEndTime(DateUtils.format(date, DateUtils.fullFormat(), TimeZone.getDefault()));
+        alertTemplate.setStartTime(
+                DateUtils.format(date, DateUtils.fullFormat(), TimeZone.getDefault()));
+        alertTemplate.setEndTime(
+                DateUtils.format(date, DateUtils.fullFormat(), TimeZone.getDefault()));
         alertTemplate.setDuration(DateUtils.toRichTimeDuration(0));
-        boolean alert = alertService.alert(AlertConfigWithParams.of(alertConfigService.getById(id)), alertTemplate);
+        boolean alert =
+                alertService.alert(
+                        AlertConfigWithParams.of(alertConfigService.getById(id)), alertTemplate);
         return RestResponse.success(alert);
     }
-
 }

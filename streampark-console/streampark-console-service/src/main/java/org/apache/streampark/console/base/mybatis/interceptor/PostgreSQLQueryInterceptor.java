@@ -32,27 +32,25 @@ import org.apache.ibatis.session.RowBounds;
 import java.util.Properties;
 
 /**
- * The limit syntax of PostgreSQL conflicts with that of MySQL,
- * So use the interceptor to process the SQL syntax here.
+ * The limit syntax of PostgreSQL conflicts with that of MySQL, So use the interceptor to process
+ * the SQL syntax here.
  */
 @Intercepts({
     @Signature(
-        type = Executor.class, method = "query",
-        args = {
-            MappedStatement.class,
-            Object.class,
-            RowBounds.class,
-            ResultHandler.class
-        }),
+            type = Executor.class,
+            method = "query",
+            args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
     @Signature(
-        type = Executor.class,
-        method = "query",
-        args = {
-            MappedStatement.class,
-            Object.class,
-            RowBounds.class,
-            ResultHandler.class, CacheKey.class,
-            BoundSql.class})
+            type = Executor.class,
+            method = "query",
+            args = {
+                MappedStatement.class,
+                Object.class,
+                RowBounds.class,
+                ResultHandler.class,
+                CacheKey.class,
+                BoundSql.class
+            })
 })
 public class PostgreSQLQueryInterceptor implements Interceptor {
 
@@ -82,6 +80,5 @@ public class PostgreSQLQueryInterceptor implements Interceptor {
     }
 
     @Override
-    public void setProperties(final Properties properties) {
-    }
+    public void setProperties(final Properties properties) {}
 }

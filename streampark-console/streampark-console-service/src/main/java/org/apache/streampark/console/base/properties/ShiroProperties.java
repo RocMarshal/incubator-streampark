@@ -28,9 +28,6 @@ public class ShiroProperties {
 
     private String anonUrl;
 
-    /**
-     * token default effective time: 1d
-     */
+    /** token default effective time: 1d */
     private Long jwtTimeOut = 86400L;
-
 }

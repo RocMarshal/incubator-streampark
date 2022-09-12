@@ -29,11 +29,12 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 @Slf4j
-public class FreemarkerUtils  {
+public class FreemarkerUtils {
     private static final Configuration CONFIGURATION;
 
     static {
-        SpringTemplateLoader templateLoader = new SpringTemplateLoader(new DefaultResourceLoader(), "classpath:alert-template");
+        SpringTemplateLoader templateLoader =
+                new SpringTemplateLoader(new DefaultResourceLoader(), "classpath:alert-template");
         CONFIGURATION = new Configuration(Configuration.VERSION_2_3_28);
         CONFIGURATION.setTemplateLoader(templateLoader);
         CONFIGURATION.setDefaultEncoding("UTF-8");

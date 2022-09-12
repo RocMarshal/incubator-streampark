@@ -21,9 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
-/**
- * doris sink buffer
- */
+/** doris sink buffer */
 public class DorisSinkBufferEntry implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -125,6 +123,10 @@ public class DorisSinkBufferEntry implements Serializable {
     }
 
     public String createLabel() {
-        return String.format("%s_%s_%s", labelPrefix, System.currentTimeMillis(), UUID.randomUUID().toString().replaceAll("-", ""));
+        return String.format(
+                "%s_%s_%s",
+                labelPrefix,
+                System.currentTimeMillis(),
+                UUID.randomUUID().toString().replaceAll("-", ""));
     }
 }

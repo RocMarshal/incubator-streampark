@@ -29,6 +29,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import java.io.File;
 
 /**
+ *
+ *
  * <pre>
  *
  *       ___                     __                  .+.                         ______             __
@@ -44,7 +46,6 @@ import java.io.File;
  *   [StreamPark] Make stream processing easier ô~ô!
  *
  * </pre>
- *
  */
 @Slf4j
 @SpringBootApplication
@@ -56,13 +57,17 @@ public class StreamParkConsoleBootstrap {
         String pid = SystemPropertyUtils.get("pid");
         if (pid != null) {
             application.addListeners(new ApplicationPidFileWriter(pid));
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                log.info("application shutdown now, pid: " + CommonUtils.getPid());
-                File pidFile = new File(pid);
-                pidFile.delete();
-            }));
+            Runtime.getRuntime()
+                    .addShutdownHook(
+                            new Thread(
+                                    () -> {
+                                        log.info(
+                                                "application shutdown now, pid: "
+                                                        + CommonUtils.getPid());
+                                        File pidFile = new File(pid);
+                                        pidFile.delete();
+                                    }));
         }
         application.run();
     }
-
 }

@@ -40,8 +40,7 @@ public class CommonServiceImpl implements CommonService {
 
     private String sqlClientJar = null;
 
-    @Autowired
-    private UserService userService;
+    @Autowired private UserService userService;
 
     @Override
     public User getCurrentUser() {
@@ -58,13 +57,23 @@ public class CommonServiceImpl implements CommonService {
                 throw new ApiException("[StreamPark] " + localClient + " no exists. please check.");
             }
             List<String> jars =
-                Arrays.stream(Objects.requireNonNull(localClient.list())).filter(x -> x.matches("streampark-flink-sqlclient_" + flinkEnv.getScalaVersion() + "-.*\\.jar"))
-                    .collect(Collectors.toList());
+                    Arrays.stream(Objects.requireNonNull(localClient.list()))
+                            .filter(
+                                    x ->
+                                            x.matches(
+                                                    "streampark-flink-sqlclient_"
+                                                            + flinkEnv.getScalaVersion()
+                                                            + "-.*\\.jar"))
+                            .collect(Collectors.toList());
             if (jars.isEmpty()) {
-                throw new ApiException("[StreamPark] can no found streampark-flink-sqlclient jar in " + localClient);
+                throw new ApiException(
+                        "[StreamPark] can no found streampark-flink-sqlclient jar in "
+                                + localClient);
             }
             if (jars.size() > 1) {
-                throw new ApiException("[StreamPark] found multiple streampark-flink-sqlclient jar in " + localClient);
+                throw new ApiException(
+                        "[StreamPark] found multiple streampark-flink-sqlclient jar in "
+                                + localClient);
             }
             sqlClientJar = jars.get(0);
         }

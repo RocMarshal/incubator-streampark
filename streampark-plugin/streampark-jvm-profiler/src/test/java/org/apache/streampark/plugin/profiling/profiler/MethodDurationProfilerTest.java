@@ -39,17 +39,16 @@ public class MethodDurationProfilerTest {
         MethodDurationCollector collector = new MethodDurationCollector(buffer);
 
         Reporter reporter =
-            new Reporter() {
-                @Override
-                public void report(String profilerName, Map<String, Object> metrics) {
-                    nameList.add(profilerName);
-                    metricList.add(metrics);
-                }
+                new Reporter() {
+                    @Override
+                    public void report(String profilerName, Map<String, Object> metrics) {
+                        nameList.add(profilerName);
+                        metricList.add(metrics);
+                    }
 
-                @Override
-                public void close() {
-                }
-            };
+                    @Override
+                    public void close() {}
+                };
 
         MethodDurationProfiler profiler = new MethodDurationProfiler(buffer, reporter);
 
@@ -69,46 +68,46 @@ public class MethodDurationProfilerTest {
         Assert.assertEquals(2 * metricCountForHistogram, metricList.size());
 
         List<Map<String, Object>> metricsToCheck =
-            metricList.stream()
-                .filter(
-                    t ->
-                        t.get("className").equals("class1")
-                            && t.get("methodName").equals("method1")
-                            && t.get("metricName").equals("metric1.count"))
-                .collect(Collectors.toList());
+                metricList.stream()
+                        .filter(
+                                t ->
+                                        t.get("className").equals("class1")
+                                                && t.get("methodName").equals("method1")
+                                                && t.get("metricName").equals("metric1.count"))
+                        .collect(Collectors.toList());
         Assert.assertEquals(1, metricsToCheck.size());
         Assert.assertEquals(2.0, (Double) metricsToCheck.get(0).get("metricValue"), 0.01);
 
         metricsToCheck =
-            metricList.stream()
-                .filter(
-                    t ->
-                        t.get("className").equals("class1")
-                            && t.get("methodName").equals("method1")
-                            && t.get("metricName").equals("metric1.sum"))
-                .collect(Collectors.toList());
+                metricList.stream()
+                        .filter(
+                                t ->
+                                        t.get("className").equals("class1")
+                                                && t.get("methodName").equals("method1")
+                                                && t.get("metricName").equals("metric1.sum"))
+                        .collect(Collectors.toList());
         Assert.assertEquals(1, metricsToCheck.size());
         Assert.assertEquals(444.0, (Double) metricsToCheck.get(0).get("metricValue"), 0.01);
 
         metricsToCheck =
-            metricList.stream()
-                .filter(
-                    t ->
-                        t.get("className").equals("class2")
-                            && t.get("methodName").equals("method2")
-                            && t.get("metricName").equals("metric2.count"))
-                .collect(Collectors.toList());
+                metricList.stream()
+                        .filter(
+                                t ->
+                                        t.get("className").equals("class2")
+                                                && t.get("methodName").equals("method2")
+                                                && t.get("metricName").equals("metric2.count"))
+                        .collect(Collectors.toList());
         Assert.assertEquals(1, metricsToCheck.size());
         Assert.assertEquals(1.0, (Double) metricsToCheck.get(0).get("metricValue"), 0.01);
 
         metricsToCheck =
-            metricList.stream()
-                .filter(
-                    t ->
-                        t.get("className").equals("class2")
-                            && t.get("methodName").equals("method2")
-                            && t.get("metricName").equals("metric2.sum"))
-                .collect(Collectors.toList());
+                metricList.stream()
+                        .filter(
+                                t ->
+                                        t.get("className").equals("class2")
+                                                && t.get("methodName").equals("method2")
+                                                && t.get("metricName").equals("metric2.sum"))
+                        .collect(Collectors.toList());
         Assert.assertEquals(1, metricsToCheck.size());
         Assert.assertEquals(222.0, (Double) metricsToCheck.get(0).get("metricValue"), 0.01);
     }

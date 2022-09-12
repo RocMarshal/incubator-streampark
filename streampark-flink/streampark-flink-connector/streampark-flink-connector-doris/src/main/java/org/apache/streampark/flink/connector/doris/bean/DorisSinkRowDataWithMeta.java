@@ -40,7 +40,7 @@ public class DorisSinkRowDataWithMeta implements Serializable {
     }
 
     public String[] getDataRows() {
-        return dataRows.toArray(new String[]{});
+        return dataRows.toArray(new String[] {});
     }
 
     public void addDataRow(String dataRow) {

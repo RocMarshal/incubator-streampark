@@ -41,17 +41,17 @@ public class AgentITCase {
         System.out.println("outputDir: " + outputDir);
 
         ProcessBuilder pb =
-            new ProcessBuilder(
-                javaBin,
-                "-cp",
-                agentJar,
-                "-javaagent:"
-                    + agentJar
-                    + "=configProvider=org.apache.streampark.plugin.profiling.util.DummyConfigProvider,reporter=org.apache.streampark.plugin.profiling.reporter.FileOutputReporter,outputDir="
-                    + outputDir
-                    + ",tag=mytag,metricInterval=200,durationProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod,argumentProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod.1,ioProfiling=true",
-                "org.apache.streampark.plugin.profiling.example.HelloWorldApplication",
-                "2000");
+                new ProcessBuilder(
+                        javaBin,
+                        "-cp",
+                        agentJar,
+                        "-javaagent:"
+                                + agentJar
+                                + "=configProvider=org.apache.streampark.plugin.profiling.util.DummyConfigProvider,reporter=org.apache.streampark.plugin.profiling.reporter.FileOutputReporter,outputDir="
+                                + outputDir
+                                + ",tag=mytag,metricInterval=200,durationProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod,argumentProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod.1,ioProfiling=true",
+                        "org.apache.streampark.plugin.profiling.example.HelloWorldApplication",
+                        "2000");
 
         pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
         pb.redirectError(ProcessBuilder.Redirect.INHERIT);
@@ -63,18 +63,21 @@ public class AgentITCase {
         Assert.assertEquals(5, files.length);
 
         List<String> fileNames =
-            Arrays.asList(files).stream().map(t -> t.getName()).sorted().collect(Collectors.toList());
+                Arrays.asList(files).stream()
+                        .map(t -> t.getName())
+                        .sorted()
+                        .collect(Collectors.toList());
 
         Assert.assertEquals("CpuAndMemory.json", fileNames.get(0));
         String jsonCpuAndMemory =
-            new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(0))));
+                new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(0))));
         System.out.println("-----CpuAndMemory-----");
         System.out.println(jsonCpuAndMemory);
         Assert.assertTrue(jsonCpuAndMemory.contains("bufferPool"));
 
         Assert.assertEquals("IO.json", fileNames.get(1));
         String jsonProcFileSystem =
-            new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(1))));
+                new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(1))));
         System.out.println("-----IO-----");
         System.out.println(jsonProcFileSystem);
         Assert.assertTrue(jsonProcFileSystem.contains("read_bytes"));
@@ -82,20 +85,21 @@ public class AgentITCase {
 
         Assert.assertEquals("MethodArgument.json", fileNames.get(2));
         String jsonMethodArgument =
-            new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(2))));
+                new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(2))));
         System.out.println("-----MethodArgument-----");
         System.out.println(jsonMethodArgument);
         Assert.assertTrue(jsonMethodArgument.contains("arg.1"));
 
         Assert.assertEquals("MethodDuration.json", fileNames.get(3));
         String jsonMethodDuration =
-            new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(3))));
+                new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(3))));
         System.out.println("-----MethodDuration-----");
         System.out.println(jsonMethodDuration);
         Assert.assertTrue(jsonMethodDuration.contains("duration.sum"));
 
         Assert.assertEquals("ProcessInfo.json", fileNames.get(4));
-        String jsonProcessInfo = new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(4))));
+        String jsonProcessInfo =
+                new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(4))));
         System.out.println("-----ProcessInfo-----");
         System.out.println(jsonProcessInfo);
         Assert.assertTrue(jsonProcessInfo.contains("jvmClassPath"));
@@ -113,17 +117,17 @@ public class AgentITCase {
         System.out.println("outputDir: " + outputDir);
 
         ProcessBuilder pb =
-            new ProcessBuilder(
-                javaBin,
-                "-cp",
-                agentJar,
-                "-javaagent:"
-                    + agentJar
-                    + "=noop=true,configProvider=org.apache.streampark.plugin.profiling.util.DummyConfigProvider,reporter=org.apache.streampark.plugin.profiling.reporter.FileOutputReporter,outputDir="
-                    + outputDir
-                    + ",tag=mytag,metricInterval=200,durationProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod,argumentProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod.1,ioProfiling=true",
-                "org.apache.streampark.plugin.profiling.example.HelloWorldApplication",
-                "2000");
+                new ProcessBuilder(
+                        javaBin,
+                        "-cp",
+                        agentJar,
+                        "-javaagent:"
+                                + agentJar
+                                + "=noop=true,configProvider=org.apache.streampark.plugin.profiling.util.DummyConfigProvider,reporter=org.apache.streampark.plugin.profiling.reporter.FileOutputReporter,outputDir="
+                                + outputDir
+                                + ",tag=mytag,metricInterval=200,durationProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod,argumentProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod.1,ioProfiling=true",
+                        "org.apache.streampark.plugin.profiling.example.HelloWorldApplication",
+                        "2000");
 
         pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
         pb.redirectError(ProcessBuilder.Redirect.INHERIT);
@@ -146,17 +150,17 @@ public class AgentITCase {
         System.out.println("outputDir: " + outputDir);
 
         ProcessBuilder pb =
-            new ProcessBuilder(
-                javaBin,
-                "-cp",
-                agentJar,
-                "-javaagent:"
-                    + agentJar
-                    + "=configProvider=org.apache.streampark.plugin.profiling.util.NoopConfigProvider,reporter=org.apache.streampark.plugin.profiling.reporter.FileOutputReporter,outputDir="
-                    + outputDir
-                    + ",tag=mytag,metricInterval=200,durationProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod,argumentProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod.1,ioProfiling=true",
-                "org.apache.streampark.plugin.profiling.example.HelloWorldApplication",
-                "2000");
+                new ProcessBuilder(
+                        javaBin,
+                        "-cp",
+                        agentJar,
+                        "-javaagent:"
+                                + agentJar
+                                + "=configProvider=org.apache.streampark.plugin.profiling.util.NoopConfigProvider,reporter=org.apache.streampark.plugin.profiling.reporter.FileOutputReporter,outputDir="
+                                + outputDir
+                                + ",tag=mytag,metricInterval=200,durationProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod,argumentProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod.1,ioProfiling=true",
+                        "org.apache.streampark.plugin.profiling.example.HelloWorldApplication",
+                        "2000");
 
         pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
         pb.redirectError(ProcessBuilder.Redirect.INHERIT);
@@ -179,17 +183,17 @@ public class AgentITCase {
         System.out.println("outputDir: " + outputDir);
 
         ProcessBuilder pb =
-            new ProcessBuilder(
-                javaBin,
-                "-cp",
-                agentJar,
-                "-javaagent:"
-                    + agentJar
-                    + "=configProvider=org.apache.streampark.plugin.profiling.util.DummyConfigProvider,reporter=org.apache.streampark.plugin.profiling.reporter.FileOutputReporter,outputDir="
-                    + outputDir
-                    + ",tag=mytag,metricInterval=200,durationProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod,argumentProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod.0",
-                "org.apache.streampark.plugin.profiling.example.HelloWorldApplication",
-                "2000");
+                new ProcessBuilder(
+                        javaBin,
+                        "-cp",
+                        agentJar,
+                        "-javaagent:"
+                                + agentJar
+                                + "=configProvider=org.apache.streampark.plugin.profiling.util.DummyConfigProvider,reporter=org.apache.streampark.plugin.profiling.reporter.FileOutputReporter,outputDir="
+                                + outputDir
+                                + ",tag=mytag,metricInterval=200,durationProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod,argumentProfiling=org.apache.streampark.plugin.profiling.example.HelloWorldApplication.publicSleepMethod.0",
+                        "org.apache.streampark.plugin.profiling.example.HelloWorldApplication",
+                        "2000");
 
         pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
         pb.redirectError(ProcessBuilder.Redirect.INHERIT);
@@ -201,31 +205,35 @@ public class AgentITCase {
         Assert.assertEquals(4, files.length);
 
         List<String> fileNames =
-            Arrays.asList(files).stream().map(t -> t.getName()).sorted().collect(Collectors.toList());
+                Arrays.asList(files).stream()
+                        .map(t -> t.getName())
+                        .sorted()
+                        .collect(Collectors.toList());
 
         Assert.assertEquals("CpuAndMemory.json", fileNames.get(0));
         String jsonCpuAndMemory =
-            new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(0))));
+                new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(0))));
         System.out.println("-----CpuAndMemory-----");
         System.out.println(jsonCpuAndMemory);
         Assert.assertTrue(jsonCpuAndMemory.contains("bufferPool"));
 
         Assert.assertEquals("MethodArgument.json", fileNames.get(1));
         String jsonMethodArgument =
-            new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(1))));
+                new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(1))));
         System.out.println("-----MethodArgument-----");
         System.out.println(jsonMethodArgument);
         Assert.assertTrue(jsonMethodArgument.contains("arg.0"));
 
         Assert.assertEquals("MethodDuration.json", fileNames.get(2));
         String jsonMethodDuration =
-            new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(2))));
+                new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(2))));
         System.out.println("-----MethodDuration-----");
         System.out.println(jsonMethodDuration);
         Assert.assertTrue(jsonMethodDuration.contains("duration.sum"));
 
         Assert.assertEquals("ProcessInfo.json", fileNames.get(3));
-        String jsonProcessInfo = new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(3))));
+        String jsonProcessInfo =
+                new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(3))));
         System.out.println("-----ProcessInfo-----");
         System.out.println(jsonProcessInfo);
         Assert.assertTrue(jsonProcessInfo.contains("jvmClassPath"));
@@ -243,17 +251,17 @@ public class AgentITCase {
         System.out.println("outputDir: " + outputDir);
 
         ProcessBuilder pb =
-            new ProcessBuilder(
-                javaBin,
-                "-cp",
-                agentJar,
-                "-javaagent:"
-                    + agentJar
-                    + "=configProvider=org.apache.streampark.plugin.profiling.util.DummyConfigProvider,reporter=org.apache.streampark.plugin.profiling.reporter.FileOutputReporter,outputDir="
-                    + outputDir
-                    + ",tag=mytag,appIdVariable=APP_ID",
-                "org.apache.streampark.plugin.profiling.example.HelloWorldApplication",
-                "2000");
+                new ProcessBuilder(
+                        javaBin,
+                        "-cp",
+                        agentJar,
+                        "-javaagent:"
+                                + agentJar
+                                + "=configProvider=org.apache.streampark.plugin.profiling.util.DummyConfigProvider,reporter=org.apache.streampark.plugin.profiling.reporter.FileOutputReporter,outputDir="
+                                + outputDir
+                                + ",tag=mytag,appIdVariable=APP_ID",
+                        "org.apache.streampark.plugin.profiling.example.HelloWorldApplication",
+                        "2000");
 
         pb.environment().put("APP_ID", "TEST_APP_ID_123_ABC");
 
@@ -267,39 +275,44 @@ public class AgentITCase {
         Assert.assertEquals(2, files.length);
 
         List<String> fileNames =
-            Arrays.asList(files).stream().map(t -> t.getName()).sorted().collect(Collectors.toList());
+                Arrays.asList(files).stream()
+                        .map(t -> t.getName())
+                        .sorted()
+                        .collect(Collectors.toList());
 
         Assert.assertEquals("CpuAndMemory.json", fileNames.get(0));
         String jsonCpuAndMemory =
-            new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(0))));
+                new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(0))));
         System.out.println("-----CpuAndMemory-----");
         System.out.println(jsonCpuAndMemory);
         Assert.assertTrue(jsonCpuAndMemory.contains("TEST_APP_ID_123_ABC"));
 
         Assert.assertEquals("ProcessInfo.json", fileNames.get(1));
-        String jsonProcessInfo = new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(1))));
+        String jsonProcessInfo =
+                new String(Files.readAllBytes(Paths.get(outputDir, fileNames.get(1))));
         System.out.println("-----ProcessInfo-----");
         System.out.println(jsonProcessInfo);
         Assert.assertTrue(jsonProcessInfo.contains("TEST_APP_ID_123_ABC"));
     }
 
     private String getAgentJarPath() throws IOException {
-        // Find jar file with largest size under target directory, which should be the packaged agent
+        // Find jar file with largest size under target directory, which should be the packaged
+        // agent
         // jar file
         String agentJar =
-            Files.list(Paths.get("target"))
-                .max(
-                    Comparator.comparingLong(
-                        t -> {
-                            try {
-                                return Files.size(t);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }))
-                .map(t -> t.toString())
-                .filter(t -> t.endsWith(".jar"))
-                .get();
+                Files.list(Paths.get("target"))
+                        .max(
+                                Comparator.comparingLong(
+                                        t -> {
+                                            try {
+                                                return Files.size(t);
+                                            } catch (IOException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        }))
+                        .map(t -> t.toString())
+                        .filter(t -> t.endsWith(".jar"))
+                        .get();
         System.out.println("agentJar: " + agentJar);
         return agentJar;
     }

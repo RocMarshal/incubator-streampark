@@ -54,22 +54,35 @@ public class AlertConfigWithParams implements Serializable {
             return null;
         }
         AlertConfigWithParams params = new AlertConfigWithParams();
-        BeanUtils.copyProperties(config, params, "emailParams", "dingTalkParams", "weComParams", "httpCallbackParams", "larkParams");
+        BeanUtils.copyProperties(
+                config,
+                params,
+                "emailParams",
+                "dingTalkParams",
+                "weComParams",
+                "httpCallbackParams",
+                "larkParams");
         try {
             if (StringUtils.isNotBlank(config.getEmailParams())) {
-                params.setEmailParams(JacksonUtils.read(config.getEmailParams(), AlertEmailParams.class));
+                params.setEmailParams(
+                        JacksonUtils.read(config.getEmailParams(), AlertEmailParams.class));
             }
             if (StringUtils.isNotBlank(config.getDingTalkParams())) {
-                params.setDingTalkParams(JacksonUtils.read(config.getDingTalkParams(), AlertDingTalkParams.class));
+                params.setDingTalkParams(
+                        JacksonUtils.read(config.getDingTalkParams(), AlertDingTalkParams.class));
             }
             if (StringUtils.isNotBlank(config.getWeComParams())) {
-                params.setWeComParams(JacksonUtils.read(config.getWeComParams(), AlertWeComParams.class));
+                params.setWeComParams(
+                        JacksonUtils.read(config.getWeComParams(), AlertWeComParams.class));
             }
             if (StringUtils.isNotBlank(config.getHttpCallbackParams())) {
-                params.setHttpCallbackParams(JacksonUtils.read(config.getHttpCallbackParams(), AlertHttpCallbackParams.class));
+                params.setHttpCallbackParams(
+                        JacksonUtils.read(
+                                config.getHttpCallbackParams(), AlertHttpCallbackParams.class));
             }
             if (StringUtils.isNotBlank(config.getLarkParams())) {
-                params.setLarkParams(JacksonUtils.read(config.getLarkParams(), AlertLarkParams.class));
+                params.setLarkParams(
+                        JacksonUtils.read(config.getLarkParams(), AlertLarkParams.class));
             }
         } catch (JsonProcessingException e) {
             log.error("Json read failed", e);

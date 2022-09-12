@@ -24,5 +24,4 @@ public interface ResponseCode {
     Long CODE_FAIL = 500L;
 
     Long CODE_API_FAIL = 501L;
-
 }

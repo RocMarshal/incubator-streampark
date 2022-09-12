@@ -39,18 +39,19 @@ public class ClassAndMethodFilterTest {
         Assert.assertTrue(filter.matchClass("class2"));
 
         filter =
-            new ClassAndMethodFilter(
-                Arrays.asList(
-                    new ClassAndMethod("class2", "method1"), new ClassAndMethod("class1", "method1")));
+                new ClassAndMethodFilter(
+                        Arrays.asList(
+                                new ClassAndMethod("class2", "method1"),
+                                new ClassAndMethod("class1", "method1")));
         Assert.assertTrue(filter.matchClass("class1"));
         Assert.assertTrue(filter.matchClass("class2"));
 
         filter =
-            new ClassAndMethodFilter(
-                Arrays.asList(
-                    new ClassAndMethod("class2", "method1"),
-                    new ClassAndMethod("class1", "method1"),
-                    new ClassAndMethod("class3", "*")));
+                new ClassAndMethodFilter(
+                        Arrays.asList(
+                                new ClassAndMethod("class2", "method1"),
+                                new ClassAndMethod("class1", "method1"),
+                                new ClassAndMethod("class3", "*")));
         Assert.assertTrue(filter.matchClass("class1xx"));
         Assert.assertTrue(filter.matchClass("class2xx"));
         Assert.assertTrue(filter.matchClass("class3xx"));
@@ -71,40 +72,43 @@ public class ClassAndMethodFilterTest {
         Assert.assertFalse(filter.matchMethod("class1", "method1"));
 
         filter =
-            new ClassAndMethodFilter(
-                Arrays.asList(
-                    new ClassAndMethod("", "method1"), new ClassAndMethod("class1", "method1")));
+                new ClassAndMethodFilter(
+                        Arrays.asList(
+                                new ClassAndMethod("", "method1"),
+                                new ClassAndMethod("class1", "method1")));
         Assert.assertTrue(filter.matchMethod("class1", "method1"));
     }
 
     @Test
     public void matchMethod_wildcard() {
         ClassAndMethodFilter filter =
-            new ClassAndMethodFilter(Arrays.asList(new ClassAndMethod("class1", "")));
+                new ClassAndMethodFilter(Arrays.asList(new ClassAndMethod("class1", "")));
         Assert.assertFalse(filter.matchMethod("class1", "method1"));
 
         filter =
-            new ClassAndMethodFilter(
-                Arrays.asList(new ClassAndMethod("class1", ""), new ClassAndMethod("class1", "*")));
+                new ClassAndMethodFilter(
+                        Arrays.asList(
+                                new ClassAndMethod("class1", ""),
+                                new ClassAndMethod("class1", "*")));
         Assert.assertTrue(filter.matchMethod("class1", "method1"));
     }
 
     @Test
     public void matchMethod_prefix() {
         ClassAndMethodFilter filter =
-            new ClassAndMethodFilter(
-                Arrays.asList(
-                    new ClassAndMethod("package11.class1", "method1"),
-                    new ClassAndMethod("package22", "method2")));
+                new ClassAndMethodFilter(
+                        Arrays.asList(
+                                new ClassAndMethod("package11.class1", "method1"),
+                                new ClassAndMethod("package22", "method2")));
         Assert.assertTrue(filter.matchMethod("package22.class2", "method2"));
         Assert.assertFalse(filter.matchMethod("package2", "method2"));
 
         filter =
-            new ClassAndMethodFilter(
-                Arrays.asList(
-                    new ClassAndMethod("package11.class1", "method1"),
-                    new ClassAndMethod("package22", "method2"),
-                    new ClassAndMethod("package33", "*")));
+                new ClassAndMethodFilter(
+                        Arrays.asList(
+                                new ClassAndMethod("package11.class1", "method1"),
+                                new ClassAndMethod("package22", "method2"),
+                                new ClassAndMethod("package33", "*")));
         Assert.assertTrue(filter.matchMethod("package22.class2", "method2"));
         Assert.assertFalse(filter.matchMethod("package2", "method2"));
         Assert.assertTrue(filter.matchMethod("package33.xx.yy", "method3"));

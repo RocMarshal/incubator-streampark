@@ -28,15 +28,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
 
-/**
- * ApplicationServiceTest
- */
+/** ApplicationServiceTest */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = StreamParkConsoleBootstrap.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        classes = StreamParkConsoleBootstrap.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ApplicationServiceTest {
 
-    @Autowired
-    private ApplicationService applicationService;
+    @Autowired private ApplicationService applicationService;
 
     @Test
     public void revokeTest() {
@@ -75,5 +74,4 @@ public class ApplicationServiceTest {
 
         Assertions.assertDoesNotThrow(() -> applicationService.updateLaunch(app));
     }
-
 }

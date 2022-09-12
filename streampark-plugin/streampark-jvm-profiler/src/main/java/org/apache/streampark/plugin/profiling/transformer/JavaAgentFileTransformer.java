@@ -23,38 +23,37 @@ import org.apache.streampark.plugin.profiling.util.ClassAndMethodFilter;
 import org.apache.streampark.plugin.profiling.util.ClassMethodArgument;
 import org.apache.streampark.plugin.profiling.util.ClassMethodArgumentFilter;
 
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.LoaderClassPath;
-
 import java.io.ByteArrayInputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 import java.util.List;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.LoaderClassPath;
 
 public class JavaAgentFileTransformer implements ClassFileTransformer {
     private static final AgentLogger LOGGER =
-        AgentLogger.getLogger(JavaAgentFileTransformer.class.getName());
+            AgentLogger.getLogger(JavaAgentFileTransformer.class.getName());
 
     private ClassAndMethodFilter durationProfilingFilter;
     private ClassMethodArgumentFilter argumentFilterProfilingFilter;
 
     public JavaAgentFileTransformer(
-        List<ClassAndMethod> durationProfiling, List<ClassMethodArgument> argumentProfiling) {
+            List<ClassAndMethod> durationProfiling, List<ClassMethodArgument> argumentProfiling) {
         this.durationProfilingFilter = new ClassAndMethodFilter(durationProfiling);
         this.argumentFilterProfilingFilter = new ClassMethodArgumentFilter(argumentProfiling);
     }
 
     @Override
     public byte[] transform(
-        ClassLoader loader,
-        String className,
-        Class<?> classBeingRedefined,
-        ProtectionDomain protectionDomain,
-        byte[] classfileBuffer)
-        throws IllegalClassFormatException {
+            ClassLoader loader,
+            String className,
+            Class<?> classBeingRedefined,
+            ProtectionDomain protectionDomain,
+            byte[] classfileBuffer)
+            throws IllegalClassFormatException {
         try {
             if (className == null || className.isEmpty()) {
                 LOGGER.debug("Hit null or empty class name");
@@ -76,7 +75,7 @@ public class JavaAgentFileTransformer implements ClassFileTransformer {
         LOGGER.debug("Checking class for transform: " + normalizedClassName);
 
         if (!durationProfilingFilter.matchClass(normalizedClassName)
-            && !argumentFilterProfilingFilter.matchClass(normalizedClassName)) {
+                && !argumentFilterProfilingFilter.matchClass(normalizedClassName)) {
             return null;
         }
 
@@ -88,18 +87,23 @@ public class JavaAgentFileTransformer implements ClassFileTransformer {
             ClassPool classPool = new ClassPool();
             classPool.appendClassPath(new LoaderClassPath(loader));
             final CtClass ctClass;
-            try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(classfileBuffer)) {
+            try (ByteArrayInputStream byteArrayInputStream =
+                    new ByteArrayInputStream(classfileBuffer)) {
                 ctClass = classPool.makeClass(byteArrayInputStream);
             }
 
             CtMethod[] ctMethods = ctClass.getDeclaredMethods();
             for (CtMethod ctMethod : ctMethods) {
                 boolean enableDurationProfiling =
-                    durationProfilingFilter.matchMethod(ctClass.getName(), ctMethod.getName());
+                        durationProfilingFilter.matchMethod(ctClass.getName(), ctMethod.getName());
                 List<Integer> enableArgumentProfiler =
-                    argumentFilterProfilingFilter.matchMethod(ctClass.getName(), ctMethod.getName());
+                        argumentFilterProfilingFilter.matchMethod(
+                                ctClass.getName(), ctMethod.getName());
                 transformMethod(
-                    normalizedClassName, ctMethod, enableDurationProfiling, enableArgumentProfiler);
+                        normalizedClassName,
+                        ctMethod,
+                        enableDurationProfiling,
+                        enableArgumentProfiler);
             }
 
             byteCode = ctClass.toBytecode();
@@ -115,10 +119,10 @@ public class JavaAgentFileTransformer implements ClassFileTransformer {
     }
 
     private void transformMethod(
-        String normalizedClassName,
-        CtMethod method,
-        boolean enableDurationProfiling,
-        List<Integer> argumentsForProfile) {
+            String normalizedClassName,
+            CtMethod method,
+            boolean enableDurationProfiling,
+            List<Integer> argumentsForProfile) {
         if (method.isEmpty()) {
             LOGGER.info("Ignored empty class method: " + method.getLongName());
             return;
@@ -144,14 +148,14 @@ public class JavaAgentFileTransformer implements ClassFileTransformer {
             for (Integer argument : argumentsForProfile) {
                 if (argument >= 1) {
                     sb.append(
-                        String.format(
-                            "try{org.apache.streampark.plugin.profiling.transformer.MethodProfilerStaticProxy.collectMethodArgument(\"%s\", \"%s\", %s, String.valueOf($%s));}catch(Throwable ex){ex.printStackTrace();}",
-                            normalizedClassName, method.getName(), argument, argument));
+                            String.format(
+                                    "try{org.apache.streampark.plugin.profiling.transformer.MethodProfilerStaticProxy.collectMethodArgument(\"%s\", \"%s\", %s, String.valueOf($%s));}catch(Throwable ex){ex.printStackTrace();}",
+                                    normalizedClassName, method.getName(), argument, argument));
                 } else {
                     sb.append(
-                        String.format(
-                            "try{org.apache.streampark.plugin.profiling.transformer.MethodProfilerStaticProxy.collectMethodArgument(\"%s\", \"%s\", %s, \"\");}catch(Throwable ex){ex.printStackTrace();}",
-                            normalizedClassName, method.getName(), argument, argument));
+                            String.format(
+                                    "try{org.apache.streampark.plugin.profiling.transformer.MethodProfilerStaticProxy.collectMethodArgument(\"%s\", \"%s\", %s, \"\");}catch(Throwable ex){ex.printStackTrace();}",
+                                    normalizedClassName, method.getName(), argument, argument));
                 }
             }
 
@@ -161,22 +165,21 @@ public class JavaAgentFileTransformer implements ClassFileTransformer {
 
             if (enableDurationProfiling) {
                 method.insertAfter(
-                    "{"
-                        + "durationMillis_java_agent_instrument = System.currentTimeMillis() - startMillis_java_agent_instrument;"
-                        + String.format(
-                        "try{org.apache.streampark.plugin.profiling.transformer.MethodProfilerStaticProxy.collectMethodDuration(\"%s\", \"%s\", durationMillis_java_agent_instrument);}catch(Throwable ex){ex.printStackTrace();}",
-                        normalizedClassName, method.getName())
-                        +
-                        "}");
+                        "{"
+                                + "durationMillis_java_agent_instrument = System.currentTimeMillis() - startMillis_java_agent_instrument;"
+                                + String.format(
+                                        "try{org.apache.streampark.plugin.profiling.transformer.MethodProfilerStaticProxy.collectMethodDuration(\"%s\", \"%s\", durationMillis_java_agent_instrument);}catch(Throwable ex){ex.printStackTrace();}",
+                                        normalizedClassName, method.getName())
+                                + "}");
             }
 
             LOGGER.info(
-                "Transformed class method: "
-                    + method.getLongName()
-                    + ", durationProfiling: "
-                    + enableDurationProfiling
-                    + ", argumentProfiling: "
-                    + argumentsForProfile);
+                    "Transformed class method: "
+                            + method.getLongName()
+                            + ", durationProfiling: "
+                            + enableDurationProfiling
+                            + ", argumentProfiling: "
+                            + argumentsForProfile);
         } catch (Throwable ex) {
             ex.printStackTrace();
             LOGGER.warn("Failed to transform class method: " + method.getLongName(), ex);

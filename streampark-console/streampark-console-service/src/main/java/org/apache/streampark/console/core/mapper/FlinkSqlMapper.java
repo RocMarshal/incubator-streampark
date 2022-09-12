@@ -24,10 +24,10 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 public interface FlinkSqlMapper extends BaseMapper<FlinkSql> {
-    @Select("select s.* from t_flink_sql s inner join t_flink_effective e on s.id = e.target_id where e.target_type=2 and e.app_id=#{appId}")
+    @Select(
+            "select s.* from t_flink_sql s inner join t_flink_effective e on s.id = e.target_id where e.target_type=2 and e.app_id=#{appId}")
     FlinkSql getEffective(@Param("appId") Long appId);
 
     @Select("select max(`version`) as maxVersion from t_flink_sql where app_id=#{appId}")
     Integer getLatestVersion(@Param("appId") Long appId);
-
 }

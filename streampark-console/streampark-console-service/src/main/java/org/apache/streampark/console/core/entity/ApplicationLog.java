@@ -32,26 +32,16 @@ public class ApplicationLog {
 
     @TableId(type = IdType.AUTO)
     private Long id;
-    /**
-     * appId
-     */
+    /** appId */
     private Long appId;
-    /**
-     * applicationId
-     */
+    /** applicationId */
     private String yarnAppId;
-    /**
-     * start status
-     */
+    /** start status */
     private Boolean success;
 
-    /**
-     * option time
-     */
+    /** option time */
     private Date optionTime;
 
-    /**
-     * exception at the start
-     */
+    /** exception at the start */
     private String exception;
 }

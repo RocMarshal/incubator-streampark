@@ -55,9 +55,9 @@ public class AgentImpl {
     private boolean started = false;
 
     public void run(
-        Arguments arguments,
-        Instrumentation instrumentation,
-        Collection<AutoCloseable> objectsToCloseOnShutdown) {
+            Arguments arguments,
+            Instrumentation instrumentation,
+            Collection<AutoCloseable> objectsToCloseOnShutdown) {
         if (arguments.isNoop()) {
             LOGGER.info("Agent noop is true, do not run anything");
             return;
@@ -79,10 +79,10 @@ public class AgentImpl {
         }
 
         if (!arguments.getDurationProfiling().isEmpty()
-            || !arguments.getArgumentProfiling().isEmpty()) {
+                || !arguments.getArgumentProfiling().isEmpty()) {
             instrumentation.addTransformer(
-                new JavaAgentFileTransformer(
-                    arguments.getDurationProfiling(), arguments.getArgumentProfiling()));
+                    new JavaAgentFileTransformer(
+                            arguments.getDurationProfiling(), arguments.getArgumentProfiling()));
         }
 
         List<Profiler> profilers = createProfilers(reporter, arguments, processUuid, appId);
@@ -90,11 +90,11 @@ public class AgentImpl {
         ProfilerGroup profilerGroup = startProfilers(profilers);
 
         Thread shutdownHook =
-            new Thread(
-                new ShutdownHookRunner(
-                    profilerGroup.getPeriodicProfilers(),
-                    Arrays.asList(reporter),
-                    objectsToCloseOnShutdown));
+                new Thread(
+                        new ShutdownHookRunner(
+                                profilerGroup.getPeriodicProfilers(),
+                                Arrays.asList(reporter),
+                                objectsToCloseOnShutdown));
         Runtime.getRuntime().addShutdownHook(shutdownHook);
     }
 
@@ -114,9 +114,9 @@ public class AgentImpl {
                 periodicProfilers.add(profiler);
             } else {
                 LOGGER.log(
-                    String.format(
-                        "Ignored profiler %s due to its invalid interval %s",
-                        profiler, profiler.getInterval()));
+                        String.format(
+                                "Ignored profiler %s due to its invalid interval %s",
+                                profiler, profiler.getInterval()));
             }
         }
 
@@ -143,7 +143,7 @@ public class AgentImpl {
     }
 
     private List<Profiler> createProfilers(
-        Reporter reporter, Arguments arguments, String processUuid, String appId) {
+            Reporter reporter, Arguments arguments, String processUuid, String appId) {
         String tag = arguments.getTag();
         String cluster = arguments.getCluster();
         long metricInterval = arguments.getMetricInterval();
@@ -175,10 +175,10 @@ public class AgentImpl {
 
         if (!arguments.getDurationProfiling().isEmpty()) {
             ClassAndMethodLongMetricBuffer classAndMethodMetricBuffer =
-                new ClassAndMethodLongMetricBuffer();
+                    new ClassAndMethodLongMetricBuffer();
 
             MethodDurationProfiler methodDurationProfiler =
-                new MethodDurationProfiler(classAndMethodMetricBuffer, reporter);
+                    new MethodDurationProfiler(classAndMethodMetricBuffer, reporter);
             methodDurationProfiler.setTag(tag);
             methodDurationProfiler.setCluster(cluster);
             methodDurationProfiler.setInterval(metricInterval);
@@ -186,7 +186,7 @@ public class AgentImpl {
             methodDurationProfiler.setAppId(appId);
 
             MethodDurationCollector methodDurationCollector =
-                new MethodDurationCollector(classAndMethodMetricBuffer);
+                    new MethodDurationCollector(classAndMethodMetricBuffer);
             MethodProfilerStaticProxy.setCollector(methodDurationCollector);
 
             profilers.add(methodDurationProfiler);
@@ -194,10 +194,10 @@ public class AgentImpl {
 
         if (!arguments.getArgumentProfiling().isEmpty()) {
             ClassMethodArgumentMetricBuffer classAndMethodArgumentBuffer =
-                new ClassMethodArgumentMetricBuffer();
+                    new ClassMethodArgumentMetricBuffer();
 
             MethodArgumentProfiler methodArgumentProfiler =
-                new MethodArgumentProfiler(classAndMethodArgumentBuffer, reporter);
+                    new MethodArgumentProfiler(classAndMethodArgumentBuffer, reporter);
             methodArgumentProfiler.setTag(tag);
             methodArgumentProfiler.setCluster(cluster);
             methodArgumentProfiler.setInterval(metricInterval);
@@ -205,7 +205,7 @@ public class AgentImpl {
             methodArgumentProfiler.setAppId(appId);
 
             MethodArgumentCollector methodArgumentCollector =
-                new MethodArgumentCollector(classAndMethodArgumentBuffer);
+                    new MethodArgumentCollector(classAndMethodArgumentBuffer);
             MethodProfilerStaticProxy.setArgumentCollector(methodArgumentCollector);
 
             profilers.add(methodArgumentProfiler);
@@ -215,11 +215,12 @@ public class AgentImpl {
             StacktraceMetricBuffer stacktraceMetricBuffer = new StacktraceMetricBuffer();
 
             StacktraceCollectorProfiler stacktraceCollectorProfiler =
-                new StacktraceCollectorProfiler(stacktraceMetricBuffer, AgentThreadFactory.NAME_PREFIX);
+                    new StacktraceCollectorProfiler(
+                            stacktraceMetricBuffer, AgentThreadFactory.NAME_PREFIX);
             stacktraceCollectorProfiler.setInterval(arguments.getSampleInterval());
 
             StacktraceReporterProfiler stacktraceReporterProfiler =
-                new StacktraceReporterProfiler(stacktraceMetricBuffer, reporter);
+                    new StacktraceReporterProfiler(stacktraceMetricBuffer, reporter);
             stacktraceReporterProfiler.setTag(tag);
             stacktraceReporterProfiler.setCluster(cluster);
             stacktraceReporterProfiler.setInterval(metricInterval);
@@ -247,21 +248,22 @@ public class AgentImpl {
     private void scheduleProfilers(Collection<Profiler> profilers) {
         int threadPoolSize = Math.min(profilers.size(), MAX_THREAD_POOL_SIZE);
         ScheduledExecutorService scheduledExecutorService =
-            Executors.newScheduledThreadPool(threadPoolSize, new AgentThreadFactory());
+                Executors.newScheduledThreadPool(threadPoolSize, new AgentThreadFactory());
         for (Profiler profiler : profilers) {
             if (profiler.getInterval() < Arguments.MIN_INTERVAL_MILLIS) {
                 throw new RuntimeException(
-                    "Interval too short for profiler: "
-                        + profiler
-                        + ", must be at least "
-                        + Arguments.MIN_INTERVAL_MILLIS);
+                        "Interval too short for profiler: "
+                                + profiler
+                                + ", must be at least "
+                                + Arguments.MIN_INTERVAL_MILLIS);
             }
             ProfilerRunner worker = new ProfilerRunner(profiler);
             scheduledExecutorService.scheduleAtFixedRate(
-                worker, 0, profiler.getInterval(), TimeUnit.MILLISECONDS);
+                    worker, 0, profiler.getInterval(), TimeUnit.MILLISECONDS);
             LOGGER.info(
-                String.format(
-                    "Scheduled profiler %s with interval %s millis", profiler, profiler.getInterval()));
+                    String.format(
+                            "Scheduled profiler %s with interval %s millis",
+                            profiler, profiler.getInterval()));
         }
     }
 }

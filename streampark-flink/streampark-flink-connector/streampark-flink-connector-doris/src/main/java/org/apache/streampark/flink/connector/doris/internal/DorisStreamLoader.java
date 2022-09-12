@@ -79,8 +79,17 @@ public class DorisStreamLoader implements Serializable {
         }
 
         LOG.info(String.format("Start to join batch data: label[%s].", bufferEntity.getLabel()));
-        String loadUrl = String.format(LOAD_URL_PATTERN, host, bufferEntity.getDatabase(), bufferEntity.getTable());
-        LoadResponse loadResponse = doHttpPut(loadUrl, bufferEntity.getLabel(), joinRows(bufferEntity.getBuffer(), (int) bufferEntity.getBatchSize()));
+        String loadUrl =
+                String.format(
+                        LOAD_URL_PATTERN,
+                        host,
+                        bufferEntity.getDatabase(),
+                        bufferEntity.getTable());
+        LoadResponse loadResponse =
+                doHttpPut(
+                        loadUrl,
+                        bufferEntity.getLabel(),
+                        joinRows(bufferEntity.getBuffer(), (int) bufferEntity.getBatchSize()));
         if (LOG.isDebugEnabled()) {
             LOG.debug(String.format("Stream Load response: \n%s\n", loadResponse.respContent));
         }
@@ -88,12 +97,18 @@ public class DorisStreamLoader implements Serializable {
             throw new RuntimeException("stream load error: " + loadResponse.respContent);
         } else {
             try {
-                RespContent respContent = OBJECT_MAPPER.readValue(loadResponse.respContent, RespContent.class);
+                RespContent respContent =
+                        OBJECT_MAPPER.readValue(loadResponse.respContent, RespContent.class);
                 if (RESULT_FAILED.equals(respContent.getStatus())) {
-                    String errMsg = String.format("stream load error: %s, see more in %s", respContent.getMessage(), respContent.getErrorURL());
+                    String errMsg =
+                            String.format(
+                                    "stream load error: %s, see more in %s",
+                                    respContent.getMessage(), respContent.getErrorURL());
                     throw new RuntimeException(errMsg);
                 } else if (RESULT_LABEL_EXISTED.equals(respContent.getStatus())) {
-                    LOG.error(String.format("Stream Load response: \n%s\n", loadResponse.respContent));
+                    LOG.error(
+                            String.format(
+                                    "Stream Load response: \n%s\n", loadResponse.respContent));
                     checkLableState(host, bufferEntity.getDatabase(), bufferEntity.getLabel());
                 }
                 return respContent;
@@ -112,8 +127,11 @@ public class DorisStreamLoader implements Serializable {
                 return;
             }
             try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-                HttpGet httpGet = new HttpGet(String.format(GET_LOAD_STATUS_URL, host, database, label));
-                httpGet.setHeader(HttpHeaders.AUTHORIZATION, getBasicAuthHeader(dorisConfig.user(), dorisConfig.password()));
+                HttpGet httpGet =
+                        new HttpGet(String.format(GET_LOAD_STATUS_URL, host, database, label));
+                httpGet.setHeader(
+                        HttpHeaders.AUTHORIZATION,
+                        getBasicAuthHeader(dorisConfig.user(), dorisConfig.password()));
                 httpGet.setHeader("Connection", "close");
                 try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
                     final int statusCode = response.getStatusLine().getStatusCode();
@@ -122,14 +140,22 @@ public class DorisStreamLoader implements Serializable {
                         loadResult = EntityUtils.toString(response.getEntity());
                     }
                     if (statusCode != 200) {
-                        throw new LoadStatusFailedException(String.format("Failed to flush data to doris, Error " +
-                            "could not get the final state of label[%s].\n", label), null);
+                        throw new LoadStatusFailedException(
+                                String.format(
+                                        "Failed to flush data to doris, Error "
+                                                + "could not get the final state of label[%s].\n",
+                                        label),
+                                null);
                     }
                     Map<String, Object> result = OBJECT_MAPPER.readValue(loadResult, HashMap.class);
                     String labelState = (String) result.get("state");
                     if (null == labelState) {
-                        throw new LoadStatusFailedException(String.format("Failed to flush data to doris, Error " +
-                            "could not get the final state of label[%s]. response[%s]\n", label, loadResult), null);
+                        throw new LoadStatusFailedException(
+                                String.format(
+                                        "Failed to flush data to doris, Error "
+                                                + "could not get the final state of label[%s]. response[%s]\n",
+                                        label, loadResult),
+                                null);
                     }
                     LOG.info(String.format("Checking label[%s] state[%s]\n", label, labelState));
                     switch (labelState) {
@@ -140,16 +166,24 @@ public class DorisStreamLoader implements Serializable {
                         case RESULT_LABEL_PREPARE:
                             continue;
                         case RESULT_LABEL_ABORTED:
-                            throw new LoadStatusFailedException(String.format("Failed to flush data to doris, Error " +
-                                "label[%s] state[%s]\n", label, labelState), null, true);
+                            throw new LoadStatusFailedException(
+                                    String.format(
+                                            "Failed to flush data to doris, Error "
+                                                    + "label[%s] state[%s]\n",
+                                            label, labelState),
+                                    null,
+                                    true);
                         case RESULT_LABEL_UNKNOWN:
                         default:
-                            throw new LoadStatusFailedException(String.format("Failed to flush data to doris, Error " +
-                                "label[%s] state[%s]\n", label, labelState), null);
+                            throw new LoadStatusFailedException(
+                                    String.format(
+                                            "Failed to flush data to doris, Error "
+                                                    + "label[%s] state[%s]\n",
+                                            label, labelState),
+                                    null);
                     }
                 }
             }
-
         }
     }
 
@@ -160,14 +194,19 @@ public class DorisStreamLoader implements Serializable {
     }
 
     private LoadResponse doHttpPut(String loadUrl, String label, byte[] data) throws IOException {
-        LOG.info(String.format("Executing stream load to: '%s', size: '%s', thread: %d", loadUrl, data.length, Thread.currentThread().getId()));
-        final HttpClientBuilder httpClientBuilder = HttpClients.custom()
-            .setRedirectStrategy(new DefaultRedirectStrategy() {
-                @Override
-                protected boolean isRedirectable(String method) {
-                    return true;
-                }
-            });
+        LOG.info(
+                String.format(
+                        "Executing stream load to: '%s', size: '%s', thread: %d",
+                        loadUrl, data.length, Thread.currentThread().getId()));
+        final HttpClientBuilder httpClientBuilder =
+                HttpClients.custom()
+                        .setRedirectStrategy(
+                                new DefaultRedirectStrategy() {
+                                    @Override
+                                    protected boolean isRedirectable(String method) {
+                                        return true;
+                                    }
+                                });
         try (CloseableHttpClient httpclient = httpClientBuilder.build()) {
             final HttpPut put = new HttpPut(loadUrl);
             final Properties properties = dorisConfig.loadProperties();
@@ -176,7 +215,9 @@ public class DorisStreamLoader implements Serializable {
                 put.setHeader("timeout", dorisConfig.timeout() + "");
             }
             put.setHeader(HttpHeaders.EXPECT, "100-continue");
-            put.setHeader(HttpHeaders.AUTHORIZATION, getBasicAuthHeader(dorisConfig.user(), dorisConfig.password()));
+            put.setHeader(
+                    HttpHeaders.AUTHORIZATION,
+                    getBasicAuthHeader(dorisConfig.user(), dorisConfig.password()));
             put.setHeader("label", label);
             put.setEntity(new ByteArrayEntity(data));
             try (CloseableHttpResponse response = httpclient.execute(put)) {
@@ -193,7 +234,9 @@ public class DorisStreamLoader implements Serializable {
 
     private byte[] joinRows(List<byte[]> rows, int totalBytes) {
         if (DorisConfig.CSV().equalsIgnoreCase(dorisConfig.loadFormat())) {
-            byte[] lineDelimiter = DorisDelimiterParser.parse(dorisConfig.rowDelimiter()).getBytes(StandardCharsets.UTF_8);
+            byte[] lineDelimiter =
+                    DorisDelimiterParser.parse(dorisConfig.rowDelimiter())
+                            .getBytes(StandardCharsets.UTF_8);
             ByteBuffer bos = ByteBuffer.allocate(totalBytes + rows.size() * lineDelimiter.length);
             for (byte[] row : rows) {
                 bos.put(row);
@@ -203,7 +246,8 @@ public class DorisStreamLoader implements Serializable {
         }
 
         if (DorisConfig.JSON().equalsIgnoreCase(dorisConfig.loadFormat())) {
-            ByteBuffer bos = ByteBuffer.allocate(totalBytes + (rows.isEmpty() ? 2 : rows.size() + 1));
+            ByteBuffer bos =
+                    ByteBuffer.allocate(totalBytes + (rows.isEmpty() ? 2 : rows.size() + 1));
             bos.put("[".getBytes(StandardCharsets.UTF_8));
             byte[] jsonDelimiter = ",".getBytes(StandardCharsets.UTF_8);
             boolean isFirstElement = true;
@@ -217,7 +261,8 @@ public class DorisStreamLoader implements Serializable {
             bos.put("]".getBytes(StandardCharsets.UTF_8));
             return bos.array();
         }
-        throw new RuntimeException("Failed to join rows data, unsupported `format` from stream load properties:");
+        throw new RuntimeException(
+                "Failed to join rows data, unsupported `format` from stream load properties:");
     }
 
     private String getWorkerHost() {
@@ -257,9 +302,12 @@ public class DorisStreamLoader implements Serializable {
 
         @Override
         public String toString() {
-            return "status: " + status +
-                ", resp msg: " + respMsg +
-                ", resp content: " + respContent;
+            return "status: "
+                    + status
+                    + ", resp msg: "
+                    + respMsg
+                    + ", resp content: "
+                    + respContent;
         }
     }
 }

@@ -21,13 +21,9 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public enum NoticeType implements Serializable {
-    /**
-     * exception
-     */
+    /** exception */
     EXCEPTION(1),
-    /**
-     * message
-     */
+    /** message */
     MESSAGE(2);
 
     private final int value;
@@ -43,5 +39,4 @@ public enum NoticeType implements Serializable {
     public static NoticeType of(Integer value) {
         return Arrays.stream(values()).filter((x) -> x.value == value).findFirst().orElse(null);
     }
-
 }

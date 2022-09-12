@@ -29,18 +29,12 @@ import java.io.Serializable;
 public class AlertHttpCallbackParams implements Serializable {
     @NotBlank(message = "The url of alert must not be empty")
     private String url;
-    /**
-     * http request method, default is  POST
-     */
+    /** http request method, default is POST */
     private String method = "POST";
 
-    /**
-     * http request contentType, default is application/json
-     */
+    /** http request contentType, default is application/json */
     private String contentType;
 
-    /**
-     * use freemarker replace the params
-     */
+    /** use freemarker replace the params */
     private String requestTemplate;
 }

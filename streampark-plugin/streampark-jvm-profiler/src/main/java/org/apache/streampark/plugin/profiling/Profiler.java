@@ -18,18 +18,12 @@
 package org.apache.streampark.plugin.profiling;
 
 public interface Profiler {
-    /**
-     * @return
-     */
+    /** @return */
     long getInterval();
 
-    /**
-     * @param reporter
-     */
+    /** @param reporter */
     void setReporter(Reporter reporter);
 
-    /**
-     *
-     */
+    /** */
     void profile();
 }

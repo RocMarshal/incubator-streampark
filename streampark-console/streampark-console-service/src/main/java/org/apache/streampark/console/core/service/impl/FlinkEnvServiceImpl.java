@@ -35,18 +35,16 @@ import java.util.Date;
 @Slf4j
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class FlinkEnvServiceImpl extends ServiceImpl<FlinkEnvMapper, FlinkEnv> implements FlinkEnvService {
+public class FlinkEnvServiceImpl extends ServiceImpl<FlinkEnvMapper, FlinkEnv>
+        implements FlinkEnvService {
 
-    /**
-     * two places will be checked:
-     * 1) name cannot be repeated
-     * 2) flink version need to be parsed
-     */
+    /** two places will be checked: 1) name cannot be repeated 2) flink version need to be parsed */
     @Override
     public boolean exists(FlinkEnv version) {
-        //1) check name
-        LambdaQueryWrapper<FlinkEnv> nameQuery = new LambdaQueryWrapper<FlinkEnv>()
-            .eq(FlinkEnv::getFlinkName, version.getFlinkName());
+        // 1) check name
+        LambdaQueryWrapper<FlinkEnv> nameQuery =
+                new LambdaQueryWrapper<FlinkEnv>()
+                        .eq(FlinkEnv::getFlinkName, version.getFlinkName());
         if (version.getId() != null) {
             nameQuery.ne(FlinkEnv::getId, version.getId());
         }
@@ -93,8 +91,7 @@ public class FlinkEnvServiceImpl extends ServiceImpl<FlinkEnvMapper, FlinkEnv> i
     @Override
     public FlinkEnv getDefault() {
         return this.baseMapper.selectOne(
-            new LambdaQueryWrapper<FlinkEnv>().eq(FlinkEnv::getIsDefault, true)
-        );
+                new LambdaQueryWrapper<FlinkEnv>().eq(FlinkEnv::getIsDefault, true));
     }
 
     @Override

@@ -39,5 +39,4 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
      * @return boolean
      */
     Boolean deleteByRoleId(@Param("roleId") Long roleId);
-
 }

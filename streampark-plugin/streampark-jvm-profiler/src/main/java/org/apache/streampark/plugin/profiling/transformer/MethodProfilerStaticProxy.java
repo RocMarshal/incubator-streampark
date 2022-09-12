@@ -24,8 +24,7 @@ public class MethodProfilerStaticProxy {
     private static MethodDurationCollector collectorSingleton;
     private static MethodArgumentCollector argumentCollectorSingleton;
 
-    private MethodProfilerStaticProxy() {
-    }
+    private MethodProfilerStaticProxy() {}
 
     public static void setCollector(MethodDurationCollector collector) {
         collectorSingleton = collector;
@@ -35,7 +34,8 @@ public class MethodProfilerStaticProxy {
         argumentCollectorSingleton = collector;
     }
 
-    public static void collectMethodDuration(String className, String methodName, long metricValue) {
+    public static void collectMethodDuration(
+            String className, String methodName, long metricValue) {
         if (collectorSingleton == null) {
             return;
         }
@@ -48,7 +48,7 @@ public class MethodProfilerStaticProxy {
     }
 
     public static void collectMethodArgument(
-        String className, String methodName, int argIndex, Object argValue) {
+            String className, String methodName, int argIndex, Object argValue) {
         if (argumentCollectorSingleton == null) {
             return;
         }

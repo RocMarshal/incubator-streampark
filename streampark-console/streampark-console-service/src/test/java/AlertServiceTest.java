@@ -51,8 +51,10 @@ public class AlertServiceTest {
         alertTemplate.setTotalRestart(5);
         alertTemplate.setRestartIndex(2);
         Date date = new Date();
-        alertTemplate.setStartTime(DateUtils.format(date, DateUtils.fullFormat(), TimeZone.getDefault()));
-        alertTemplate.setEndTime(DateUtils.format(date, DateUtils.fullFormat(), TimeZone.getDefault()));
+        alertTemplate.setStartTime(
+                DateUtils.format(date, DateUtils.fullFormat(), TimeZone.getDefault()));
+        alertTemplate.setEndTime(
+                DateUtils.format(date, DateUtils.fullFormat(), TimeZone.getDefault()));
         alertTemplate.setDuration(DateUtils.toRichTimeDuration(0));
     }
 
@@ -67,14 +69,17 @@ public class AlertServiceTest {
         alertTemplate.setCpMaxFailureInterval(5);
         alertTemplate.setCpFailureRateInterval("10%");
         Date date = new Date();
-        alertTemplate.setStartTime(DateUtils.format(date, DateUtils.fullFormat(), TimeZone.getDefault()));
-        alertTemplate.setEndTime(DateUtils.format(date, DateUtils.fullFormat(), TimeZone.getDefault()));
+        alertTemplate.setStartTime(
+                DateUtils.format(date, DateUtils.fullFormat(), TimeZone.getDefault()));
+        alertTemplate.setEndTime(
+                DateUtils.format(date, DateUtils.fullFormat(), TimeZone.getDefault()));
         alertTemplate.setDuration(DateUtils.toRichTimeDuration(0));
     }
 
     @Test
     public void dingTalkAlertTest() throws Exception {
-        DingTalkAlertNotifyServiceImpl notifyService = new DingTalkAlertNotifyServiceImpl(restTemplate);
+        DingTalkAlertNotifyServiceImpl notifyService =
+                new DingTalkAlertNotifyServiceImpl(restTemplate);
 
         notifyService.loadTemplateFile();
         AlertDingTalkParams dingTalkParams = new AlertDingTalkParams();
@@ -104,7 +109,8 @@ public class AlertServiceTest {
 
     @Test
     public void larkAlertTest() throws Exception {
-        LarkAlertNotifyServiceImpl notifyService = new LarkAlertNotifyServiceImpl(restTemplate, mapper);
+        LarkAlertNotifyServiceImpl notifyService =
+                new LarkAlertNotifyServiceImpl(restTemplate, mapper);
         notifyService.loadTemplateFile();
 
         AlertLarkParams alertLarkParams = new AlertLarkParams();

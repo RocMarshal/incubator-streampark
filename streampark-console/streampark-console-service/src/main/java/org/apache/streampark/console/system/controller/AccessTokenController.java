@@ -42,19 +42,16 @@ import javax.validation.constraints.NotNull;
 @RequestMapping("token")
 public class AccessTokenController {
 
-    @Autowired
-    private AccessTokenService accessTokenService;
+    @Autowired private AccessTokenService accessTokenService;
 
-    @Autowired
-    private CommonService commonService;
+    @Autowired private CommonService commonService;
 
-    /**
-     * generate token string
-     */
+    /** generate token string */
     @PostMapping(value = "create")
     @RequiresPermissions("token:add")
-    public RestResponse createToken(@NotBlank(message = "{required}") Long userId, String expireTime, String description)
-        throws InternalException {
+    public RestResponse createToken(
+            @NotBlank(message = "{required}") Long userId, String expireTime, String description)
+            throws InternalException {
         return accessTokenService.generateToken(userId, expireTime, description);
     }
 
@@ -77,28 +74,23 @@ public class AccessTokenController {
         return restResponse;
     }
 
-    /**
-     * query token list
-     */
+    /** query token list */
     @PostMapping(value = "list")
     @RequiresPermissions("token:view")
     public RestResponse tokenList(RestRequest restRequest, AccessToken accessToken) {
-        IPage<AccessToken> accessTokens = accessTokenService.findAccessTokens(accessToken, restRequest);
+        IPage<AccessToken> accessTokens =
+                accessTokenService.findAccessTokens(accessToken, restRequest);
         return RestResponse.success(accessTokens);
     }
 
-    /**
-     * update token status
-     */
+    /** update token status */
     @PostMapping("toggle")
     @RequiresPermissions("token:add")
     public RestResponse toggleToken(@NotNull(message = "{required}") Long tokenId) {
         return accessTokenService.toggleToken(tokenId);
     }
 
-    /**
-     * delete token by id
-     */
+    /** delete token by id */
     @DeleteMapping(value = "delete")
     @RequiresPermissions("token:delete")
     public RestResponse deleteToken(@NotBlank(message = "{required}") Long tokenId) {
@@ -107,37 +99,42 @@ public class AccessTokenController {
     }
 
     /**
-     * copy cURL, hardcode now, there is no need for configuration here,
-     * because there are several fixed interfaces
+     * copy cURL, hardcode now, there is no need for configuration here, because there are several
+     * fixed interfaces
      */
     @PostMapping(value = "curl")
-    public RestResponse copyRestApiCurl(@NotBlank(message = "{required}") String appId,
-                                               @NotBlank(message = "{required}") String baseUrl,
-                                               @NotBlank(message = "{required}") String path) {
+    public RestResponse copyRestApiCurl(
+            @NotBlank(message = "{required}") String appId,
+            @NotBlank(message = "{required}") String baseUrl,
+            @NotBlank(message = "{required}") String path) {
         String resultCURL = null;
         CURLBuilder curlBuilder = new CURLBuilder(baseUrl + path);
 
         User user = commonService.getCurrentUser();
 
         curlBuilder
-            .addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-            .addHeader("Authorization", accessTokenService.getByUserId(user.getUserId()).getToken());
+                .addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                .addHeader(
+                        "Authorization",
+                        accessTokenService.getByUserId(user.getUserId()).getToken());
 
         if ("/flink/app/start".equalsIgnoreCase(path)) {
-            resultCURL = curlBuilder
-                .addFormData("allowNonRestored", "false")
-                .addFormData("flameGraph", "false")
-                .addFormData("savePoint", "")
-                .addFormData("savePointed", "false")
-                .addFormData("id", appId)
-                .build();
+            resultCURL =
+                    curlBuilder
+                            .addFormData("allowNonRestored", "false")
+                            .addFormData("flameGraph", "false")
+                            .addFormData("savePoint", "")
+                            .addFormData("savePointed", "false")
+                            .addFormData("id", appId)
+                            .build();
         } else if ("/flink/app/cancel".equalsIgnoreCase(path)) {
-            resultCURL = curlBuilder
-                .addFormData("id", appId)
-                .addFormData("savePointed", "false")
-                .addFormData("drain", "false")
-                .addFormData("savePoint", "")
-                .build();
+            resultCURL =
+                    curlBuilder
+                            .addFormData("id", appId)
+                            .addFormData("savePointed", "false")
+                            .addFormData("drain", "false")
+                            .addFormData("savePoint", "")
+                            .build();
         }
         return RestResponse.success(resultCURL);
     }

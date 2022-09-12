@@ -28,13 +28,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
 
 public class LdapAuthenticator extends AbstractAuthenticator {
-    @Autowired
-    private UserService usersService;
-    @Autowired
-    private LdapService ldapService;
+    @Autowired private UserService usersService;
+    @Autowired private LdapService ldapService;
 
-    @Autowired
-    private PasswordAuthenticator passwordAuthenticator;
+    @Autowired private PasswordAuthenticator passwordAuthenticator;
 
     @Override
     public User login(String userId, String password) throws Exception {
@@ -47,7 +44,7 @@ public class LdapAuthenticator extends AbstractAuthenticator {
         if (ldapUser == null) {
             return passwordAuthenticator.login(userId, password);
         } else {
-            //check if user exist
+            // check if user exist
             User user = usersService.findByName(userId);
             if (user != null) {
                 return passwordAuthenticator.login(userId, password);

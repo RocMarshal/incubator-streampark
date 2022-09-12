@@ -31,7 +31,8 @@ public class LoadStatusFailedException extends IOException {
         this.response = response;
     }
 
-    public LoadStatusFailedException(String message, Map<String, Object> response, boolean reCreateLabel) {
+    public LoadStatusFailedException(
+            String message, Map<String, Object> response, boolean reCreateLabel) {
         super(message);
         this.response = response;
         this.reCreateLabel = reCreateLabel;
@@ -44,5 +45,4 @@ public class LoadStatusFailedException extends IOException {
     public boolean needReCreateLabel() {
         return reCreateLabel;
     }
-
 }

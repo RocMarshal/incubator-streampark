@@ -30,9 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * This class reads the stacktraces from the given buffer and send out via given reporter.
- */
+/** This class reads the stacktraces from the given buffer and send out via given reporter. */
 public class StacktraceReporterProfiler extends ProfilerBase implements Profiler {
     public static final String PROFILER_NAME = "Stacktrace";
 
@@ -110,7 +108,8 @@ public class StacktraceReporterProfiler extends ProfilerBase implements Profiler
                 List<String> stackArray = new ArrayList<>(classAndMethodArray.length);
                 for (int i = 0; i < classAndMethodArray.length; i++) {
                     ClassAndMethod classAndMethod = classAndMethodArray[i];
-                    stackArray.add(classAndMethod.getClassName() + "." + classAndMethod.getMethodName());
+                    stackArray.add(
+                            classAndMethod.getClassName() + "." + classAndMethod.getMethodName());
                 }
                 map.put("stacktrace", stackArray);
             }

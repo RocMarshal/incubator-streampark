@@ -44,9 +44,7 @@ import java.util.UUID;
 @Slf4j
 public final class CommonUtils implements Serializable {
 
-    private CommonUtils() {
-
-    }
+    private CommonUtils() {}
 
     private static final long serialVersionUID = 6458428317155311192L;
 
@@ -58,7 +56,7 @@ public final class CommonUtils implements Serializable {
      * @param objs handle obj
      * @return Boolean
      * @see <b>Returns true if the object is Null, returns true if the size of the collection is 0,
-     *         and returns true if the iterator has no next</b>
+     *     and returns true if the iterator has no next</b>
      * @since 1.0
      */
     public static Boolean isEmpty(Object... objs) {
@@ -94,7 +92,8 @@ public final class CommonUtils implements Serializable {
             }
 
             if (obj instanceof Iterable) {
-                if (((Iterable<?>) obj).iterator() == null || !((Iterable<?>) obj).iterator().hasNext()) {
+                if (((Iterable<?>) obj).iterator() == null
+                        || !((Iterable<?>) obj).iterator().hasNext()) {
                     return true;
                 }
             }
@@ -212,7 +211,7 @@ public final class CommonUtils implements Serializable {
      * Check whether the given Enumeration contains the given element.
      *
      * @param enumeration the Enumeration to check
-     * @param element     the element to look for
+     * @param element the element to look for
      * @return <code>true</code> if found, <code>false</code> else
      */
     public static boolean contains(Enumeration enumeration, Object element) {
@@ -248,7 +247,7 @@ public final class CommonUtils implements Serializable {
      * equal element as well.
      *
      * @param collection the Collection to check
-     * @param element    the element to look for
+     * @param element the element to look for
      * @return <code>true</code> if found, <code>false</code> else
      */
     public static boolean containsInstance(Collection collection, Object element) {
@@ -429,9 +428,7 @@ public final class CommonUtils implements Serializable {
         return isUnix;
     }
 
-    /**
-     * linux内核平台 1 window： 2 其他平台 0
-     */
+    /** linux内核平台 1 window： 2 其他平台 0 */
     public static int getPlatform() {
         int platform = 0;
         if (CommonUtils.isUnix()) {
@@ -612,7 +609,7 @@ public final class CommonUtils implements Serializable {
      * @throws IllegalAccessException
      */
     public static <T> List<T> mapsToObjects(List<Map<String, Object>> maps, Class<T> clazz)
-        throws InstantiationException, IllegalAccessException {
+            throws InstantiationException, IllegalAccessException {
         List<T> list = new ArrayList<>();
         if (maps != null && maps.size() > 0) {
             Map<String, Object> map;
@@ -636,5 +633,4 @@ public final class CommonUtils implements Serializable {
             return -1;
         }
     }
-
 }

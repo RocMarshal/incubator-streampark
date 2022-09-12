@@ -53,7 +53,7 @@ public class Utils {
             return mapper.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(
-                String.format("Failed to serialize %s (%s)", obj, obj.getClass()), e);
+                    String.format("Failed to serialize %s (%s)", obj, obj.getClass()), e);
         }
     }
 

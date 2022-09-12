@@ -37,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
-    implements MessageService {
+        implements MessageService {
 
     @Override
     public void push(Message message) {
@@ -50,6 +50,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         LambdaQueryWrapper<Message> query = new LambdaQueryWrapper();
         query.eq(Message::getIsRead, false).orderByDesc(Message::getCreateTime);
         query.eq(Message::getType, noticeType.get());
-        return this.baseMapper.selectPage(new MybatisPager<Message>().getDefaultPage(request), query);
+        return this.baseMapper.selectPage(
+                new MybatisPager<Message>().getDefaultPage(request), query);
     }
 }

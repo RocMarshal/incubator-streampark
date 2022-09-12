@@ -24,5 +24,4 @@ import java.util.List;
 public interface ApplicationHistoryService {
 
     List<String> listUploadJars(StorageType storageType, int limit);
-
 }

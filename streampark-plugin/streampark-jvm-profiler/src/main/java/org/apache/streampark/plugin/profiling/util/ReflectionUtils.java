@@ -22,24 +22,25 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class ReflectionUtils {
-    private static final AgentLogger LOGGER = AgentLogger.getLogger(ReflectionUtils.class.getName());
+    private static final AgentLogger LOGGER =
+            AgentLogger.getLogger(ReflectionUtils.class.getName());
 
     public static <T> Constructor<T> getConstructor(
-        String implementaionClass, Class<T> interfaceClass) {
+            String implementaionClass, Class<T> interfaceClass) {
         Class<?> clazz = null;
 
         try {
             clazz = Class.forName(implementaionClass);
         } catch (Throwable e) {
             throw new RuntimeException(
-                String.format("Failed to get class for %s", implementaionClass), e);
+                    String.format("Failed to get class for %s", implementaionClass), e);
         }
 
         if (!interfaceClass.isAssignableFrom(clazz)) {
             throw new RuntimeException(
-                String.format(
-                    "Invalid class %s, please make sure it is an implementation of %s",
-                    clazz, interfaceClass.getName()));
+                    String.format(
+                            "Invalid class %s, please make sure it is an implementation of %s",
+                            clazz, interfaceClass.getName()));
         }
 
         try {
@@ -48,7 +49,7 @@ public class ReflectionUtils {
             return constructor;
         } catch (Throwable e) {
             throw new RuntimeException(
-                String.format("Failed to get constructor for %s", clazz.getName()), e);
+                    String.format("Failed to get constructor for %s", clazz.getName()), e);
         }
     }
 
@@ -57,21 +58,22 @@ public class ReflectionUtils {
             Constructor<T> constructor = getConstructor(implementaionClass, interfaceClass);
             T result = constructor.newInstance();
             LOGGER.info(
-                String.format(
-                    "Created %s instance (%s) for interface %s",
-                    implementaionClass, result, interfaceClass));
+                    String.format(
+                            "Created %s instance (%s) for interface %s",
+                            implementaionClass, result, interfaceClass));
             return result;
         } catch (Throwable e) {
             throw new RuntimeException(
-                String.format(
-                    "Failed to create %s instance for interface %s", implementaionClass, interfaceClass),
-                e);
+                    String.format(
+                            "Failed to create %s instance for interface %s",
+                            implementaionClass, interfaceClass),
+                    e);
         }
     }
 
     public static Object executeStaticMethods(String className, String methods)
-        throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException,
-        IllegalAccessException {
+            throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException,
+                    IllegalAccessException {
         String[] methodArray = methods.split("\\.");
         Class clazz = Class.forName(className);
         Object clazzObject = null;

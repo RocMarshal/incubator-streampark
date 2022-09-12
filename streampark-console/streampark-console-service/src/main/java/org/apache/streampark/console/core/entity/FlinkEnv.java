@@ -53,9 +53,7 @@ public class FlinkEnv implements Serializable {
 
     private String version;
 
-    /**
-     * is default
-     */
+    /** is default */
     private Boolean isDefault;
 
     private Date createTime;
@@ -79,12 +77,9 @@ public class FlinkEnv implements Serializable {
         this.setScalaVersion(this.getFlinkVersion().scalaVersion());
         if (!streamParkScalaVersion.startsWith(this.getFlinkVersion().scalaVersion())) {
             throw new UnsupportedOperationException(
-                String.format(
-                    "The current Scala version of StreamPark is %s, but the scala version of Flink to be added is %s, which does not match, Please check",
-                    streamParkScalaVersion,
-                    this.getFlinkVersion().scalaVersion()
-                )
-            );
+                    String.format(
+                            "The current Scala version of StreamPark is %s, but the scala version of Flink to be added is %s, which does not match, Please check",
+                            streamParkScalaVersion, this.getFlinkVersion().scalaVersion()));
         }
     }
 
@@ -125,5 +120,4 @@ public class FlinkEnv implements Serializable {
     public String getVersionOfLast() {
         return this.version.split("\\.")[2];
     }
-
 }

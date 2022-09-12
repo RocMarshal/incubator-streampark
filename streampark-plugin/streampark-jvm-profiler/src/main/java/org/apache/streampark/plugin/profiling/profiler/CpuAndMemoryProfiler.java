@@ -42,7 +42,7 @@ public class CpuAndMemoryProfiler extends ProfilerBase implements Profiler {
     public static final String PROFILER_NAME = "CpuAndMemory";
 
     private static final AgentLogger LOGGER =
-        AgentLogger.getLogger(CpuAndMemoryProfiler.class.getName());
+            AgentLogger.getLogger(CpuAndMemoryProfiler.class.getName());
 
     private static final String ATTRIBUTE_NAME_PROCESS_CPU_LOAD = "ProcessCpuLoad";
     private static final int ATTRIBUTE_INDEX_PROCESS_CPU_LOAD = 0;
@@ -161,7 +161,7 @@ public class CpuAndMemoryProfiler extends ProfilerBase implements Profiler {
         List<Map<String, Object>> bufferPoolsMetrics = new ArrayList<>();
 
         List<BufferPoolMXBean> bufferPools =
-            ManagementFactory.getPlatformMXBeans(BufferPoolMXBean.class);
+                ManagementFactory.getPlatformMXBeans(BufferPoolMXBean.class);
         if (bufferPools != null) {
             for (BufferPoolMXBean pool : bufferPools) {
                 Map<String, Object> bufferPoolMap = new HashMap<>();
@@ -255,12 +255,13 @@ public class CpuAndMemoryProfiler extends ProfilerBase implements Profiler {
     private AttributeList getCpuAttributes() {
         try {
             String[] names =
-                new String[]{
-                    ATTRIBUTE_NAME_PROCESS_CPU_LOAD,
-                    ATTRIBUTE_NAME_SYSTEM_CPU_LOAD,
-                    ATTRIBUTE_NAME_PROCESS_CPU_TIME
-                };
-            AttributeList list = platformMBeanServer.getAttributes(operatingSystemObjectName, names);
+                    new String[] {
+                        ATTRIBUTE_NAME_PROCESS_CPU_LOAD,
+                        ATTRIBUTE_NAME_SYSTEM_CPU_LOAD,
+                        ATTRIBUTE_NAME_PROCESS_CPU_TIME
+                    };
+            AttributeList list =
+                    platformMBeanServer.getAttributes(operatingSystemObjectName, names);
             if (list.size() != names.length) {
                 LOGGER.warn("Failed to get all attributes");
                 return new AttributeList();

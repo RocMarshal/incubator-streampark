@@ -65,7 +65,8 @@ public class LarkAlertNotifyServiceImpl implements AlertNotifyService {
     }
 
     @Override
-    public boolean doAlert(AlertConfigWithParams alertConfig, AlertTemplate alertTemplate) throws AlertException {
+    public boolean doAlert(AlertConfigWithParams alertConfig, AlertTemplate alertTemplate)
+            throws AlertException {
         AlertLarkParams alertLarkParams = alertConfig.getLarkParams();
         if (alertLarkParams.getIsAtAll()) {
             alertTemplate.setAtAll(true);
@@ -73,8 +74,8 @@ public class LarkAlertNotifyServiceImpl implements AlertNotifyService {
         try {
             // format markdown
             String markdown = FreemarkerUtils.format(template, alertTemplate);
-            Map<String, Object> cardMap = mapper.readValue(markdown, new TypeReference<Map<String, Object>>() {
-            });
+            Map<String, Object> cardMap =
+                    mapper.readValue(markdown, new TypeReference<Map<String, Object>>() {});
 
             Map<String, Object> body = new HashMap<>();
             // get sign
@@ -95,7 +96,8 @@ public class LarkAlertNotifyServiceImpl implements AlertNotifyService {
         }
     }
 
-    private void sendMessage(AlertLarkParams params, Map<String, Object> body) throws AlertException {
+    private void sendMessage(AlertLarkParams params, Map<String, Object> body)
+            throws AlertException {
         // get webhook url
         String url = getWebhook(params);
         HttpHeaders headers = new HttpHeaders();
@@ -104,29 +106,35 @@ public class LarkAlertNotifyServiceImpl implements AlertNotifyService {
 
         AlertLarkRobotResponse robotResponse;
         try {
-            robotResponse = alertRestTemplate.postForObject(url, entity, AlertLarkRobotResponse.class);
+            robotResponse =
+                    alertRestTemplate.postForObject(url, entity, AlertLarkRobotResponse.class);
         } catch (Exception e) {
             log.error("Failed to request Lark robot alarm,\nurl:{}", url, e);
-            throw new AlertException(String.format("Failed to request Lark robot alert,\nurl:%s", url), e);
+            throw new AlertException(
+                    String.format("Failed to request Lark robot alert,\nurl:%s", url), e);
         }
 
         if (robotResponse == null) {
-            throw new AlertException(String.format("Failed to request Lark robot alert,\nurl:%s", url));
+            throw new AlertException(
+                    String.format("Failed to request Lark robot alert,\nurl:%s", url));
         }
         if (robotResponse.getStatusCode() == null || robotResponse.getStatusCode() != 0) {
-            throw new AlertException(String.format("Failed to request Lark robot alert,\nurl:%s,\nerrorCode:%d,\nerrorMsg:%s",
-                    url, robotResponse.getCode(), robotResponse.getMsg()));
+            throw new AlertException(
+                    String.format(
+                            "Failed to request Lark robot alert,\nurl:%s,\nerrorCode:%d,\nerrorMsg:%s",
+                            url, robotResponse.getCode(), robotResponse.getMsg()));
         }
     }
 
     /**
      * Gets webhook.
      *
-     * @param params {@link  AlertLarkParams}
+     * @param params {@link AlertLarkParams}
      * @return the webhook
      */
     private String getWebhook(AlertLarkParams params) {
-        String url = String.format("https://open.feishu.cn/open-apis/bot/v2/hook/%s", params.getToken());
+        String url =
+                String.format("https://open.feishu.cn/open-apis/bot/v2/hook/%s", params.getToken());
         if (log.isDebugEnabled()) {
             log.debug("The alarm robot url of Lark is {}", url);
         }
@@ -135,10 +143,12 @@ public class LarkAlertNotifyServiceImpl implements AlertNotifyService {
 
     /**
      * Calculate the signature
-     * <p>Reference documentation</p>
-     * <a href="https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN#348211be">Customize Robot Security Settings</a>
      *
-     * @param secret    secret
+     * <p>Reference documentation <a
+     * href="https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN#348211be">Customize
+     * Robot Security Settings</a>
+     *
+     * @param secret secret
      * @param timestamp current timestamp
      * @return Signature information calculated from timestamp
      */
@@ -146,8 +156,9 @@ public class LarkAlertNotifyServiceImpl implements AlertNotifyService {
         try {
             String stringToSign = timestamp + "\n" + secret;
             Mac mac = Mac.getInstance("HmacSHA256");
-            mac.init(new SecretKeySpec(stringToSign.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
-            byte[] signData = mac.doFinal(new byte[]{});
+            mac.init(
+                    new SecretKeySpec(stringToSign.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+            byte[] signData = mac.doFinal(new byte[] {});
             String sign = new String(Base64.encodeBase64(signData));
             if (log.isDebugEnabled()) {
                 log.debug("Calculate the signature success, sign:{}", sign);

@@ -83,5 +83,4 @@ public class CheckPoints implements Serializable {
     public static class Latest implements Serializable {
         private CheckPoint completed;
     }
-
 }

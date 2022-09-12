@@ -29,6 +29,7 @@ import java.util.Date;
 public class Tutorial {
     @TableId(type = IdType.AUTO)
     private Long id;
+
     private String name;
     private Integer type;
     private String content;

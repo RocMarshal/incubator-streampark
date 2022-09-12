@@ -15,9 +15,6 @@
  * limitations under the License.
  */
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.apache.streampark.common.util.CompletableFutureUtils;
 
 import org.junit.Test;
@@ -27,6 +24,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class CompletableFutureTest {
 
@@ -43,12 +43,12 @@ public class CompletableFutureTest {
 
         // Set the timeout is 10 seconds for start job.
         CompletableFutureUtils.runTimeout(
-            future,
-            10L,
-            TimeUnit.SECONDS,
-            r -> isStartNormal.set(true),
-            e -> isStartException.set(true)
-        ).get();
+                        future,
+                        10L,
+                        TimeUnit.SECONDS,
+                        r -> isStartNormal.set(true),
+                        e -> isStartException.set(true))
+                .get();
 
         assertTrue(future.isDone());
         assertTrue(isStartNormal.get());
@@ -68,20 +68,21 @@ public class CompletableFutureTest {
 
         // Set the timeout is 15 seconds for start job.
         CompletableFutureUtils.runTimeout(
-            future,
-            15L,
-            TimeUnit.SECONDS,
-            r -> {
-                isStartNormal.set(true);
-                throw new IllegalStateException("It shouldn't be called due to the job is stopped before the timeout.");
-            },
-            e -> {
-                isStartException.set(true);
-                assertTrue(future.isCancelled());
-                assertTrue(e.getCause() instanceof CancellationException);
-                System.out.println("The future is cancelled.");
-            }
-        ).get();
+                        future,
+                        15L,
+                        TimeUnit.SECONDS,
+                        r -> {
+                            isStartNormal.set(true);
+                            throw new IllegalStateException(
+                                    "It shouldn't be called due to the job is stopped before the timeout.");
+                        },
+                        e -> {
+                            isStartException.set(true);
+                            assertTrue(future.isCancelled());
+                            assertTrue(e.getCause() instanceof CancellationException);
+                            System.out.println("The future is cancelled.");
+                        })
+                .get();
         assertTrue(future.isCancelled());
         assertFalse(isStartNormal.get());
         assertTrue(isStartException.get());
@@ -101,29 +102,28 @@ public class CompletableFutureTest {
 
         // Set the timeout is 5 seconds for start job.
         CompletableFutureUtils.runTimeout(
-            future,
-            5L,
-            TimeUnit.SECONDS,
-            r -> {
-                isStartNormal.set(true);
-                throw new IllegalStateException("It shouldn't be called due to the job is timed out.");
-            },
-            e -> {
-                isStartException.set(true);
-                assertFalse(future.isDone());
-                assertTrue(e.getCause() instanceof TimeoutException);
-                future.cancel(true);
-                System.out.println("Future is timed out.");
-            }
-        ).get();
+                        future,
+                        5L,
+                        TimeUnit.SECONDS,
+                        r -> {
+                            isStartNormal.set(true);
+                            throw new IllegalStateException(
+                                    "It shouldn't be called due to the job is timed out.");
+                        },
+                        e -> {
+                            isStartException.set(true);
+                            assertFalse(future.isDone());
+                            assertTrue(e.getCause() instanceof TimeoutException);
+                            future.cancel(true);
+                            System.out.println("Future is timed out.");
+                        })
+                .get();
         assertTrue(future.isCancelled());
         assertFalse(isStartNormal.get());
         assertTrue(isStartException.get());
     }
 
-    /**
-     * Cancel the future after sec seconds.
-     */
+    /** Cancel the future after sec seconds. */
     private void runStop(CompletableFuture<String> future, int sec) {
         try {
             Thread.sleep(sec * 1000L);
@@ -138,9 +138,7 @@ public class CompletableFutureTest {
         }
     }
 
-    /**
-     * Start job, it will take sec seconds.
-     */
+    /** Start job, it will take sec seconds. */
     private String runStart(int sec) {
         try {
             Thread.sleep(sec * 1000L);

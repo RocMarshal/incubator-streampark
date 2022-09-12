@@ -41,7 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
-    implements SettingService {
+        implements SettingService {
 
     @Override
     public Setting get(String key) {
@@ -94,8 +94,10 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
             String host = settings.get(SettingService.KEY_ALERT_EMAIL_HOST).getSettingValue();
             String port = settings.get(SettingService.KEY_ALERT_EMAIL_PORT).getSettingValue();
             String from = settings.get(SettingService.KEY_ALERT_EMAIL_FROM).getSettingValue();
-            String userName = settings.get(SettingService.KEY_ALERT_EMAIL_USERNAME).getSettingValue();
-            String password = settings.get(SettingService.KEY_ALERT_EMAIL_PASSWORD).getSettingValue();
+            String userName =
+                    settings.get(SettingService.KEY_ALERT_EMAIL_USERNAME).getSettingValue();
+            String password =
+                    settings.get(SettingService.KEY_ALERT_EMAIL_PASSWORD).getSettingValue();
             String ssl = settings.get(SettingService.KEY_ALERT_EMAIL_SSL).getSettingValue();
 
             SenderEmail senderEmail = new SenderEmail();
@@ -114,42 +116,49 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
 
     @Override
     public String getDockerRegisterAddress() {
-        return settings.getOrDefault(SettingService.KEY_DOCKER_REGISTER_ADDRESS, defaultSetting).getSettingValue();
+        return settings.getOrDefault(SettingService.KEY_DOCKER_REGISTER_ADDRESS, defaultSetting)
+                .getSettingValue();
     }
 
     @Override
     public String getDockerRegisterUser() {
-        return settings.getOrDefault(SettingService.KEY_DOCKER_REGISTER_USER, defaultSetting).getSettingValue();
+        return settings.getOrDefault(SettingService.KEY_DOCKER_REGISTER_USER, defaultSetting)
+                .getSettingValue();
     }
 
     @Override
     public String getDockerRegisterPassword() {
-        return settings.getOrDefault(SettingService.KEY_DOCKER_REGISTER_PASSWORD, defaultSetting).getSettingValue();
+        return settings.getOrDefault(SettingService.KEY_DOCKER_REGISTER_PASSWORD, defaultSetting)
+                .getSettingValue();
     }
 
     @Override
     public String getDockerRegisterNamespace() {
-        return settings.getOrDefault(SettingService.KEY_DOCKER_REGISTER_NAMESPACE, defaultSetting).getSettingValue();
+        return settings.getOrDefault(SettingService.KEY_DOCKER_REGISTER_NAMESPACE, defaultSetting)
+                .getSettingValue();
     }
 
     @Override
     public String getStreamParkAddress() {
-        return settings.getOrDefault(SettingService.KEY_STREAMPARK_ADDRESS, defaultSetting).getSettingValue();
+        return settings.getOrDefault(SettingService.KEY_STREAMPARK_ADDRESS, defaultSetting)
+                .getSettingValue();
     }
 
     @Override
     public String getMavenRepository() {
-        return settings.getOrDefault(SettingService.KEY_MAVEN_REPOSITORY, defaultSetting).getSettingValue();
+        return settings.getOrDefault(SettingService.KEY_MAVEN_REPOSITORY, defaultSetting)
+                .getSettingValue();
     }
 
     @Override
     public String getMavenAuthUser() {
-        return settings.getOrDefault(SettingService.KEY_MAVEN_AUTH_USER, defaultSetting).getSettingValue();
+        return settings.getOrDefault(SettingService.KEY_MAVEN_AUTH_USER, defaultSetting)
+                .getSettingValue();
     }
 
     @Override
     public String getMavenAuthPassword() {
-        return settings.getOrDefault(SettingService.KEY_MAVEN_AUTH_PASSWORD, defaultSetting).getSettingValue();
+        return settings.getOrDefault(SettingService.KEY_MAVEN_AUTH_PASSWORD, defaultSetting)
+                .getSettingValue();
     }
-
 }

@@ -24,9 +24,7 @@ import java.util.Random;
 
 public final class ShaHashUtils {
 
-    private ShaHashUtils() {
-
-    }
+    private ShaHashUtils() {}
 
     /**
      * encrypt user password
@@ -56,5 +54,4 @@ public final class ShaHashUtils {
         }
         return builder.toString();
     }
-
 }

@@ -30,18 +30,12 @@ public class AlertLarkParams implements Serializable {
     @NotBlank(message = "The access token of Lark must not be empty")
     private String token;
 
-    /**
-     * at all
-     */
+    /** at all */
     private Boolean isAtAll = false;
 
-    /**
-     * lark robot secret enabled, default false, if enable, need set secret token
-     */
+    /** lark robot secret enabled, default false, if enable, need set secret token */
     private Boolean secretEnable = false;
 
-    /**
-     * lark robot webhook secret_token
-     */
+    /** lark robot webhook secret_token */
     private String secretToken;
 }

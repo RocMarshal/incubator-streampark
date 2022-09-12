@@ -63,9 +63,10 @@ public class ClassAndMethodMetricBufferTest {
     public void appendValue_concurrent() throws InterruptedException {
         ClassAndMethodLongMetricBuffer buffer = new ClassAndMethodLongMetricBuffer();
 
-        String[] classNames = new String[]{"class1", "class2", "class1", "class2", "class101"};
-        String[] methodNames = new String[]{"method1", "method2", "method1", "method3", "method101"};
-        int[] values = new int[]{1, 2, 10, 20, 101};
+        String[] classNames = new String[] {"class1", "class2", "class1", "class2", "class101"};
+        String[] methodNames =
+                new String[] {"method1", "method2", "method1", "method3", "method101"};
+        int[] values = new int[] {1, 2, 10, 20, 101};
 
         Thread[] threads = new Thread[classNames.length];
 
@@ -74,13 +75,16 @@ public class ClassAndMethodMetricBufferTest {
         for (int i = 0; i < threads.length; i++) {
             final int index = i;
             Thread thread =
-                new Thread(
-                    () -> {
-                        for (int repeat = 0; repeat < repeatTimes; repeat++) {
-                            buffer.appendValue(
-                                classNames[index], methodNames[index], "duration", values[index]);
-                        }
-                    });
+                    new Thread(
+                            () -> {
+                                for (int repeat = 0; repeat < repeatTimes; repeat++) {
+                                    buffer.appendValue(
+                                            classNames[index],
+                                            methodNames[index],
+                                            "duration",
+                                            values[index]);
+                                }
+                            });
             threads[i] = thread;
         }
 
@@ -96,36 +100,45 @@ public class ClassAndMethodMetricBufferTest {
         Assert.assertEquals(4, result.size());
 
         Assert.assertEquals(
-            2 * repeatTimes,
-            result.get(new ClassAndMethodMetricKey("class1", "method1", "duration")).getCount());
+                2 * repeatTimes,
+                result.get(new ClassAndMethodMetricKey("class1", "method1", "duration"))
+                        .getCount());
         Assert.assertEquals(
-            11 * repeatTimes,
-            result.get(new ClassAndMethodMetricKey("class1", "method1", "duration")).getSum());
+                11 * repeatTimes,
+                result.get(new ClassAndMethodMetricKey("class1", "method1", "duration")).getSum());
         Assert.assertEquals(
-            1, result.get(new ClassAndMethodMetricKey("class1", "method1", "duration")).getMin());
+                1,
+                result.get(new ClassAndMethodMetricKey("class1", "method1", "duration")).getMin());
         Assert.assertEquals(
-            10, result.get(new ClassAndMethodMetricKey("class1", "method1", "duration")).getMax());
+                10,
+                result.get(new ClassAndMethodMetricKey("class1", "method1", "duration")).getMax());
 
         Assert.assertEquals(
-            repeatTimes,
-            result.get(new ClassAndMethodMetricKey("class2", "method2", "duration")).getCount());
+                repeatTimes,
+                result.get(new ClassAndMethodMetricKey("class2", "method2", "duration"))
+                        .getCount());
         Assert.assertEquals(
-            2 * repeatTimes,
-            result.get(new ClassAndMethodMetricKey("class2", "method2", "duration")).getSum());
+                2 * repeatTimes,
+                result.get(new ClassAndMethodMetricKey("class2", "method2", "duration")).getSum());
         Assert.assertEquals(
-            2, result.get(new ClassAndMethodMetricKey("class2", "method2", "duration")).getMin());
+                2,
+                result.get(new ClassAndMethodMetricKey("class2", "method2", "duration")).getMin());
         Assert.assertEquals(
-            2, result.get(new ClassAndMethodMetricKey("class2", "method2", "duration")).getMax());
+                2,
+                result.get(new ClassAndMethodMetricKey("class2", "method2", "duration")).getMax());
 
         Assert.assertEquals(
-            repeatTimes,
-            result.get(new ClassAndMethodMetricKey("class2", "method3", "duration")).getCount());
+                repeatTimes,
+                result.get(new ClassAndMethodMetricKey("class2", "method3", "duration"))
+                        .getCount());
         Assert.assertEquals(
-            20 * repeatTimes,
-            result.get(new ClassAndMethodMetricKey("class2", "method3", "duration")).getSum());
+                20 * repeatTimes,
+                result.get(new ClassAndMethodMetricKey("class2", "method3", "duration")).getSum());
         Assert.assertEquals(
-            20, result.get(new ClassAndMethodMetricKey("class2", "method3", "duration")).getMin());
+                20,
+                result.get(new ClassAndMethodMetricKey("class2", "method3", "duration")).getMin());
         Assert.assertEquals(
-            20, result.get(new ClassAndMethodMetricKey("class2", "method3", "duration")).getMax());
+                20,
+                result.get(new ClassAndMethodMetricKey("class2", "method3", "duration")).getMax());
     }
 }

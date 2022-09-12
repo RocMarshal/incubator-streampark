@@ -29,6 +29,4 @@ public interface TableEnvConfigFunction {
      * @param parameterTool
      */
     void configuration(TableConfig tableConfig, ParameterTool parameterTool);
-
 }
-

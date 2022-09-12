@@ -21,26 +21,17 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public enum ChangedType implements Serializable {
-    /**
-     * none changed
-     */
+    /** none changed */
     NONE(0),
 
-    /**
-     * dependency has changed
-     */
+    /** dependency has changed */
     DEPENDENCY(1),
 
-    /**
-     * sql has changed
-     */
+    /** sql has changed */
     SQL(2),
 
-    /**
-     * both
-     */
+    /** both */
     ALL(3);
-
 
     private final int value;
 

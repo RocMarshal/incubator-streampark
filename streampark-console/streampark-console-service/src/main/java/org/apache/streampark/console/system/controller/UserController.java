@@ -49,8 +49,7 @@ import java.util.List;
 @RequestMapping("user")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    @Autowired private UserService userService;
 
     @PostMapping("detail")
     public User detail(@NotBlank(message = "{required}") @PathVariable String username) {
@@ -58,7 +57,9 @@ public class UserController {
     }
 
     @PostMapping("list")
-    @RequiresPermissions(value = {"user:view", "app:view"}, logical = Logical.OR)
+    @RequiresPermissions(
+            value = {"user:view", "app:view"},
+            logical = Logical.OR)
     public RestResponse userList(RestRequest restRequest, User user) {
         IPage<User> userList = userService.findUserDetail(user, restRequest);
         return RestResponse.success(userList);
@@ -93,9 +94,9 @@ public class UserController {
 
     @PutMapping("avatar")
     public RestResponse updateAvatar(
-        @NotBlank(message = "{required}") String username,
-        @NotBlank(message = "{required}") String avatar)
-        throws Exception {
+            @NotBlank(message = "{required}") String username,
+            @NotBlank(message = "{required}") String avatar)
+            throws Exception {
         this.userService.updateAvatar(username, avatar);
         return RestResponse.success();
     }
@@ -114,8 +115,8 @@ public class UserController {
 
     @PostMapping("check/password")
     public RestResponse checkPassword(
-        @NotBlank(message = "{required}") String username,
-        @NotBlank(message = "{required}") String password) {
+            @NotBlank(message = "{required}") String username,
+            @NotBlank(message = "{required}") String password) {
 
         User user = userService.findByName(username);
         String salt = user.getSalt();
@@ -126,9 +127,9 @@ public class UserController {
 
     @PutMapping("password")
     public RestResponse updatePassword(
-        @NotBlank(message = "{required}") String username,
-        @NotBlank(message = "{required}") String password)
-        throws Exception {
+            @NotBlank(message = "{required}") String username,
+            @NotBlank(message = "{required}") String password)
+            throws Exception {
         userService.updatePassword(username, password);
         return RestResponse.success();
     }
@@ -136,10 +137,9 @@ public class UserController {
     @PutMapping("password/reset")
     @RequiresPermissions("user:reset")
     public RestResponse resetPassword(@NotBlank(message = "{required}") String usernames)
-        throws Exception {
+            throws Exception {
         String[] usernameArr = usernames.split(StringPool.COMMA);
         this.userService.resetPassword(usernameArr);
         return RestResponse.success();
     }
-
 }

@@ -28,8 +28,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public final class MoreFutures {
-    private MoreFutures() {
-    }
+    private MoreFutures() {}
 
     public static <T> T await(CompletionStage<T> stage) {
         CompletableFuture<T> future = stage.toCompletableFuture();
@@ -59,8 +58,11 @@ public final class MoreFutures {
         return deref(stage, 5L, TimeUnit.SECONDS);
     }
 
-    public static <T> CompletionStage<T> exceptionallyCompose(CompletionStage<T> stage, Function<Throwable, ? extends CompletionStage<T>> fn) {
-        return stage.thenApply((res) -> CompletableFuture.completedFuture(res)).exceptionally((Function<Throwable, ? extends CompletableFuture<T>>) fn).thenCompose(Function.identity());
+    public static <T> CompletionStage<T> exceptionallyCompose(
+            CompletionStage<T> stage, Function<Throwable, ? extends CompletionStage<T>> fn) {
+        return stage.thenApply((res) -> CompletableFuture.completedFuture(res))
+                .exceptionally((Function<Throwable, ? extends CompletableFuture<T>>) fn)
+                .thenCompose(Function.identity());
     }
 
     public static <T> CompletableFuture<T> completeImmediately(Supplier<T> supplier) {
@@ -114,7 +116,8 @@ public final class MoreFutures {
             return this.value;
         }
 
-        public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+        public T get(long timeout, TimeUnit unit)
+                throws InterruptedException, ExecutionException, TimeoutException {
             return this.value;
         }
     }

@@ -33,16 +33,17 @@ public class SparkUtilsTest {
 
     @Test
     public void getAppId()
-        throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
-        InvocationTargetException {
+            throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
+                    InvocationTargetException {
         Assert.assertNull(SparkUtils.getSparkEnvAppId());
     }
 
     @Test
     public void probeRole() {
         Assert.assertEquals(
-            "executor",
-            SparkUtils.probeRole("java org.apache.spark.executor.CoarseGrainedExecutorBackend"));
+                "executor",
+                SparkUtils.probeRole(
+                        "java org.apache.spark.executor.CoarseGrainedExecutorBackend"));
         Assert.assertEquals("driver", SparkUtils.probeRole("java org.apache.spark.MockDriver"));
         Assert.assertEquals(null, SparkUtils.probeRole("java foo"));
     }

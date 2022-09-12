@@ -55,8 +55,9 @@ public class ClassMethodArgmentMetricBufferTest {
     public void appendValue_concurrent() throws InterruptedException {
         ClassMethodArgumentMetricBuffer buffer = new ClassMethodArgumentMetricBuffer();
 
-        String[] classNames = new String[]{"class1", "class2", "class1", "class2", "class101"};
-        String[] methodNames = new String[]{"method1", "method2", "method1", "method3", "method101"};
+        String[] classNames = new String[] {"class1", "class2", "class1", "class2", "class101"};
+        String[] methodNames =
+                new String[] {"method1", "method2", "method1", "method3", "method101"};
 
         Thread[] threads = new Thread[classNames.length];
 
@@ -65,12 +66,13 @@ public class ClassMethodArgmentMetricBufferTest {
         for (int i = 0; i < threads.length; i++) {
             final int index = i;
             Thread thread =
-                new Thread(
-                    () -> {
-                        for (int repeat = 0; repeat < repeatTimes; repeat++) {
-                            buffer.appendValue(classNames[index], methodNames[index], "arg1");
-                        }
-                    });
+                    new Thread(
+                            () -> {
+                                for (int repeat = 0; repeat < repeatTimes; repeat++) {
+                                    buffer.appendValue(
+                                            classNames[index], methodNames[index], "arg1");
+                                }
+                            });
             threads[i] = thread;
         }
 
@@ -86,13 +88,15 @@ public class ClassMethodArgmentMetricBufferTest {
         Assert.assertEquals(4, result.size());
 
         Assert.assertEquals(
-            2 * repeatTimes,
-            result.get(new ClassAndMethodMetricKey("class1", "method1", "arg1")).get());
+                2 * repeatTimes,
+                result.get(new ClassAndMethodMetricKey("class1", "method1", "arg1")).get());
 
         Assert.assertEquals(
-            repeatTimes, result.get(new ClassAndMethodMetricKey("class2", "method2", "arg1")).get());
+                repeatTimes,
+                result.get(new ClassAndMethodMetricKey("class2", "method2", "arg1")).get());
 
         Assert.assertEquals(
-            repeatTimes, result.get(new ClassAndMethodMetricKey("class2", "method3", "arg1")).get());
+                repeatTimes,
+                result.get(new ClassAndMethodMetricKey("class2", "method3", "arg1")).get());
     }
 }

@@ -40,8 +40,7 @@ import java.util.List;
 @RequestMapping("flink/cluster")
 public class FlinkClusterController {
 
-    @Autowired
-    private FlinkClusterService flinkClusterService;
+    @Autowired private FlinkClusterService flinkClusterService;
 
     @PostMapping("list")
     public RestResponse list() {

@@ -53,16 +53,16 @@ public class StringUtilsTest {
         Assert.assertEquals("", StringUtils.extractByRegex("", "").get(0));
 
         List<String> list =
-            StringUtils.extractByRegex(
-                "appcache/application_1498604172385_2751189/container_e241_1498604172385_2751189_01_000267",
-                "application_[\\w_]+");
+                StringUtils.extractByRegex(
+                        "appcache/application_1498604172385_2751189/container_e241_1498604172385_2751189_01_000267",
+                        "application_[\\w_]+");
         Assert.assertEquals(1, list.size());
         Assert.assertEquals("application_1498604172385_2751189", list.get(0));
 
         list =
-            StringUtils.extractByRegex(
-                "appcache/application_1498604172385_2751189/container_e241_1498604172385_2751189_01_000267,appcache/application_1498604172385_2751190/container_e241_1498604172385_2751189_01_000267",
-                "application_[\\w_]+");
+                StringUtils.extractByRegex(
+                        "appcache/application_1498604172385_2751189/container_e241_1498604172385_2751189_01_000267,appcache/application_1498604172385_2751190/container_e241_1498604172385_2751189_01_000267",
+                        "application_[\\w_]+");
         Assert.assertEquals(2, list.size());
         Assert.assertEquals("application_1498604172385_2751189", list.get(0));
         Assert.assertEquals("application_1498604172385_2751190", list.get(1));
@@ -86,19 +86,23 @@ public class StringUtilsTest {
         Assert.assertEquals(123 * 1024L, StringUtils.getBytesValueOrNull("123KB").longValue());
         Assert.assertEquals(123 * 1024L, StringUtils.getBytesValueOrNull("123 KB").longValue());
 
-        Assert.assertEquals(123 * 1024L * 1024L, StringUtils.getBytesValueOrNull("123m").longValue());
-        Assert.assertEquals(123 * 1024L * 1024L, StringUtils.getBytesValueOrNull("123mb").longValue());
-        Assert.assertEquals(123 * 1024L * 1024L, StringUtils.getBytesValueOrNull("123 mb").longValue());
-        Assert.assertEquals(123 * 1024L * 1024L, StringUtils.getBytesValueOrNull("123M").longValue());
+        Assert.assertEquals(
+                123 * 1024L * 1024L, StringUtils.getBytesValueOrNull("123m").longValue());
+        Assert.assertEquals(
+                123 * 1024L * 1024L, StringUtils.getBytesValueOrNull("123mb").longValue());
+        Assert.assertEquals(
+                123 * 1024L * 1024L, StringUtils.getBytesValueOrNull("123 mb").longValue());
+        Assert.assertEquals(
+                123 * 1024L * 1024L, StringUtils.getBytesValueOrNull("123M").longValue());
 
         Assert.assertEquals(
-            123 * 1024L * 1024L * 1024L, StringUtils.getBytesValueOrNull("123g").longValue());
+                123 * 1024L * 1024L * 1024L, StringUtils.getBytesValueOrNull("123g").longValue());
         Assert.assertEquals(
-            123 * 1024L * 1024L * 1024L, StringUtils.getBytesValueOrNull("123gb").longValue());
+                123 * 1024L * 1024L * 1024L, StringUtils.getBytesValueOrNull("123gb").longValue());
         Assert.assertEquals(
-            123 * 1024L * 1024L * 1024L, StringUtils.getBytesValueOrNull("123 gb").longValue());
+                123 * 1024L * 1024L * 1024L, StringUtils.getBytesValueOrNull("123 gb").longValue());
         Assert.assertEquals(
-            123 * 1024L * 1024L * 1024L, StringUtils.getBytesValueOrNull("123G").longValue());
+                123 * 1024L * 1024L * 1024L, StringUtils.getBytesValueOrNull("123G").longValue());
 
         Assert.assertEquals(123L, StringUtils.getBytesValueOrNull("123bytes").longValue());
         Assert.assertEquals(123L, StringUtils.getBytesValueOrNull("123 Bytes").longValue());
@@ -115,25 +119,29 @@ public class StringUtilsTest {
         Assert.assertEquals(null, StringUtils.getArgumentValue("", "test"));
 
         Assert.assertEquals(
-            "com.foo.jobs.Abc", StringUtils.getArgumentValue("--class com.foo.jobs.Abc", "--class"));
+                "com.foo.jobs.Abc",
+                StringUtils.getArgumentValue("--class com.foo.jobs.Abc", "--class"));
         Assert.assertEquals(
-            "com.foo.jobs.Abc", StringUtils.getArgumentValue(" --class  com.foo.jobs.Abc ", "--class"));
+                "com.foo.jobs.Abc",
+                StringUtils.getArgumentValue(" --class  com.foo.jobs.Abc ", "--class"));
         Assert.assertEquals(
-            "com.foo.jobs.Abc", StringUtils.getArgumentValue(" --class  com.foo.jobs.Abc ", "--class"));
+                "com.foo.jobs.Abc",
+                StringUtils.getArgumentValue(" --class  com.foo.jobs.Abc ", "--class"));
         Assert.assertEquals(
-            "com.foo.jobs.Abc",
-            StringUtils.getArgumentValue(" --class  'com.foo.jobs.Abc' ", "--class"));
+                "com.foo.jobs.Abc",
+                StringUtils.getArgumentValue(" --class  'com.foo.jobs.Abc' ", "--class"));
         Assert.assertEquals(
-            "com.foo.jobs.Abc",
-            StringUtils.getArgumentValue(" --class  \"com.foo.jobs.Abc\" ", "--class"));
+                "com.foo.jobs.Abc",
+                StringUtils.getArgumentValue(" --class  \"com.foo.jobs.Abc\" ", "--class"));
         Assert.assertEquals(
-            " com.foo.jobs.Abc ",
-            StringUtils.getArgumentValue(" --class  ' com.foo.jobs.Abc ' ", "--class"));
+                " com.foo.jobs.Abc ",
+                StringUtils.getArgumentValue(" --class  ' com.foo.jobs.Abc ' ", "--class"));
 
         Assert.assertEquals(
-            "com.foo.jobs.Abc",
-            StringUtils.getArgumentValue(
-                "xyz --class com.foo.jobs.Abc --jar file:/home/test/hi.jar --others world", "--class"));
+                "com.foo.jobs.Abc",
+                StringUtils.getArgumentValue(
+                        "xyz --class com.foo.jobs.Abc --jar file:/home/test/hi.jar --others world",
+                        "--class"));
     }
 
     @Test
@@ -147,17 +155,18 @@ public class StringUtilsTest {
         Assert.assertArrayEquals(new String[0], StringUtils.getArgumentValues("", "test"));
 
         Assert.assertArrayEquals(
-            new String[]{"com.foo.jobs.Abc"},
-            StringUtils.getArgumentValues("--class com.foo.jobs.Abc", "--class"));
+                new String[] {"com.foo.jobs.Abc"},
+                StringUtils.getArgumentValues("--class com.foo.jobs.Abc", "--class"));
         Assert.assertArrayEquals(
-            new String[]{"com.foo.jobs.Abc", "com.foo.jobs.Abc", " com.foo.jobs.Abc "},
-            StringUtils.getArgumentValues(
-                " --class  \"com.foo.jobs.Abc\"  --class com.foo.jobs.Abc --class  ' com.foo.jobs.Abc ' ",
-                "--class"));
+                new String[] {"com.foo.jobs.Abc", "com.foo.jobs.Abc", " com.foo.jobs.Abc "},
+                StringUtils.getArgumentValues(
+                        " --class  \"com.foo.jobs.Abc\"  --class com.foo.jobs.Abc --class  ' com.foo.jobs.Abc ' ",
+                        "--class"));
 
         Assert.assertArrayEquals(
-            new String[]{"com.foo.jobs.Abc"},
-            StringUtils.getArgumentValues(
-                "xyz --class com.foo.jobs.Abc --jar file:/home/test/hi.jar --others world", "--class"));
+                new String[] {"com.foo.jobs.Abc"},
+                StringUtils.getArgumentValues(
+                        "xyz --class com.foo.jobs.Abc --jar file:/home/test/hi.jar --others world",
+                        "--class"));
     }
 }

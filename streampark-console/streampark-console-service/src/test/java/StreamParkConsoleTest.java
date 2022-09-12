@@ -26,11 +26,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = StreamParkConsoleBootstrap.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        classes = StreamParkConsoleBootstrap.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class StreamParkConsoleTest {
 
-    @Autowired
-    private ApplicationService applicationService;
+    @Autowired private ApplicationService applicationService;
 
     @Test
     public void start() throws Exception {
@@ -43,5 +44,4 @@ public class StreamParkConsoleTest {
 
         applicationService.start(application, false);
     }
-
 }

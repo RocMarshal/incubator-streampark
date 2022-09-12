@@ -46,8 +46,7 @@ public class EmailAlertNotifyServiceImpl implements AlertNotifyService {
 
     private Template template;
 
-    @Autowired
-    private SettingService settingService;
+    @Autowired private SettingService settingService;
 
     @PostConstruct
     public void loadTemplateFile() throws Exception {
@@ -56,10 +55,16 @@ public class EmailAlertNotifyServiceImpl implements AlertNotifyService {
     }
 
     @Override
-    public boolean doAlert(AlertConfigWithParams alertConfig, AlertTemplate template) throws AlertException {
-        SenderEmail senderEmail = Optional.ofNullable(settingService.getSenderEmail())
-            .orElseThrow(() -> new AlertException("Please configure first mail sender"));
-        String contacts = alertConfig.getEmailParams() == null ? null : alertConfig.getEmailParams().getContacts();
+    public boolean doAlert(AlertConfigWithParams alertConfig, AlertTemplate template)
+            throws AlertException {
+        SenderEmail senderEmail =
+                Optional.ofNullable(settingService.getSenderEmail())
+                        .orElseThrow(
+                                () -> new AlertException("Please configure first mail sender"));
+        String contacts =
+                alertConfig.getEmailParams() == null
+                        ? null
+                        : alertConfig.getEmailParams().getContacts();
         if (!StringUtils.hasLength(contacts)) {
             throw new AlertException("Please configure a valid contacts");
         }
@@ -67,7 +72,8 @@ public class EmailAlertNotifyServiceImpl implements AlertNotifyService {
         return sendEmail(senderEmail, template, emails);
     }
 
-    private boolean sendEmail(SenderEmail senderEmail, AlertTemplate mail, String... mails) throws AlertException {
+    private boolean sendEmail(SenderEmail senderEmail, AlertTemplate mail, String... mails)
+            throws AlertException {
         log.info(mail.getSubject());
         try {
             Map<String, AlertTemplate> out = new HashMap<>(16);
@@ -94,5 +100,4 @@ public class EmailAlertNotifyServiceImpl implements AlertNotifyService {
             throw new AlertException("Failed send email alert", e);
         }
     }
-
 }

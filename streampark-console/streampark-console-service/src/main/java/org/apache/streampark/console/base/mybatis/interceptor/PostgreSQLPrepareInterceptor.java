@@ -29,11 +29,12 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.util.Properties;
 
-/**
- * the mybatis interceptor for update/insert/delete.
- */
+/** the mybatis interceptor for update/insert/delete. */
 @Intercepts({
-    @Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})
+    @Signature(
+            type = StatementHandler.class,
+            method = "prepare",
+            args = {Connection.class, Integer.class})
 })
 public class PostgreSQLPrepareInterceptor implements Interceptor {
     @Override
@@ -52,7 +53,5 @@ public class PostgreSQLPrepareInterceptor implements Interceptor {
     }
 
     @Override
-    public void setProperties(final Properties properties) {
-
-    }
+    public void setProperties(final Properties properties) {}
 }

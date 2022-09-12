@@ -29,13 +29,13 @@ public class AgentThreadFactoryTest {
 
         AgentThreadFactory threadFactory = new AgentThreadFactory();
         Thread thread =
-            threadFactory.newThread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        i.incrementAndGet();
-                    }
-                });
+                threadFactory.newThread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                i.incrementAndGet();
+                            }
+                        });
 
         thread.start();
         thread.join();

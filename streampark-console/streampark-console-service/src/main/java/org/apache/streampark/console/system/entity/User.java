@@ -34,9 +34,7 @@ import java.util.Date;
 public class User implements Serializable {
 
     private static final long serialVersionUID = -4852732617765810959L;
-    /**
-     * user status
-     */
+    /** user status */
     public static final String STATUS_VALID = "1";
 
     public static final String STATUS_LOCK = "0";
@@ -100,11 +98,11 @@ public class User implements Serializable {
 
     /**
      * shiro-redis v3.1.0 must have getAuthCacheKey() or getId() function # Principal id field name.
-     * The field which you can get unique id to identify this principal. # For example, if you use UserInfo as
-     * Principal class, the id field maybe userId, userName, email, etc. # Remember to add getter to
-     * this id field. For example, getUserId(), getUserName(), getEmail(), etc. # Default value is
-     * authCacheKey or id, that means your principal object has a method called "getAuthCacheKey()" or
-     * "getId()"
+     * The field which you can get unique id to identify this principal. # For example, if you use
+     * UserInfo as Principal class, the id field maybe userId, userName, email, etc. # Remember to
+     * add getter to this id field. For example, getUserId(), getUserName(), getEmail(), etc. #
+     * Default value is authCacheKey or id, that means your principal object has a method called
+     * "getAuthCacheKey()" or "getId()"
      *
      * @return userId as Principal id field name
      */

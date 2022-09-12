@@ -33,21 +33,22 @@ public class ArgumentsTest {
     @Test
     public void allArguments() {
         Arguments arguments =
-            Arguments.parseArgs(
-                "reporter=org.apache.streampark.plugin.profiling.ArgumentsTest$DummyReporter,durationProfiling=a.bc.foo,metricInterval=123,appIdVariable=APP_ID1,appIdRegex=app123,argumentProfiling=package1.class1.method1.1");
+                Arguments.parseArgs(
+                        "reporter=org.apache.streampark.plugin.profiling.ArgumentsTest$DummyReporter,durationProfiling=a.bc.foo,metricInterval=123,appIdVariable=APP_ID1,appIdRegex=app123,argumentProfiling=package1.class1.method1.1");
         Assert.assertEquals(6, arguments.getRawArgValues().size());
         Assert.assertFalse(arguments.isNoop());
         Assert.assertEquals(DummyReporter.class, arguments.getReporter().getClass());
         Assert.assertEquals(1, arguments.getDurationProfiling().size());
-        Assert.assertEquals(new ClassAndMethod("a.bc", "foo"), arguments.getDurationProfiling().get(0));
+        Assert.assertEquals(
+                new ClassAndMethod("a.bc", "foo"), arguments.getDurationProfiling().get(0));
         Assert.assertEquals(123, arguments.getMetricInterval());
         Assert.assertEquals("APP_ID1", arguments.getAppIdVariable());
         Assert.assertEquals("app123", arguments.getAppIdRegex());
 
         Assert.assertEquals(1, arguments.getArgumentProfiling().size());
         Assert.assertEquals(
-            new ClassMethodArgument("package1.class1", "method1", 1),
-            arguments.getArgumentProfiling().get(0));
+                new ClassMethodArgument("package1.class1", "method1", 1),
+                arguments.getArgumentProfiling().get(0));
     }
 
     @Test
@@ -72,7 +73,8 @@ public class ArgumentsTest {
     @Test
     public void noop() {
         Arguments arguments =
-            Arguments.parseArgs("durationProfiling=a.bc.foo,noop=true,durationProfiling=ab.c.d.test");
+                Arguments.parseArgs(
+                        "durationProfiling=a.bc.foo,noop=true,durationProfiling=ab.c.d.test");
         Assert.assertEquals(2, arguments.getRawArgValues().size());
         Assert.assertTrue(arguments.isNoop());
         Assert.assertEquals(2, arguments.getDurationProfiling().size());
@@ -81,11 +83,12 @@ public class ArgumentsTest {
     @Test
     public void durationProfiling() {
         Arguments arguments =
-            Arguments.parseArgs("durationProfiling=a.bc.foo,durationProfiling=ab.c.d.test");
+                Arguments.parseArgs("durationProfiling=a.bc.foo,durationProfiling=ab.c.d.test");
         Assert.assertEquals(2, arguments.getDurationProfiling().size());
-        Assert.assertEquals(new ClassAndMethod("a.bc", "foo"), arguments.getDurationProfiling().get(0));
         Assert.assertEquals(
-            new ClassAndMethod("ab.c.d", "test"), arguments.getDurationProfiling().get(1));
+                new ClassAndMethod("a.bc", "foo"), arguments.getDurationProfiling().get(0));
+        Assert.assertEquals(
+                new ClassAndMethod("ab.c.d", "test"), arguments.getDurationProfiling().get(1));
         Assert.assertEquals(Arguments.DEFAULT_METRIC_INTERVAL, arguments.getMetricInterval());
         Assert.assertEquals(Arguments.DEFAULT_APP_ID_REGEX, arguments.getAppIdRegex());
     }
@@ -93,11 +96,12 @@ public class ArgumentsTest {
     @Test
     public void argumentProfiling() {
         Arguments arguments =
-            Arguments.parseArgs("durationProfiling=a.bc.foo,durationProfiling=ab.c.d.test");
+                Arguments.parseArgs("durationProfiling=a.bc.foo,durationProfiling=ab.c.d.test");
         Assert.assertEquals(2, arguments.getDurationProfiling().size());
-        Assert.assertEquals(new ClassAndMethod("a.bc", "foo"), arguments.getDurationProfiling().get(0));
         Assert.assertEquals(
-            new ClassAndMethod("ab.c.d", "test"), arguments.getDurationProfiling().get(1));
+                new ClassAndMethod("a.bc", "foo"), arguments.getDurationProfiling().get(0));
+        Assert.assertEquals(
+                new ClassAndMethod("ab.c.d", "test"), arguments.getDurationProfiling().get(1));
         Assert.assertEquals(Arguments.DEFAULT_METRIC_INTERVAL, arguments.getMetricInterval());
         Assert.assertEquals(Arguments.DEFAULT_APP_ID_REGEX, arguments.getAppIdRegex());
     }
@@ -116,7 +120,7 @@ public class ArgumentsTest {
         Arguments arguments = Arguments.parseArgs("");
 
         arguments.setConfigProvider(
-            "org.apache.streampark.plugin.profiling.ArgumentsTest$DummyConfigProvider");
+                "org.apache.streampark.plugin.profiling.ArgumentsTest$DummyConfigProvider");
         ConfigProvider configProvider = arguments.getConfigProvider();
         Assert.assertTrue(configProvider instanceof DummyConfigProvider);
     }
@@ -124,8 +128,8 @@ public class ArgumentsTest {
     @Test
     public void processConfigProvider_DummyConfigProvider() {
         Arguments arguments =
-            Arguments.parseArgs(
-                "tag=tag1,cluster=cluster1,metricInterval=1000,ioProfiling=true,durationProfiling=a.bc.foo,durationProfiling=ab.c.d.test,configProvider=org.apache.streampark.plugin.profiling.ArgumentsTest$DummyConfigProvider");
+                Arguments.parseArgs(
+                        "tag=tag1,cluster=cluster1,metricInterval=1000,ioProfiling=true,durationProfiling=a.bc.foo,durationProfiling=ab.c.d.test,configProvider=org.apache.streampark.plugin.profiling.ArgumentsTest$DummyConfigProvider");
 
         arguments.runConfigProvider();
 
@@ -134,17 +138,17 @@ public class ArgumentsTest {
         Assert.assertEquals(1000L, arguments.getMetricInterval());
         Assert.assertEquals(true, arguments.isIoProfiling());
         Assert.assertArrayEquals(
-            new ClassAndMethod[]{
-                new ClassAndMethod("a.bc", "foo"), new ClassAndMethod("ab.c.d", "test")
-            },
-            arguments.getDurationProfiling().toArray(new ClassAndMethod[2]));
+                new ClassAndMethod[] {
+                    new ClassAndMethod("a.bc", "foo"), new ClassAndMethod("ab.c.d", "test")
+                },
+                arguments.getDurationProfiling().toArray(new ClassAndMethod[2]));
     }
 
     @Test
     public void processConfigProvider_SimpleConfigProvider() {
         Arguments arguments =
-            Arguments.parseArgs(
-                "tag=tag1,metricInterval=1000,ioProfiling=true,durationProfiling=a.bc.foo,durationProfiling=ab.c.d.test,configProvider=org.apache.streampark.plugin.profiling.ArgumentsTest$SimpleConfigProvider");
+                Arguments.parseArgs(
+                        "tag=tag1,metricInterval=1000,ioProfiling=true,durationProfiling=a.bc.foo,durationProfiling=ab.c.d.test,configProvider=org.apache.streampark.plugin.profiling.ArgumentsTest$SimpleConfigProvider");
 
         arguments.runConfigProvider();
 
@@ -152,17 +156,18 @@ public class ArgumentsTest {
         Assert.assertEquals(9000L, arguments.getMetricInterval());
         Assert.assertEquals(false, arguments.isIoProfiling());
         Assert.assertArrayEquals(
-            new ClassAndMethod[]{
-                new ClassAndMethod("package.c900", "m900"), new ClassAndMethod("package.c901", "m901")
-            },
-            arguments.getDurationProfiling().toArray(new ClassAndMethod[2]));
+                new ClassAndMethod[] {
+                    new ClassAndMethod("package.c900", "m900"),
+                    new ClassAndMethod("package.c901", "m901")
+                },
+                arguments.getDurationProfiling().toArray(new ClassAndMethod[2]));
     }
 
     @Test
     public void processConfigProvider_OverrideConfigProvider() {
         Arguments arguments =
-            Arguments.parseArgs(
-                "tag=tag1,metricInterval=1000,ioProfiling=true,durationProfiling=a.bc.foo,durationProfiling=ab.c.d.test,configProvider=org.apache.streampark.plugin.profiling.ArgumentsTest$OverrideConfigProvider");
+                Arguments.parseArgs(
+                        "tag=tag1,metricInterval=1000,ioProfiling=true,durationProfiling=a.bc.foo,durationProfiling=ab.c.d.test,configProvider=org.apache.streampark.plugin.profiling.ArgumentsTest$OverrideConfigProvider");
 
         arguments.runConfigProvider();
 
@@ -170,14 +175,15 @@ public class ArgumentsTest {
         Assert.assertEquals(9001L, arguments.getMetricInterval());
         Assert.assertEquals(false, arguments.isIoProfiling());
         Assert.assertArrayEquals(
-            new ClassAndMethod[]{
-                new ClassAndMethod("package.c900", "m910"), new ClassAndMethod("package.c901", "m911")
-            },
-            arguments.getDurationProfiling().toArray(new ClassAndMethod[2]));
+                new ClassAndMethod[] {
+                    new ClassAndMethod("package.c900", "m910"),
+                    new ClassAndMethod("package.c901", "m911")
+                },
+                arguments.getDurationProfiling().toArray(new ClassAndMethod[2]));
 
         arguments =
-            Arguments.parseArgs(
-                "tag=tag2,metricInterval=1000,ioProfiling=true,durationProfiling=a.bc.foo,durationProfiling=ab.c.d.test,configProvider=org.apache.streampark.plugin.profiling.ArgumentsTest$OverrideConfigProvider");
+                Arguments.parseArgs(
+                        "tag=tag2,metricInterval=1000,ioProfiling=true,durationProfiling=a.bc.foo,durationProfiling=ab.c.d.test,configProvider=org.apache.streampark.plugin.profiling.ArgumentsTest$OverrideConfigProvider");
 
         arguments.runConfigProvider();
 
@@ -185,14 +191,15 @@ public class ArgumentsTest {
         Assert.assertEquals(9002L, arguments.getMetricInterval());
         Assert.assertEquals(true, arguments.isIoProfiling());
         Assert.assertArrayEquals(
-            new ClassAndMethod[]{
-                new ClassAndMethod("package.c900", "m920"), new ClassAndMethod("package.c901", "m921")
-            },
-            arguments.getDurationProfiling().toArray(new ClassAndMethod[2]));
+                new ClassAndMethod[] {
+                    new ClassAndMethod("package.c900", "m920"),
+                    new ClassAndMethod("package.c901", "m921")
+                },
+                arguments.getDurationProfiling().toArray(new ClassAndMethod[2]));
 
         arguments =
-            Arguments.parseArgs(
-                "tag=tag3,metricInterval=1000,ioProfiling=true,durationProfiling=a.bc.foo,durationProfiling=ab.c.d.test,configProvider=org.apache.streampark.plugin.profiling.ArgumentsTest$OverrideConfigProvider");
+                Arguments.parseArgs(
+                        "tag=tag3,metricInterval=1000,ioProfiling=true,durationProfiling=a.bc.foo,durationProfiling=ab.c.d.test,configProvider=org.apache.streampark.plugin.profiling.ArgumentsTest$OverrideConfigProvider");
 
         arguments.runConfigProvider();
 
@@ -200,20 +207,19 @@ public class ArgumentsTest {
         Assert.assertEquals(9000L, arguments.getMetricInterval());
         Assert.assertEquals(true, arguments.isIoProfiling());
         Assert.assertArrayEquals(
-            new ClassAndMethod[]{
-                new ClassAndMethod("package.c900", "m900"), new ClassAndMethod("package.c901", "m901")
-            },
-            arguments.getDurationProfiling().toArray(new ClassAndMethod[2]));
+                new ClassAndMethod[] {
+                    new ClassAndMethod("package.c900", "m900"),
+                    new ClassAndMethod("package.c901", "m901")
+                },
+                arguments.getDurationProfiling().toArray(new ClassAndMethod[2]));
     }
 
     public static class DummyReporter implements Reporter {
         @Override
-        public void report(String profilerName, Map<String, Object> metrics) {
-        }
+        public void report(String profilerName, Map<String, Object> metrics) {}
 
         @Override
-        public void close() {
-        }
+        public void close() {}
     }
 
     public static class DummyConfigProvider implements ConfigProvider {
@@ -231,7 +237,8 @@ public class ArgumentsTest {
             Map<String, List<String>> argMap = new HashMap<>();
             argMap.put("metricInterval", Arrays.asList("9000"));
             argMap.put("ioProfiling", Arrays.asList("false"));
-            argMap.put("durationProfiling", Arrays.asList("package.c900.m900", "package.c901.m901"));
+            argMap.put(
+                    "durationProfiling", Arrays.asList("package.c900.m900", "package.c901.m901"));
 
             configMap.put("", argMap);
 
@@ -247,21 +254,24 @@ public class ArgumentsTest {
             Map<String, List<String>> argMap = new HashMap<>();
             argMap.put("metricInterval", Arrays.asList("9000"));
             argMap.put("ioProfiling", Arrays.asList("true"));
-            argMap.put("durationProfiling", Arrays.asList("package.c900.m900", "package.c901.m901"));
+            argMap.put(
+                    "durationProfiling", Arrays.asList("package.c900.m900", "package.c901.m901"));
 
             configMap.put("", argMap);
 
             argMap = new HashMap<>();
             argMap.put("metricInterval", Arrays.asList("9001"));
             argMap.put("ioProfiling", Arrays.asList("false"));
-            argMap.put("durationProfiling", Arrays.asList("package.c900.m910", "package.c901.m911"));
+            argMap.put(
+                    "durationProfiling", Arrays.asList("package.c900.m910", "package.c901.m911"));
 
             configMap.put("tag1", argMap);
 
             argMap = new HashMap<>();
             argMap.put("metricInterval", Arrays.asList("9002"));
             argMap.put("ioProfiling", Arrays.asList("true"));
-            argMap.put("durationProfiling", Arrays.asList("package.c900.m920", "package.c901.m921"));
+            argMap.put(
+                    "durationProfiling", Arrays.asList("package.c900.m920", "package.c901.m921"));
 
             configMap.put("tag2", argMap);
 
