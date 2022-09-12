@@ -57,16 +57,6 @@
     <module name="SuppressWarningsFilter"/>
     <module name="TreeWalker">
         <module name="SuppressWarningsHolder"/>
-        <module name="ImportOrder">
-            <property name="severity" value="error"/>
-            <property name="staticGroups" value="org.apache.streampark,org.apache.streampark.shade,*,javax,java,scala"/>
-            <property name="groups" value="org.apache.streampark,org.apache.streampark.shade,*,javax,java,scala"/>
-            <property name="separated" value="true"/>
-            <property name="sortStaticImportsAlphabetically" value="true"/>
-            <property name="option" value="top"/>
-            <property name="tokens" value="STATIC_IMPORT, IMPORT"/>
-            <message key="import.ordering" value="Import {0} appears after other imports that it should precede"/>
-        </module>
 
         <!-- Prohibit T.getT() methods for standard boxed types -->
         <module name="Regexp">
@@ -410,7 +400,7 @@
             <property name="braceAdjustment" value="0"/>
             <property name="caseIndent" value="4"/>
             <property name="throwsIndent" value="2"/>
-            <property name="lineWrappingIndentation" value="4"/>
+            <property name="lineWrappingIndentation" value="8"/>
             <property name="arrayInitIndent" value="4"/>
         </module>
 
@@ -465,20 +455,6 @@
             <property name="tokens" value="COMMA, SEMI, DOT, POST_DEC, POST_INC, ELLIPSIS, METHOD_REF"/>
             <property name="allowLineBreaks" value="true"/>
             <property name="severity" value="error"/>
-        </module>
-
-        <module name="OperatorWrap">
-            <!-- Checks that assignment operators are at the end of the line. -->
-            <property name="option" value="eol"/>
-            <property name="tokens"
-                      value="ASSIGN, BAND, BOR, BSR, BXOR, DIV, EQUAL, GE, GT, LE, LITERAL_INSTANCEOF, LT, MINUS, MOD, NOT_EQUAL, QUESTION, SL, SR, STAR, METHOD_REF"/>
-        </module>
-
-        <module name="AnnotationLocation">
-            <property name="allowSamelineMultipleAnnotations" value="false"/>
-            <property name="allowSamelineSingleParameterlessAnnotation" value="false"/>
-            <property name="allowSamelineParameterizedAnnotation" value="true"/>
-            <property name="tokens" value="METHOD_DEF, CTOR_DEF, VARIABLE_DEF, CLASS_DEF, INTERFACE_DEF, ENUM_DEF"/>
         </module>
 
         <module name="TypecastParenPad"/>
