@@ -95,6 +95,11 @@
             <artifactId>guava</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
         <!--test-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

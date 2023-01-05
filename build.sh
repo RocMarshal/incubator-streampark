@@ -241,3 +241,11 @@ main() {
 }
 
 main "$@"
+
+cd /Users/yuepeng.pan/acommunity/incubator-streampark/streampark-console/streampark-console-service/target \
+&& tar -zxvf apache-streampark_2.12-2.0.0-incubating-bin.tar.gz
+
+rm -rf /Users/yuepeng.pan/bin/streampark/apache-streampark_2.12-2.0.0-incubating-bin
+
+cp -r /Users/yuepeng.pan/acommunity/incubator-streampark/streampark-console/streampark-console-service/target/apache-streampark_2.12-2.0.0-incubating-bin /Users/yuepeng.pan/bin/streampark/
+
