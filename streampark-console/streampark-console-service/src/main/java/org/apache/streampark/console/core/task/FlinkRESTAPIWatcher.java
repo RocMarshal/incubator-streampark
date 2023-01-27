@@ -357,7 +357,9 @@ public class FlinkRESTAPIWatcher {
     FlinkCluster flinkCluster = getFlinkCluster(application);
     CheckPoints checkPoints = httpCheckpoints(application, flinkCluster);
     if (checkPoints != null) {
-      checkpointProcessor.process(application.getId(), checkPoints);
+      checkPoints
+          .getLatestChkAndSavepointWithTimeAscOrder()
+          .forEach(checkPoint -> checkpointProcessor.process(application.getId(), checkPoint));
     }
   }
 

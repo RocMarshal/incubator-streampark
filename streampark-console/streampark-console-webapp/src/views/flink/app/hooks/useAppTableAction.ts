@@ -38,6 +38,7 @@ import { useI18n } from '/@/hooks/web/useI18n';
 export const useAppTableAction = (
   openStartModal: Fn,
   openStopModal: Fn,
+  openSavepointModal: Fn,
   openLogModal: Fn,
   openBuildDrawer: Fn,
   handlePageDataReload: Fn,
@@ -106,6 +107,14 @@ export const useAppTableAction = (
         onClick: handleCancel.bind(null, record),
       },
       {
+        tooltip: { title: t('flink.app.operation.savepoint') },
+        ifShow:
+          record.state == AppStateEnum.RUNNING && record['optionState'] == OptionStateEnum.NONE,
+        auth: 'app:triggerSavepoint',
+        icon: 'ant-design:database-outlined',
+        onClick: handleSavepoint.bind(null, record),
+      },
+      {
         tooltip: { title: t('flink.app.operation.detail') },
         auth: 'app:detail',
         icon: 'carbon:data-view-alt',
@@ -147,6 +156,12 @@ export const useAppTableAction = (
   function handleDetail(app: AppListRecord) {
     flinkAppStore.setApplicationId(app.id);
     router.push({ path: '/flink/app/detail', query: { appId: app.id } });
+  }
+  // click stop application
+  function handleSavepoint(app: AppListRecord) {
+    if (!optionApps.stopping.get(app.id) || app['optionState'] == OptionStateEnum.NONE) {
+      openSavepointModal(true, { application: app });
+    }
   }
   // click stop application
   function handleCancel(app: AppListRecord) {

@@ -17,6 +17,7 @@
 
 package org.apache.streampark.console.core.task;
 
+import org.apache.streampark.common.enums.ExecutionMode;
 import org.apache.streampark.console.core.entity.Application;
 import org.apache.streampark.console.core.entity.SavePoint;
 import org.apache.streampark.console.core.enums.CheckPointStatus;
@@ -26,10 +27,13 @@ import org.apache.streampark.console.core.service.ApplicationService;
 import org.apache.streampark.console.core.service.SavePointService;
 import org.apache.streampark.console.core.service.alert.AlertService;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Nonnull;
 
 import java.util.Date;
 import java.util.Map;
@@ -52,13 +56,13 @@ public class CheckpointProcessor {
 
   @Autowired private SavePointService savePointService;
 
-  public void process(Long appId, CheckPoints checkPoints) {
-    CheckPoints.Latest latest = checkPoints.getLatest();
-    if (latest == null || latest.getCompleted() == null) {
+  public void process(Long appId, @Nonnull CheckPoints.CheckPoint checkPoint) {
+    Application application = applicationService.getById(appId);
+
+    if (!checkpointNeedStore(application, checkPoint)) {
       return;
     }
-    CheckPoints.CheckPoint checkPoint = latest.getCompleted();
-    Application application = applicationService.getById(appId);
+
     CheckPointStatus status = checkPoint.getCheckPointStatus();
 
     if (CheckPointStatus.COMPLETED.equals(status)) {
@@ -75,7 +79,7 @@ public class CheckpointProcessor {
         saveSavepoint(checkPoint, application);
         checkPointCache.put(cacheId, checkPoint.getId());
       }
-    } else if (CheckPointStatus.FAILED.equals(status) && application.cpFailedTrigger()) {
+    } else if (shouldProcessFailedTrigger(checkPoint, application, status)) {
       Counter counter = checkPointFailedCache.get(appId);
       if (counter == null) {
         checkPointFailedCache.put(appId, new Counter(checkPoint.getTriggerTimestamp()));
@@ -108,15 +112,41 @@ public class CheckpointProcessor {
     }
   }
 
+  private boolean shouldProcessFailedTrigger(
+      CheckPoints.CheckPoint checkPoint, Application application, CheckPointStatus status) {
+    return CheckPointStatus.FAILED.equals(status)
+        && !checkPoint.getIsSavepoint()
+        && application.cpFailedTrigger();
+  }
+
+  private boolean checkpointNeedStore(
+      Application application, @Nonnull CheckPoints.CheckPoint checkPoint) {
+    LambdaQueryWrapper<SavePoint> queryWrapper =
+        new LambdaQueryWrapper<SavePoint>()
+            .eq(SavePoint::getAppId, application.getAppId())
+            .eq(SavePoint::getJobId, application.getJobId())
+            .eq(SavePoint::getChkId, checkPoint.getId());
+    return savePointService.getOne(queryWrapper) == null;
+  }
+
   private void saveSavepoint(CheckPoints.CheckPoint checkPoint, Application application) {
     SavePoint savePoint = new SavePoint();
+    savePoint.setTriggerTime(new Date(checkPoint.getTriggerTimestamp()));
+    savePoint.setStatus(checkPoint.getStatus());
+    savePoint.setType(checkPoint.getCheckPointType().get());
     savePoint.setAppId(application.getId());
     savePoint.setChkId(checkPoint.getId());
     savePoint.setLatest(true);
-    savePoint.setType(checkPoint.getCheckPointType().get());
     savePoint.setPath(checkPoint.getExternalPath());
-    savePoint.setTriggerTime(new Date(checkPoint.getTriggerTimestamp()));
     savePoint.setCreateTime(new Date());
+    savePoint.setJobId(application.getJobId());
+    savePoint.setEndTime(new Date(checkPoint.getLatestAckTimestamp()));
+    if (application.getClusterId() != null) {
+      savePoint.setClusterId(application.getConfigId());
+    }
+    if (application.getExecutionMode() != null) {
+      savePoint.setExecutionMode(ExecutionMode.of(application.getExecutionMode()).name());
+    }
     savePointService.save(savePoint);
   }
 

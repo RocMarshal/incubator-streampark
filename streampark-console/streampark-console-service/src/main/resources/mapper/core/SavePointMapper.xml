@@ -25,5 +25,11 @@
         <result column="path" jdbcType="VARCHAR" property="path"/>
         <result column="trigger_time" jdbcType="DATE" property="triggerTime"/>
         <result column="create_time" jdbcType="DATE" property="createTime"/>
+        <result column="job_id" jdbcType="VARCHAR" property="jobId"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="execution_mode" jdbcType="VARCHAR" property="executionMode"/>
+        <result column="cluster_id" jdbcType="BIGINT" property="clusterId"/>
+        <result column="end_time" jdbcType="DATE" property="endTime"/>
+        <result column="modify_time" jdbcType="DATE" property="modifyTime"/>
     </resultMap>
 </mapper>

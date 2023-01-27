@@ -50,6 +50,7 @@ enum APP_API {
   CHECK_JAR = '/flink/app/checkjar',
   VERIFY_SCHEMA = '/flink/app/verifySchema',
   CHECK_SAVEPOINT_PATH = '/flink/app/checkSavepointPath',
+  TRIGGER_SAVEPOINT = '/flink/app/triggerSavepoint',
 }
 
 /**
@@ -217,4 +218,8 @@ export function fetchCancel(data: CancelParam): Promise<boolean> {
 
 export function fetchName(data: { config: string }) {
   return defHttp.post({ url: APP_API.NAME, data });
+}
+
+export function triggerSavepoint(data: { appId: string | number,  savepointPath: string | null}) {
+  return defHttp.post({ url: APP_API.TRIGGER_SAVEPOINT, data });
 }

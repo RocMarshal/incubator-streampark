@@ -25,11 +25,15 @@ import org.apache.streampark.console.core.entity.SavePoint;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import javax.annotation.Nullable;
+
 public interface SavePointService extends IService<SavePoint> {
 
   void expire(Long appId);
 
   SavePoint getLatest(Long id);
+
+  Boolean triggerSavepoint(Long appId, @Nullable String savepointPath);
 
   Boolean delete(Long id, Application application) throws InternalException;
 

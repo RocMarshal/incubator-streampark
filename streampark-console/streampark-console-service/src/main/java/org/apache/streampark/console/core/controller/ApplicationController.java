@@ -33,6 +33,7 @@ import org.apache.streampark.console.core.service.AppBuildPipeService;
 import org.apache.streampark.console.core.service.ApplicationBackUpService;
 import org.apache.streampark.console.core.service.ApplicationLogService;
 import org.apache.streampark.console.core.service.ApplicationService;
+import org.apache.streampark.console.core.service.SavePointService;
 import org.apache.streampark.flink.packer.pipeline.PipelineStatus;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -49,6 +50,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,6 +76,8 @@ public class ApplicationController {
   @Autowired private ApplicationLogService applicationLogService;
 
   @Autowired private AppBuildPipeService appBuildPipeService;
+
+  @Autowired private SavePointService savePointService;
 
   @ApiAccess
   @PostMapping("get")
@@ -340,6 +345,12 @@ public class ApplicationController {
   public RestResponse optionlog(ApplicationLog applicationLog, RestRequest request) {
     IPage<ApplicationLog> applicationList = applicationLogService.page(applicationLog, request);
     return RestResponse.success(applicationList);
+  }
+
+  @PostMapping("triggerSavepoint")
+  public RestResponse triggerSavepoint(Long appId, @Nullable String savepointPath) {
+    Boolean result = savePointService.triggerSavepoint(appId, savepointPath);
+    return RestResponse.success(result);
   }
 
   @PostMapping("delete")

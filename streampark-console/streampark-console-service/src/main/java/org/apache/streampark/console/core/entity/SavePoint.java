@@ -50,4 +50,16 @@ public class SavePoint {
   private Date triggerTime;
 
   private Date createTime;
+
+  private String jobId;
+
+  private String status;
+
+  private String executionMode;
+
+  private Long clusterId;
+
+  private Date endTime;
+
+  private Date modifyTime;
 }

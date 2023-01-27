@@ -1237,6 +1237,7 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
             application.getK8sNamespace(),
             properties);
 
+    final Date triggerTime = new Date();
     CompletableFuture<CancelResponse> cancelFuture =
         CompletableFuture.supplyAsync(() -> FlinkSubmitter.cancel(cancelRequest), executorService);
 
@@ -1256,8 +1257,16 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
                 savePoint.setAppId(application.getId());
                 savePoint.setLatest(true);
                 savePoint.setType(CheckPointType.SAVEPOINT.get());
-                savePoint.setTriggerTime(now);
+                savePoint.setTriggerTime(triggerTime);
                 savePoint.setCreateTime(now);
+                savePoint.setJobId(cancelRequest.jobId());
+                savePoint.setEndTime(now);
+                if (appParam.getClusterId() != null) {
+                  savePoint.setClusterId(appParam.getConfigId());
+                }
+                if (appParam.getExecutionMode() != null) {
+                  savePoint.setExecutionMode(ExecutionMode.of(appParam.getExecutionMode()).name());
+                }
                 savePointService.save(savePoint);
               }
               if (isKubernetesApp(application)) {

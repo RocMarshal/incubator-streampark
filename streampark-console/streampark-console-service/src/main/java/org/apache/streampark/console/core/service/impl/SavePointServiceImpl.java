@@ -18,6 +18,7 @@
 package org.apache.streampark.console.core.service.impl;
 
 import org.apache.streampark.common.util.AssertUtils;
+import org.apache.streampark.common.util.HttpClientUtils;
 import org.apache.streampark.console.base.domain.Constant;
 import org.apache.streampark.console.base.domain.RestRequest;
 import org.apache.streampark.console.base.exception.InternalException;
@@ -27,6 +28,7 @@ import org.apache.streampark.console.core.entity.Application;
 import org.apache.streampark.console.core.entity.FlinkEnv;
 import org.apache.streampark.console.core.entity.SavePoint;
 import org.apache.streampark.console.core.enums.CheckPointType;
+import org.apache.streampark.console.core.mapper.ApplicationMapper;
 import org.apache.streampark.console.core.mapper.SavePointMapper;
 import org.apache.streampark.console.core.service.FlinkEnvService;
 import org.apache.streampark.console.core.service.SavePointService;
@@ -35,11 +37,19 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.flink.runtime.rest.handler.async.TriggerResponse;
+import org.apache.flink.runtime.rest.messages.job.savepoints.SavepointTriggerRequestBody;
+import org.apache.flink.runtime.rest.util.RestMapperUtils;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Nullable;
 
 @Slf4j
 @Service
@@ -47,7 +57,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class SavePointServiceImpl extends ServiceImpl<SavePointMapper, SavePoint>
     implements SavePointService {
 
+  private static final ObjectMapper objMapper = RestMapperUtils.getStrictObjectMapper();
+
   @Autowired private FlinkEnvService flinkEnvService;
+
+  @Autowired private ApplicationMapper appMapper;
 
   @Override
   public void expire(Long appId) {
@@ -112,6 +126,40 @@ public class SavePointServiceImpl extends ServiceImpl<SavePointMapper, SavePoint
             .eq(SavePoint::getAppId, id)
             .eq(SavePoint::getLatest, true);
     return this.getOne(queryWrapper);
+  }
+
+  @Override
+  public Boolean triggerSavepoint(Long appId, @Nullable String savepointPath) {
+    log.info("Start to trigger savepoint for app {}", appId);
+    Application app = appMapper.selectById(appId);
+    Preconditions.checkState(app != null, "The application %s doesn't exist.", appId);
+    String trackingUrl = app.getJobManagerUrl();
+    Preconditions.checkState(
+        StringUtils.isNotEmpty(trackingUrl), "The flink trackingUrl for app[%] isn't available.");
+    String jobId = app.getJobId();
+    Preconditions.checkState(
+        StringUtils.isNotEmpty(jobId), "The jobId of application[%s] is absent.", appId);
+    String triggerId = triggerSavepoint(trackingUrl, jobId, savepointPath);
+    log.info("Request savepoint successful in triggerId {}", triggerId);
+    return true;
+  }
+
+  private String triggerSavepoint(
+      String trackingUrl, String jobId, @Nullable String savepointPath) {
+    String response = null;
+    try {
+      String url = String.format("%s/jobs/%s/savepoints", trackingUrl, jobId);
+      String postBody =
+          objMapper.writeValueAsString(new SavepointTriggerRequestBody(savepointPath, false));
+      response = HttpClientUtils.httpPostRequest(url, postBody);
+      TriggerResponse triggerResponse = objMapper.readValue(response, TriggerResponse.class);
+      return triggerResponse.getTriggerId().toString();
+    } catch (Exception e) {
+      throw new RuntimeException(
+          String.format(
+              "Fail to trigger savepoint, trackingUrl = %s, response = %s", trackingUrl, response),
+          e);
+    }
   }
 
   @Override
