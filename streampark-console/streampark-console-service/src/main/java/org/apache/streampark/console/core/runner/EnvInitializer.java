@@ -45,6 +45,7 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,6 +56,8 @@ import static org.apache.streampark.common.enums.StorageType.LFS;
 @Slf4j
 @Component
 public class EnvInitializer implements ApplicationRunner {
+
+  public static final String SKIP_RUN_METHOD = "envinitializer.run.skip";
 
   @Autowired private ApplicationContext context;
 
@@ -69,8 +72,24 @@ public class EnvInitializer implements ApplicationRunner {
           "^streampark-flink-shims_flink-(1.12|1.13|1.14|1.15|1.16)_(2.11|2.12)-(.*).jar$",
           Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
+  private boolean skipRun() {
+    try {
+      String skipRun = System.getProperty(SKIP_RUN_METHOD);
+      if (Objects.nonNull(skipRun)) {
+        return Boolean.parseBoolean(skipRun);
+      }
+      return false;
+    } catch (Exception e) {
+      // Ignore the exception.
+      return false;
+    }
+  }
+
   @Override
   public void run(ApplicationArguments args) throws Exception {
+    if (skipRun()) {
+      return;
+    }
     String appHome = WebUtils.getAppHome();
     if (appHome == null) {
       throw new ExceptionInInitializerError(
@@ -133,6 +152,12 @@ public class EnvInitializer implements ApplicationRunner {
 
   /** @param storageType */
   public synchronized void storageInitialize(StorageType storageType) {
+
+    String property = System.getProperty("active.test");
+
+    if (!StringUtils.isEmpty(property) && Boolean.parseBoolean(property)) {
+      return;
+    }
 
     final String mkdirLog = "storage initialize, now mkdir [{}] starting ...";
 
