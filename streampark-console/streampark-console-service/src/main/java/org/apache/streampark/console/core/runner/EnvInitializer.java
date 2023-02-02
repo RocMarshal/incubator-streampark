@@ -134,6 +134,12 @@ public class EnvInitializer implements ApplicationRunner {
   /** @param storageType */
   public synchronized void storageInitialize(StorageType storageType) {
 
+    String property = System.getProperty("active.test");
+
+    if (!StringUtils.isEmpty(property) && Boolean.parseBoolean(property)) {
+      return;
+    }
+
     final String mkdirLog = "storage initialize, now mkdir [{}] starting ...";
 
     if (initialized.get(storageType) == null) {
