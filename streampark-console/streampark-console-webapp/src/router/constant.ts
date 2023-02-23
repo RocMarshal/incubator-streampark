@@ -53,5 +53,7 @@ export const menuMap = {
   [`${applicationPath}/edit_streampark`]: applicationPath,
   [`${settingPath}/add_cluster`]: settingPath,
   [`${settingPath}/edit_cluster`]: settingPath,
+  [`${settingPath}/add_yarn_queue`]: settingPath,
+  [`${settingPath}/edit_yarn_queue`]: settingPath,
   [`${variablePath}/depend_apps`]: variablePath,
 };

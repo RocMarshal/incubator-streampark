@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *    https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,15 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.apache.streampark.console.core.service;
-
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.apache.streampark.console.base.domain.RestRequest;
-import org.apache.streampark.console.core.entity.YarnQueue;
-
-import com.baomidou.mybatisplus.extension.service.IService;
-
-public interface YarnQueueService extends IService<YarnQueue> {
-    IPage<YarnQueue> findQueues(Long teamId, YarnQueue yarnQueue, RestRequest restRequest);
+export interface YarnQueue {
+  id: number;
+  teamId: number;
+  queueLabel: string;
+  description: string;
+  createTime: string;
+  modifyTime: string;
 }

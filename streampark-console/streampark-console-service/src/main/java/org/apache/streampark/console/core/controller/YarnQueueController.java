@@ -17,11 +17,16 @@
 
 package org.apache.streampark.console.core.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.apache.streampark.console.base.domain.RestRequest;
+import org.apache.streampark.console.base.domain.RestResponse;
+import org.apache.streampark.console.core.entity.YarnQueue;
 import org.apache.streampark.console.core.service.YarnQueueService;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,4 +37,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class YarnQueueController {
 
   @Autowired private YarnQueueService yarnQueueService;
+
+    /***
+     * List the queues in the specified team by the paging & optional search hint message.
+     * @param teamId team id
+     * @param restRequest page request information.
+     * @param yarnQueue optional fields used to search.
+     * @return RestResponse with IPage<{@link YarnQueue}> object.
+     */
+    @PostMapping("list")
+    public RestResponse list(Long teamId, RestRequest restRequest, YarnQueue yarnQueue) {
+        IPage<YarnQueue> queuePage = yarnQueueService.findQueues(teamId, yarnQueue, restRequest);
+        return RestResponse.success(queuePage);
+    }
 }

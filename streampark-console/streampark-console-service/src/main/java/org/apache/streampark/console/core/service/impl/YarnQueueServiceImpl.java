@@ -17,12 +17,16 @@
 
 package org.apache.streampark.console.core.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.streampark.console.base.domain.RestRequest;
 import org.apache.streampark.console.core.entity.YarnQueue;
 import org.apache.streampark.console.core.mapper.YarnQueueMapper;
 import org.apache.streampark.console.core.service.YarnQueueService;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.streampark.console.system.entity.Team;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,4 +35,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class YarnQueueServiceImpl extends ServiceImpl<YarnQueueMapper, YarnQueue>
-    implements YarnQueueService {}
+    implements YarnQueueService {
+    @Override
+    public IPage<YarnQueue> findQueues(Long teamId, YarnQueue yarnQueue, RestRequest request) {
+        Page<Team> page = new Page<>();
+        page.setCurrent(request.getPageNum());
+        page.setSize(request.getPageSize());
+        return this.baseMapper.findQueues(teamId, page, yarnQueue);
+    }
+}

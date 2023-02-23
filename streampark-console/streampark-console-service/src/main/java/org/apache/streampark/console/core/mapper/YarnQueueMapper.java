@@ -17,9 +17,15 @@
 
 package org.apache.streampark.console.core.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Param;
 import org.apache.streampark.console.core.entity.YarnQueue;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.streampark.console.system.entity.Team;
 
 /** Yarn queue mapper definition. */
-public interface YarnQueueMapper extends BaseMapper<YarnQueue> {}
+public interface YarnQueueMapper extends BaseMapper<YarnQueue> {
+    IPage<YarnQueue> findQueues(Long teamId, Page<Team> page, YarnQueue yarnQueue);
+}

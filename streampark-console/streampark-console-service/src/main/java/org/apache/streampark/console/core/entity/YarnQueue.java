@@ -51,4 +51,8 @@ public class YarnQueue implements Serializable {
 
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
   private Date modifyTime;
+
+  private transient String createTimeFrom;
+
+  private transient String createTimeTo;
 }
