@@ -42,6 +42,7 @@ drop table if exists "public"."t_access_token";
 drop table if exists "public"."t_flink_log";
 drop table if exists "public"."t_team";
 drop table if exists "public"."t_variable";
+drop table if exists "public"."t_yarn_queue";
 
 -- ----------------------------
 -- drop sequence if exists
@@ -66,6 +67,7 @@ drop sequence if exists "public"."streampark_t_access_token_id_seq";
 drop sequence if exists "public"."streampark_t_flink_log_id_seq";
 drop sequence if exists "public"."streampark_t_team_id_seq";
 drop sequence if exists "public"."streampark_t_variable_id_seq";
+drop sequence if exists "public"."streampark_t_yarn_queue_id_seq";
 
 -- ----------------------------
 -- drop trigger if exists
@@ -740,6 +742,31 @@ create index "un_user_role_inx" on "public"."t_member" using btree (
   "user_id" "pg_catalog"."int8_ops" asc nulls last,
   "role_id" "pg_catalog"."int8_ops" asc nulls last
 );
+
+-- ----------------------------
+-- table structure for t_yarn_queue
+-- ----------------------------
+create sequence "public"."streampark_t_yarn_queue_id_seq"
+    increment 1 start 10000 cache 1 minvalue 10000 maxvalue 9223372036854775807;
+
+create table "public"."t_yarn_queue" (
+  "id" int8 not null default nextval('streampark_t_yarn_queue_id_seq'::regclass),
+  `team_id` int8 not null comment 'team id',
+  "queue_label" varchar(255) not null collate "pg_catalog"."default",
+  "description" varchar(512) collate "pg_catalog"."default",
+  "create_time" timestamp(6) not null default timezone('UTC-8'::text, (now())::timestamp(0) without time zone),
+  "modify_time" timestamp(6) not null default timezone('UTC-8'::text, (now())::timestamp(0) without time zone)
+)
+;
+comment on column "public"."t_yarn_queue"."id" is 'queue id';
+comment on column "public"."t_yarn_queue"."team_id" is 'team id';
+comment on column "public"."t_yarn_queue"."queue_label" is 'queue label expression';
+comment on column "public"."t_yarn_queue"."description" is 'description of the queue';
+comment on column "public"."t_yarn_queue"."create_time" is 'create time';
+comment on column "public"."t_yarn_queue"."modify_time" is 'modify time';
+
+alter table "public"."t_yarn_queue" add constraint "t_yarn_queue_pkey" primary key ("id");
+alter table "public"."t_yarn_queue" add constraint "unique_team_id_queue_label" unique("team_id", "queue_label");
 
 -- -----------------------------------------
 -- trigger for table with modify_time field
