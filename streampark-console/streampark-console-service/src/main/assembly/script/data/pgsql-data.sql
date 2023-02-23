@@ -118,6 +118,9 @@ insert into "public"."t_menu" values (100071, 100033, 'link view', null, null, '
 insert into "public"."t_menu" values (100072, 100033, 'link create', null, null, 'externalLink:create', null, '1', '1', NULL, now(), now());
 insert into "public"."t_menu" values (100073, 100033, 'link update', null, null, 'externalLink:update', null, '1', '1', NULL, now(), now());
 insert into "public"."t_menu" values (100074, 100033, 'link delete', null, null, 'externalLink:delete', null, '1', '1', NULL, now(), now());
+insert into "public"."t_menu" values (100075, 100033, 'add yarn queue', null, null, 'yarnQueue:create', '', '1', '0', null, now(), now());
+insert into "public"."t_menu" values (100076, 100033, 'update yarn queue', null, null, 'yarnQueue:update', '', '1', '0', null, now(), now());
+insert into "public"."t_menu" values (100077, 100033, 'delete yarn queue', null, null, 'yarnQueue:delete', '', '1', '0', null, now(), now());
 
 -- ----------------------------
 -- Records of t_role

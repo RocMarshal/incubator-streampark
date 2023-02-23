@@ -57,5 +57,27 @@ insert into `t_role_menu` values (100063, 100002, 100073);
 insert into `t_role_menu` values (100064, 100002, 100074);
 -- Issue-2191/2215 DDL & DML End
 
-set foreign_key_checks = 1;
 
+-- Issue-2324 Start --
+
+insert into `t_menu` values (100075, 100033, 'add yarn queue', null, null, 'yarnQueue:create', '', '1', 0, null, now(), now());
+insert into `t_menu` values (100076, 100033, 'edit yarn queue', null, null, 'yarnQueue:update', '', '1', 0, null, now(), now());
+insert into `t_menu` values (100077, 100033, 'delete yarn queue', null, null, 'yarnQueue:delete', '', '1', 0, null, now(), now());
+
+-- ----------------------------
+-- table structure for t_yarn_queue
+-- ----------------------------
+drop table if exists `t_yarn_queue`;
+create table `t_yarn_queue` (
+  `id` bigint not null primary key auto_increment comment 'queue id',
+  `team_id` bigint not null comment 'team id',
+  `queue_label` varchar(255) collate utf8mb4_general_ci not null comment 'queue and label expression',
+  `description` varchar(512) collate utf8mb4_general_ci default null comment 'description of the queue label',
+  `create_time` datetime not null default current_timestamp comment 'create time',
+  `modify_time` datetime not null default current_timestamp on update current_timestamp comment 'modify time',
+  unique key `unq_team_id_queue_label` (`team_id`, `queue_label`) using btree
+) engine = innodb default charset = utf8mb4 collate = utf8mb4_general_ci;
+
+-- Issue-2324 End --
+
+set foreign_key_checks = 1;

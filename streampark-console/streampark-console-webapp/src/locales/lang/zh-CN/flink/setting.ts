@@ -21,6 +21,7 @@ export default {
     flinkHome: 'Flink版本',
     flinkCluster: 'Flink集群',
     externalLink: '扩展链接 ',
+    yarnQueue: 'Yarn 队列',
   },
   systemSettingItems: {
     mavenSetting: {
@@ -112,6 +113,21 @@ export default {
       updateAlertConfigSuccessfull: '告警配置更新成功!',
     },
     delete: '是否确定删除此警报 ?',
+  },
+  yarnQueue: {
+    tableTitle: 'Yarn Queue 列表',
+    createQueue: '创建队列',
+    success: '成功',
+    yarnQueueMsg: '不可为空字符串',
+    modifyYarnQueue: '编辑队列',
+    deleteYarnQueue: '删除队列',
+    deleteConfirm: '确定要删除此队列?',
+    descriptionMessage: '超过了512个字符的最大长度限制',
+    yarnQueueLabelExpression: "Yarn 队列{'@'}标签",
+    placeholder: {
+      yarnQueueLabelExpression: "请输入队列名字，格式如 {'{queue}'}或者{'{queue}@{label,...}'}",
+      description: '请输入描述',
+    },
   },
   cluster: {
     detail: '查看集群详情',
