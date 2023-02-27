@@ -28,12 +28,11 @@
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
 
   import { fetchYarnQueueCreate, fetchYarnQueueUpdate } from '/@/api/flink/setting/yarnQueue';
-  import { Icon } from '/@/components/Icon';
   import { useI18n } from '/@/hooks/web/useI18n';
 
   export default defineComponent({
     name: 'YarnQueueDrawer',
-    components: { BasicDrawer, BasicForm, Icon },
+    components: { BasicDrawer, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
@@ -52,7 +51,9 @@
             required: !isUpdate.value,
             dynamicRules: () => {
               if (!isUpdate.value) {
-                return [{ required: true, min: 1, message: t('flink.setting.yarnQueue.yarnQueueMsg') }];
+                return [
+                  { required: true, min: 1, message: t('flink.setting.yarnQueue.yarnQueueMsg') },
+                ];
               }
               return [];
             },
@@ -90,16 +91,16 @@
       );
 
       const getTitle = computed(() =>
-        !unref(isUpdate) ? t('flink.setting.yarnQueue.createQueue') : t('flink.setting.yarnQueue.modifyYarnQueue'),
+        !unref(isUpdate)
+          ? t('flink.setting.yarnQueue.createQueue')
+          : t('flink.setting.yarnQueue.modifyYarnQueue'),
       );
       // form submit
       async function handleSubmit() {
         try {
           const values = await validate();
           setDrawerProps({ confirmLoading: true });
-          await (isUpdate.value
-            ? fetchYarnQueueUpdate(values)
-            : fetchYarnQueueCreate(values));
+          await (isUpdate.value ? fetchYarnQueueUpdate(values) : fetchYarnQueueCreate(values));
           closeDrawer();
           emit('success', isUpdate.value);
         } finally {

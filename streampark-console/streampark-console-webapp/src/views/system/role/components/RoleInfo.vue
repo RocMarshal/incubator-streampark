@@ -28,7 +28,8 @@
     </template>
     <Description :column="1" :data="roleInfo" :schema="roleColumn" />
     <p class="mt-20px">
-      <Icon icon="ant-design:trophy-outlined" />&nbsp;&nbsp; {{ t('system.role.assignment') }}
+      <Icon icon="ant-design:trophy-outlined" />&nbsp;&nbsp;
+      {{ t('system.role.assignment') }}
       <Tree
         :check-strictly="false"
         :checkable="true"
@@ -36,7 +37,11 @@
         v-model:checkedKeys="checkedKeys"
         v-if="menuTreeData.length > 0"
         :tree-data="menuTreeData"
-      />
+      >
+        <template #title="{ text }">
+          {{ handleTreeTitle(text) }}
+        </template>
+      </Tree>
     </p>
   </BasicDrawer>
 </template>
@@ -123,5 +128,11 @@
   ];
   function handleSubmit() {
     closeDrawer();
+  }
+  function handleTreeTitle(text: string) {
+    if (/^\w+\.\w+$/.test(text)) {
+      return t(`menu.${text}`);
+    }
+    return text;
   }
 </script>
