@@ -122,9 +122,9 @@ export default {
     deleteYarnQueue: '删除队列',
     deleteConfirm: '确定要删除此队列?',
     descriptionMessage: '超过了512个字符的最大长度限制',
-    yarnQueueLabelExpression: '队列@标签',
+    yarnQueueLabelExpression: "Yarn 队列{'@'}标签",
     placeholder: {
-      yarnQueueLabelExpression: '请输入队列名字，格式如 {queue} 或者 {queue}@{label,...}',
+      yarnQueueLabelExpression: "请输入队列名字，格式如 {'{queue}'}或者{'{queue}@{label,...}'}",
       description: '请输入描述',
     },
   },

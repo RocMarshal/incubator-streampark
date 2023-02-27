@@ -118,15 +118,16 @@ export default {
     tableTitle: 'Yarn Queue List',
     createQueue: 'Create Yarn Queue',
     success: 'Success',
-    yarnQueueMsg: 'Can\'t be empty',
+    yarnQueueMsg: "Can't be empty",
     descriptionMessage: 'exceeds maximum length limit of 512 characters',
     modifyYarnQueue: 'Edit Yarn Queue',
     deleteYarnQueue: 'Delete Yarn Queue',
     deleteConfirm: 'Are you sure to delete this queue ?',
-    yarnQueueLabelExpression: 'Queue@Label',
+    yarnQueueLabelExpression: "Queue{'@'}Label",
     placeholder: {
-      yarnQueueLabelExpression: 'Please input the queue label like {queue} or {queue}@{label,...}',
-      description: 'Please input the description of the queue.'
+      yarnQueueLabelExpression:
+        "Please input the queue label like {'{queue}'} or {'{queue}@{label,...}'} ",
+      description: 'Please input the description of the queue.',
     },
   },
   cluster: {

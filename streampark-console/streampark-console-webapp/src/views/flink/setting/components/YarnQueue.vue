@@ -18,7 +18,7 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate" v-auth="'yarnQueue:add'">
+        <a-button type="primary" @click="handleCreate" v-auth="'yarnQueue:create'">
           <Icon icon="ant-design:plus-outlined" />
           {{ t('common.add') }}
         </a-button>
@@ -52,7 +52,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent } from "vue";
+  import { defineComponent } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import YarnQueueDrawer from './YarnQueueDrawer.vue';
@@ -62,7 +62,6 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import Icon from '/@/components/Icon';
-  import { getUserTeamId } from "/@/utils";
   export default defineComponent({
     name: 'YarnQueue',
     components: { BasicTable, YarnQueueDrawer, TableAction, Icon },
@@ -109,22 +108,26 @@
       async function handleDelete(record: Recordable) {
         const { data } = await fetchYarnQueueDelete({ id: record.id });
         if (data.status === 'success') {
-          createMessage.success(`${t('flink.setting.yarnQueue.deleteYarnQueue')} ${t('flink.setting.yarnQueue.success')}`);
+          createMessage.success(
+            `${t('flink.setting.yarnQueue.deleteYarnQueue')} ${t(
+              'flink.setting.yarnQueue.success',
+            )}`,
+          );
           reload();
         } else {
-          createMessage.error(`${t('flink.setting.yarnQueue.deleteYarnQueue')} ${t('common.failed')}`);
+          createMessage.error(
+            `${t('flink.setting.yarnQueue.deleteYarnQueue')} ${t('common.failed')}`,
+          );
         }
       }
 
       function handleSuccess(isUpdate: boolean) {
         createMessage.success(
-          `${isUpdate ? t('common.edit') : t('flink.setting.yarnQueue.createQueue')} ${t('flink.setting.yarnQueue.success')}`,
+          `${isUpdate ? t('common.edit') : t('flink.setting.yarnQueue.createQueue')} ${t(
+            'flink.setting.yarnQueue.success',
+          )}`,
         );
         reload();
-      }
-
-      function onChange(val) {
-        console.log(val);
       }
 
       // setInterval(() => fetchYarnQueueList, 1000 * 3);
@@ -136,7 +139,6 @@
         handleYarnQueueEdit,
         handleDelete,
         handleSuccess,
-        onChange,
       };
     },
   });
