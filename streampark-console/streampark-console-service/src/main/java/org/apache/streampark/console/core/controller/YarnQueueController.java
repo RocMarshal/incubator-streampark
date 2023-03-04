@@ -19,6 +19,7 @@ package org.apache.streampark.console.core.controller;
 
 import org.apache.streampark.console.base.domain.RestRequest;
 import org.apache.streampark.console.base.domain.RestResponse;
+import org.apache.streampark.console.core.annotation.ApiAccess;
 import org.apache.streampark.console.core.bean.ResponseResult;
 import org.apache.streampark.console.core.entity.YarnQueue;
 import org.apache.streampark.console.core.service.YarnQueueService;
@@ -26,6 +27,9 @@ import org.apache.streampark.console.core.service.YarnQueueService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -49,6 +53,21 @@ public class YarnQueueController {
    * @param yarnQueue optional fields used to search.
    * @return RestResponse with IPage<{@link YarnQueue}> object.
    */
+  @ApiAccess
+  @ApiOperation(value = "Trigger savepoint for specified application by id.")
+  @ApiImplicitParams({
+    @ApiImplicitParam(
+        name = "appId",
+        value = "application id",
+        required = true,
+        paramType = "query",
+        dataTypeClass = Long.class),
+    @ApiImplicitParam(
+        name = "savepointPath",
+        value = "specified savepoint path",
+        paramType = "query",
+        dataTypeClass = String.class)
+  })
   @PostMapping("list")
   public RestResponse list(Long teamId, RestRequest restRequest, YarnQueue yarnQueue) {
     IPage<YarnQueue> queuePage = yarnQueueService.findYarnQueues(teamId, yarnQueue, restRequest);
@@ -59,30 +78,100 @@ public class YarnQueueController {
    * Check for the yarn queue if exists in the team or the queueLabel format is invalid. status msg
    * 0 Success 1 The queue already existed in the team 2 The queueLabel format in invalid.
    */
+  @ApiAccess
+  @ApiOperation(value = "Trigger savepoint for specified application by id.")
+  @ApiImplicitParams({
+    @ApiImplicitParam(
+        name = "appId",
+        value = "application id",
+        required = true,
+        paramType = "query",
+        dataTypeClass = Long.class),
+    @ApiImplicitParam(
+        name = "savepointPath",
+        value = "specified savepoint path",
+        paramType = "query",
+        dataTypeClass = String.class)
+  })
   @PostMapping("check")
   public RestResponse check(YarnQueue yarnQueue) {
     ResponseResult checkResult = null;
     return RestResponse.success(checkResult);
   }
 
+  @ApiAccess
+  @ApiOperation(value = "Trigger savepoint for specified application by id.")
+  @ApiImplicitParams({
+    @ApiImplicitParam(
+        name = "appId",
+        value = "application id",
+        required = true,
+        paramType = "query",
+        dataTypeClass = Long.class),
+    @ApiImplicitParam(
+        name = "savepointPath",
+        value = "specified savepoint path",
+        paramType = "query",
+        dataTypeClass = String.class)
+  })
   @PostMapping("create")
   @RequiresPermissions("yarnQueue:create")
   public RestResponse create(YarnQueue yarnQueue) {
     return RestResponse.success(true);
   }
 
+  @ApiAccess
+  @ApiOperation(value = "Trigger savepoint for specified application by id.")
+  @ApiImplicitParams({
+    @ApiImplicitParam(
+        name = "appId",
+        value = "application id",
+        required = true,
+        paramType = "query",
+        dataTypeClass = Long.class),
+    @ApiImplicitParam(
+        name = "savepointPath",
+        value = "specified savepoint path",
+        paramType = "query",
+        dataTypeClass = String.class)
+  })
   @PostMapping("update")
   @RequiresPermissions("yarnQueue:update")
   public RestResponse update(YarnQueue yarnQueue) {
     return RestResponse.success();
   }
 
+  @ApiAccess
+  @ApiOperation(value = "Trigger savepoint for specified application by id.")
+  @ApiImplicitParams({
+    @ApiImplicitParam(
+        name = "appId",
+        value = "application id",
+        required = true,
+        paramType = "query",
+        dataTypeClass = Long.class),
+    @ApiImplicitParam(
+        name = "savepointPath",
+        value = "specified savepoint path",
+        paramType = "query",
+        dataTypeClass = String.class)
+  })
   @PostMapping("get")
   public RestResponse get(Long queueId) {
     YarnQueue yarnQueue = null;
     return RestResponse.success(yarnQueue);
   }
 
+  @ApiAccess
+  @ApiOperation(value = "Delete a yarn queue by (team id & yarn queue) or yarn queue id.")
+  @ApiImplicitParams({
+    @ApiImplicitParam(
+        name = "yarnQueue",
+        value = "Yarn Queue json value",
+        required = true,
+        paramType = "body",
+        dataTypeClass = YarnQueue.class)
+  })
   @PostMapping("delete")
   @RequiresPermissions("yarnQueue:delete")
   public RestResponse delete(YarnQueue yarnQueue) {

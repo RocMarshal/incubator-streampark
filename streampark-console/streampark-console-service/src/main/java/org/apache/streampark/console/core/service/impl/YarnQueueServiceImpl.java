@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class YarnQueueServiceImpl extends ServiceImpl<YarnQueueMapper, YarnQueue>
     implements YarnQueueService {
+
   @Override
   public IPage<YarnQueue> findYarnQueues(Long teamId, YarnQueue yarnQueue, RestRequest request) {
     Page<Team> page = new Page<>();
