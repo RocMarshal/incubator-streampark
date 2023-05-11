@@ -52,7 +52,7 @@ public class SqlGatewayServiceFactoryUtilsTest {
   public void testCreateServices() {
     String id = UUID.randomUUID().toString();
     Map<String, String> config = getDefaultConfig(id);
-    config.put("streampark.sql-gateway.service", "mocked;fake");
+    config.put("streampark.sql-gateway.service", "mocked;fa   ke");
     List<SqlGatewayService> actual = SqlGatewayServiceFactoryUtils.createSqlGatewayService(config);
     MockedSqlGatewayService expectedMocked =
         new MockedSqlGatewayService("localhost", 8080, "The Mocked SQL gateway service");
