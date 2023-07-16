@@ -53,9 +53,9 @@ import java.nio.file.Path;
 @SpringBootTest(
     classes = StreamParkConsoleBootstrap.class,
     webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public abstract class SpringTestBase {
+public abstract class SpringUnitTestBase {
 
-  protected static final Logger LOG = LoggerFactory.getLogger(SpringTestBase.class);
+  protected static final Logger LOG = LoggerFactory.getLogger(SpringUnitTestBase.class);
 
   @BeforeAll
   public static void init(@TempDir File tempPath) throws IOException {

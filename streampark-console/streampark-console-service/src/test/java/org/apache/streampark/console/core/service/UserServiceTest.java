@@ -17,7 +17,7 @@
 
 package org.apache.streampark.console.core.service;
 
-import org.apache.streampark.console.SpringTestBase;
+import org.apache.streampark.console.SpringUnitTestBase;
 import org.apache.streampark.console.core.entity.Application;
 import org.apache.streampark.console.core.entity.Resource;
 import org.apache.streampark.console.core.enums.EngineType;
@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.Map;
 
 /** org.apache.streampark.console.core.service.UserServiceTest. */
-class UserServiceTest extends SpringTestBase {
+class UserServiceTest extends SpringUnitTestBase {
   @Autowired private UserService userService;
   @Autowired private ApplicationService applicationService;
   @Autowired private ResourceService resourceService;

@@ -18,7 +18,7 @@
 package org.apache.streampark.console.core.service;
 
 import org.apache.streampark.common.enums.ExecutionMode;
-import org.apache.streampark.console.SpringTestBase;
+import org.apache.streampark.console.SpringUnitTestBase;
 import org.apache.streampark.console.base.domain.RestRequest;
 import org.apache.streampark.console.base.exception.ApiAlertException;
 import org.apache.streampark.console.core.bean.ResponseResult;
@@ -47,7 +47,7 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
  * avoid noisy data form h2 database.
  */
 @Execution(SAME_THREAD)
-class YarnQueueServiceTest extends SpringTestBase {
+class YarnQueueServiceTest extends SpringUnitTestBase {
 
   @Autowired private FlinkClusterService flinkClusterService;
 
